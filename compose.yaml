@@ -1,0 +1,11 @@
+services:
+  backend:
+    image: ghcr.io/clubmanager1999/backend:latest
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/"
+    network_mode: "host"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: secret
+    network_mode: "host"

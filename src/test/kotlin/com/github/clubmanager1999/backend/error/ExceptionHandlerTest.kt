@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
+import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito.reset
@@ -43,6 +44,11 @@ class ExceptionHandlerTest {
                 Exception(),
                 ApiError(ErrorCode.INTERNAL_ERROR, "Internal error"),
                 HttpStatus.INTERNAL_SERVER_ERROR,
+            ),
+            Case(
+                MemberNotFoundException(42),
+                ApiError(ErrorCode.MEMBER_NOT_FOUND, "No member with id 42 found"),
+                HttpStatus.NOT_FOUND,
             ),
         )
 
