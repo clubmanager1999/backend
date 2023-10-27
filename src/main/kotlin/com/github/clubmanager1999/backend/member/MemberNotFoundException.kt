@@ -14,9 +14,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.error
+package com.github.clubmanager1999.backend.member
 
-enum class ErrorCode {
-    INTERNAL_ERROR,
-    MEMBER_NOT_FOUND,
-}
+class MemberNotFoundException(id: Long) : Exception("No member with id $id found")
