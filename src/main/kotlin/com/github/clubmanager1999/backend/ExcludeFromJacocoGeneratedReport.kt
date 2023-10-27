@@ -16,13 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-
-@SpringBootApplication
-class ClubManager1999Application
-
-@ExcludeFromJacocoGeneratedReport
-fun main(args: Array<String>) {
-    runApplication<ClubManager1999Application>(*args)
-}
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
+annotation class ExcludeFromJacocoGeneratedReport

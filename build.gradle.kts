@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
     id("com.diffplug.spotless") version "6.22.0"
+    id("jacoco")
 }
 
 group = "com.github.clubmanager1999"
@@ -46,5 +47,14 @@ spotless {
     flexmark {
         target("**/*.md")
         flexmark()
+    }
+}
+
+jacoco { toolVersion = "0.8.11" }
+
+tasks.withType<JacocoReport> {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
     }
 }
