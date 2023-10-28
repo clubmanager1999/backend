@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.error
 
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
+import com.github.clubmanager1999.backend.security.withoutRole
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito.reset
@@ -27,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -37,6 +39,8 @@ class ExceptionHandlerTest {
     @Autowired private lateinit var mockMvc: MockMvc
 
     @MockBean private lateinit var testService: TestService
+
+    @MockBean private lateinit var jwtDecoder: JwtDecoder
 
     private final val testCases =
         listOf(
@@ -60,7 +64,7 @@ class ExceptionHandlerTest {
                 `when`(testService.raise()).thenThrow(it.e)
 
                 mockMvc
-                    .perform(MockMvcRequestBuilders.get("/test"))
+                    .perform(MockMvcRequestBuilders.get("/test").withoutRole())
                     .andExpect(MockMvcResultMatchers.status().`is`(it.httpStatus.value()))
                     .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(it.apiError.code.toString()))

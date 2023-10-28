@@ -17,6 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.member
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.security.Roles
+import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
@@ -25,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -43,12 +46,15 @@ internal class MemberControllerTest {
 
     @MockBean private lateinit var memberService: MemberService
 
+    @MockBean
+    private lateinit var jwtDecoder: JwtDecoder
+
     @Test
     fun shouldReturnMember() {
         `when`(memberService.get(42)).thenReturn(MemberTestData.createExistingMember())
 
         mockMvc
-            .perform(get("/api/members/42"))
+            .perform(get("/api/members/42").withRole(Roles.MEMBER_ADMIN))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(ID))
@@ -67,7 +73,7 @@ internal class MemberControllerTest {
         `when`(memberService.getAll()).thenReturn(listOf(MemberTestData.createExistingMember()))
 
         mockMvc
-            .perform(get("/api/members"))
+            .perform(get("/api/members").withRole(Roles.MEMBER_ADMIN))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id").value(ID))
@@ -88,7 +94,7 @@ internal class MemberControllerTest {
 
         mockMvc
             .perform(
-                post("/api/members")
+                post("/api/members").withRole(Roles.MEMBER_ADMIN)
                     .content(objectMapper.writeValueAsString(MemberTestData.createExistingMember()))
                     .contentType(MediaType.APPLICATION_JSON),
             )
@@ -102,7 +108,7 @@ internal class MemberControllerTest {
 
         mockMvc
             .perform(
-                put("/api/members/42")
+                put("/api/members/42").withRole(Roles.MEMBER_ADMIN)
                     .content(objectMapper.writeValueAsString(MemberTestData.createNewMember()))
                     .contentType(MediaType.APPLICATION_JSON),
             )
@@ -112,7 +118,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldDeleteUser() {
         mockMvc
-            .perform(delete("/api/members/42"))
+            .perform(delete("/api/members/42").withRole(Roles.MEMBER_ADMIN))
             .andExpect(status().isNoContent)
 
         verify(memberService).delete(42)
