@@ -9,3 +9,12 @@ services:
     environment:
       POSTGRES_PASSWORD: secret
     network_mode: "host"
+  keycloak:
+    image: keycloak/keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+    volumes:
+      - ./src/test/resources/realm.json:/opt/keycloak/data/import/realm.json
+    network_mode: "host"
+    command: start-dev --import-realm --hostname-url=http://localhost:8081 --http-port=8081

@@ -14,19 +14,27 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend
+package com.github.clubmanager1999.backend.security
 
+import com.github.clubmanager1999.backend.security.SecurityTestData.CLIENT
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.security.oauth2.jwt.JwtDecoder
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @SpringBootTest
-class ClubManager1999ApplicationTests {
-    @MockBean
-    private lateinit var jwtDecoder: JwtDecoder
+@ExtendWith(SpringExtension::class)
+internal class KeycloakJwtConfigTest {
+    @Autowired private lateinit var keycloakJwtConfig: KeycloakJwtConfig
+
+    @MockBean private lateinit var jwtDecoder: JwtDecoder
 
     @Test
-    fun contextLoads() {
+    fun shouldLoadConfig() {
+        assertThat(keycloakJwtConfig.clientName).isEqualTo(CLIENT)
     }
 }

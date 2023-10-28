@@ -3,3 +3,6 @@ spring:
     url: "jdbc:postgresql://localhost:5432/"
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+    client-name: clubmanager1999-frontend

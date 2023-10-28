@@ -14,19 +14,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend
+package com.github.clubmanager1999.backend.security
 
-import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.security.oauth2.jwt.JwtDecoder
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.context.annotation.Configuration
 
-@SpringBootTest
-class ClubManager1999ApplicationTests {
-    @MockBean
-    private lateinit var jwtDecoder: JwtDecoder
-
-    @Test
-    fun contextLoads() {
-    }
+@Configuration
+@ConfigurationProperties(prefix = "jwt")
+class KeycloakJwtConfig {
+    lateinit var clientName: String
 }

@@ -1,0 +1,45 @@
+[
+  {
+    "realm": "clubmanager1999",
+    "enabled": true,
+    "roles": {
+      "client" : {
+        "clubmanager1999-frontend" : [ {
+          "name" : "member-admin"
+        } ]
+      }
+    },
+    "users": [
+      {
+        "username": "tyler.durden",
+        "enabled": true,
+        "emailVerified": true,
+        "firstName": "Tyler",
+        "lastName": "Durden",
+        "email": "tyler.durden@paper-street-soap.co",
+        "credentials": [
+          {
+            "type": "password",
+            "value": "chaos"
+          }
+        ],
+        "clientRoles" : {
+          "clubmanager1999-frontend" : [ "member-admin" ]
+        }
+      }
+    ],
+    "clients": [
+      {
+        "clientId": "clubmanager1999-frontend",
+        "name": "Club 1999 Frontend",
+        "clientAuthenticatorType": "client-secret",
+        "secret": "z4Zx8Z6nDWlNSU8mQpl0GWo9LTnFrMwO",
+        "redirectUris": ["/*"],
+        "webOrigins": ["/*"],
+        "standardFlowEnabled": true,
+        "directAccessGrantsEnabled": true,
+        "protocol": "openid-connect"
+      }
+    ]
+  }
+]

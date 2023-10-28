@@ -14,19 +14,22 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend
+package com.github.clubmanager1999.backend.security
 
-import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.security.oauth2.jwt.JwtDecoder
-
-@SpringBootTest
-class ClubManager1999ApplicationTests {
-    @MockBean
-    private lateinit var jwtDecoder: JwtDecoder
-
-    @Test
-    fun contextLoads() {
+object SecurityTestData {
+    const val CLIENT = "clubmanager1999-frontend"
+    const val SUBJECT = "3743f6ef-9b0b-4f16-7479-f526273621c1"
+    const val JWT =
+        """
+{
+  "sub": "$SUBJECT",
+  "resource_access": {
+    "$CLIENT": {
+      "roles": [
+        "member-admin"
+      ]
     }
+  }
+}
+"""
 }
