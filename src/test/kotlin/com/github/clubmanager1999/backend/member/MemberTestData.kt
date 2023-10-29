@@ -16,6 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
+
 const val ID = 42L
 
 const val USER_NAME = "tyler.durden"
@@ -59,6 +61,7 @@ object MemberTestData {
     fun createMemberEntity(): MemberEntity {
         return MemberEntity(
             ID,
+            SUBJECT,
             USER_NAME,
             FIRST_NAME,
             LAST_NAME,

@@ -16,12 +16,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.oidc.OidcAdminService
+import com.github.clubmanager1999.backend.oidc.OidcUserMapper
 import org.springframework.stereotype.Service
 
 @Service
 class MemberService(
     val memberEntityMapper: MemberEntityMapper,
     val memberRepository: MemberRepository,
+    val oidcUserMapper: OidcUserMapper,
+    val oidcAdminService: OidcAdminService,
 ) {
     fun get(id: Long): ExistingMember {
         return memberRepository
@@ -35,8 +39,11 @@ class MemberService(
     }
 
     fun create(newMember: NewMember): ExistingMember {
+        val oidcUser = oidcUserMapper.toOidcUser(newMember)
+        val subject = oidcAdminService.createUser(oidcUser)
+
         return newMember
-            .let { memberEntityMapper.toMemberEntity(null, it) }
+            .let { memberEntityMapper.toMemberEntity(null, subject.id, it) }
             .let { memberRepository.save(it) }
             .let { memberEntityMapper.toExistingMember(it) }
     }
@@ -49,7 +56,7 @@ class MemberService(
             .findById(id)
             .orElseThrow { MemberNotFoundException(id) }
             .let {
-                memberEntityMapper.toMemberEntity(id, newMember)
+                memberEntityMapper.toMemberEntity(id, it.subject, newMember)
             }
             .let { memberRepository.save(it) }
             .let { memberEntityMapper.toExistingMember(it) }

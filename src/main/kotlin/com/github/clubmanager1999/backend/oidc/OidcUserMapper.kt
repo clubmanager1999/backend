@@ -14,21 +14,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.oidc
 
-import jakarta.persistence.Embedded
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.github.clubmanager1999.backend.member.NewMember
+import org.springframework.stereotype.Service
 
-@Entity
-data class MemberEntity(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long?,
-    val subject: String,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    @Embedded val address: Address,
-)
+@Service
+class OidcUserMapper {
+    fun toOidcUser(newMember: NewMember): OidcUser {
+        return OidcUser(
+            enabled = true,
+            username = newMember.userName,
+            email = newMember.email,
+        )
+    }
+}

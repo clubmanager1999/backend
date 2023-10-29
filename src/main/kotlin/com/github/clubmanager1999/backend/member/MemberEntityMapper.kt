@@ -31,23 +31,14 @@ class MemberEntityMapper {
         )
     }
 
-    fun toMemberEntity(existingMember: ExistingMember): MemberEntity {
-        return MemberEntity(
-            id = existingMember.id,
-            userName = existingMember.userName,
-            firstName = existingMember.firstName,
-            lastName = existingMember.lastName,
-            email = existingMember.email,
-            address = existingMember.address,
-        )
-    }
-
     fun toMemberEntity(
         id: Long?,
+        subject: String,
         newMember: NewMember,
     ): MemberEntity {
         return MemberEntity(
             id = id,
+            subject = subject,
             userName = newMember.userName,
             firstName = newMember.firstName,
             lastName = newMember.lastName,

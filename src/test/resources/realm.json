@@ -26,6 +26,14 @@
         "clientRoles" : {
           "clubmanager1999-frontend" : [ "member-admin" ]
         }
+      },
+      {
+        "username" : "service-account-clubmanager1999-backend",
+        "enabled" : true,
+        "serviceAccountClientId" : "clubmanager1999-backend",
+        "clientRoles" : {
+          "realm-management" : [ "manage-users" ]
+        }
       }
     ],
     "clients": [
@@ -39,6 +47,18 @@
         "standardFlowEnabled": true,
         "directAccessGrantsEnabled": true,
         "protocol": "openid-connect"
+      },
+      {
+        "id" : "37150a66-b2c6-4493-9954-d2f8d55efcdf",
+        "clientId" : "clubmanager1999-backend",
+        "name" : "clubmanager1999 Backend",
+        "clientAuthenticatorType" : "client-secret",
+        "secret" : "ct9rMuQiyTa3F7pgw64NPgi4EWoLtctX",
+        "redirectUris" : [ "/*" ],
+        "webOrigins" : [ "/*" ],
+        "serviceAccountsEnabled" : true,
+        "authorizationServicesEnabled" : true,
+        "protocol" : "openid-connect"
       }
     ]
   }
