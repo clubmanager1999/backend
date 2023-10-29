@@ -14,9 +14,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.oidc
 
-import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
+import com.github.clubmanager1999.backend.member.MemberTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -24,24 +24,13 @@ import org.mockito.InjectMocks
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class MemberEntityMapperTest {
-    @InjectMocks lateinit var memberEntityMapper: MemberEntityMapper
+class OidcUserMapperTest {
+    @InjectMocks lateinit var oidcUserMapper: OidcUserMapper
 
     @Test
-    fun shouldMapMemberEntityToExistingMember() {
-        assertThat(memberEntityMapper.toExistingMember(MemberTestData.createMemberEntity()))
-            .isEqualTo(MemberTestData.createExistingMember())
-    }
+    fun shouldMapNewMember() {
+        val oidcUser = oidcUserMapper.toOidcUser(MemberTestData.createNewMember())
 
-    @Test
-    fun shouldMapNewMemberToMemberEntityWithId() {
-        assertThat(
-            memberEntityMapper.toMemberEntity(
-                ID,
-                SUBJECT,
-                MemberTestData.createNewMember(),
-            ),
-        )
-            .isEqualTo(MemberTestData.createMemberEntity())
+        assertThat(oidcUser).isEqualTo(OidcTestData.createOidcUser())
     }
 }

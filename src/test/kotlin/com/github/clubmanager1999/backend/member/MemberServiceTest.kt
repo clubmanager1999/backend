@@ -16,17 +16,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.oidc.OidcAdminService
+import com.github.clubmanager1999.backend.oidc.OidcTestData
+import com.github.clubmanager1999.backend.oidc.OidcUserMapper
+import com.github.clubmanager1999.backend.oidc.Subject
+import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
 import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
@@ -34,6 +40,10 @@ class MemberServiceTest {
     @Mock lateinit var memberEntityMapper: MemberEntityMapper
 
     @Mock lateinit var memberRepository: MemberRepository
+
+    @Mock lateinit var oidcUserMapper: OidcUserMapper
+
+    @Mock lateinit var oidcAdminService: OidcAdminService
 
     @InjectMocks lateinit var memberService: MemberService
 
@@ -78,6 +88,7 @@ class MemberServiceTest {
         `when`(
             memberEntityMapper.toMemberEntity(
                 null,
+                SUBJECT,
                 newMember,
             ),
         )
@@ -86,6 +97,10 @@ class MemberServiceTest {
         `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
 
         `when`(memberEntityMapper.toExistingMember(savedEntity)).thenReturn(existingMember)
+
+        `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
+
+        `when`(oidcAdminService.createUser(any())).thenReturn(Subject(SUBJECT))
 
         assertThat(memberService.create(newMember)).isEqualTo(existingMember)
     }
@@ -102,6 +117,7 @@ class MemberServiceTest {
         `when`(
             memberEntityMapper.toMemberEntity(
                 42,
+                SUBJECT,
                 newMember,
             ),
         )
@@ -130,5 +146,50 @@ class MemberServiceTest {
         memberService.delete(42)
 
         verify(memberRepository).deleteById(42)
+    }
+
+    @Test
+    fun shouldCreateOidcUser() {
+        val newMember = MemberTestData.createNewMember()
+        val existingMember = MemberTestData.createExistingMember()
+        val savedEntity = MemberTestData.createMemberEntity()
+        val newEntity = savedEntity.copy(id = null)
+
+        `when`(
+            memberEntityMapper.toMemberEntity(
+                null,
+                SUBJECT,
+                newMember,
+            ),
+        )
+            .thenReturn(newEntity)
+
+        `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
+
+        `when`(memberEntityMapper.toExistingMember(savedEntity)).thenReturn(existingMember)
+
+        `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
+
+        `when`(oidcAdminService.createUser(any())).thenReturn(Subject(SUBJECT))
+
+        memberService.create(newMember)
+
+        verify(oidcAdminService).createUser(OidcTestData.createOidcUser())
+    }
+
+    @Test
+    fun shouldNotCreateMemberIfOidcFails() {
+        val newMember = MemberTestData.createNewMember()
+        val exception = RuntimeException()
+
+        `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
+
+        `when`(oidcAdminService.createUser(any())).thenThrow(exception)
+
+        assertThatThrownBy { memberService.create(newMember) }
+            .isInstanceOf(RuntimeException::class.java)
+
+        verify(oidcAdminService).createUser(OidcTestData.createOidcUser())
+        verifyNoInteractions(memberRepository)
     }
 }

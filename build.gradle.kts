@@ -30,12 +30,16 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.postgresql:postgresql:42.6.0")
+    implementation("org.keycloak:keycloak-admin-client:22.0.4")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+
     testImplementation("org.testcontainers:junit-jupiter:1.19.1")
     testImplementation("org.testcontainers:postgresql:1.19.1")
+    testImplementation("com.github.dasniko:testcontainers-keycloak:3.0.0")
 }
 
 tasks.withType<KotlinCompile> {

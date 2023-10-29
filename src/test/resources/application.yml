@@ -6,3 +6,11 @@ spring:
 
 jwt:
     client-name: clubmanager1999-frontend
+
+oidc:
+  admin:
+    keycloak:
+      url: defined-in-test
+      realm: clubmanager1999
+      client-id: clubmanager1999-backend
+      client-secret: ct9rMuQiyTa3F7pgw64NPgi4EWoLtctX

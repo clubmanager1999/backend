@@ -14,21 +14,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.oidc
 
-import jakarta.persistence.Embedded
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.context.annotation.Configuration
 
-@Entity
-data class MemberEntity(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long?,
-    val subject: String,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    @Embedded val address: Address,
-)
+@Configuration
+@ConfigurationProperties(prefix = "oidc.admin.keycloak")
+class KeycloakAdminConfig {
+    lateinit var url: String
+    lateinit var realm: String
+    lateinit var clientId: String
+    lateinit var clientSecret: String
+}
