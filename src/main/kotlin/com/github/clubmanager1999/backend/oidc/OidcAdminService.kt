@@ -28,4 +28,6 @@ interface OidcAdminService {
     )
 
     fun deleteUser(subject: Subject)
+
+    fun resetPassword(subject: Subject)
 }

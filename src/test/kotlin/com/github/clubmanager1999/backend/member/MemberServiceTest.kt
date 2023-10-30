@@ -175,10 +175,11 @@ class MemberServiceTest {
         memberService.create(newMember)
 
         verify(oidcAdminService).createUser(OidcTestData.createOidcUser())
+        verify(oidcAdminService).resetPassword(Subject(SUBJECT))
     }
 
     @Test
-    fun shouldNotCreateMemberIfOidcFails() {
+    fun shouldNotCreateMemberIfOidcCreateFails() {
         val newMember = MemberTestData.createNewMember()
         val exception = RuntimeException()
 
@@ -191,6 +192,38 @@ class MemberServiceTest {
 
         verify(oidcAdminService).createUser(OidcTestData.createOidcUser())
         verifyNoInteractions(memberRepository)
+    }
+
+    @Test
+    fun shouldCreateMemberIfOidcResetFails() {
+        val newMember = MemberTestData.createNewMember()
+        val existingMember = MemberTestData.createExistingMember()
+        val savedEntity = MemberTestData.createMemberEntity()
+        val newEntity = savedEntity.copy(id = null)
+
+        `when`(
+            memberEntityMapper.toMemberEntity(
+                null,
+                SUBJECT,
+                newMember,
+            ),
+        )
+            .thenReturn(newEntity)
+
+        `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
+
+        `when`(memberEntityMapper.toExistingMember(savedEntity)).thenReturn(existingMember)
+
+        `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
+
+        `when`(oidcAdminService.createUser(any())).thenReturn(Subject(SUBJECT))
+
+        `when`(oidcAdminService.resetPassword(any())).thenThrow(RuntimeException())
+
+        memberService.create(newMember)
+
+        verify(oidcAdminService).createUser(OidcTestData.createOidcUser())
+        verify(oidcAdminService).resetPassword(Subject(SUBJECT))
     }
 
     @Test
