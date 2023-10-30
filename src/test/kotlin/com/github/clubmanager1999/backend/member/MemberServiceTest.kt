@@ -67,6 +67,25 @@ class MemberServiceTest {
     }
 
     @Test
+    fun shouldGetMemberBySubject() {
+        val existingMember = MemberTestData.createExistingMember()
+        val savedEntity = MemberTestData.createMemberEntity()
+
+        `when`(memberEntityMapper.toExistingMember(savedEntity)).thenReturn(existingMember)
+
+        `when`(memberRepository.findBySubject(SUBJECT)).thenReturn(Optional.of(savedEntity))
+
+        assertThat(memberService.get(Subject(SUBJECT))).isEqualTo(existingMember)
+    }
+
+    @Test
+    fun shouldThrowExceptionIfMemberIsNotFoundBySubject() {
+        `when`(memberRepository.findBySubject(SUBJECT)).thenReturn(Optional.empty())
+
+        assertThatThrownBy { memberService.get(Subject(SUBJECT)) }.isInstanceOf(SubjectNotFoundException::class.java)
+    }
+
+    @Test
     fun shouldGetAllMembers() {
         val existingMember = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()

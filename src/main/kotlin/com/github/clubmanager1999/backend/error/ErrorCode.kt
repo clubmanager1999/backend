@@ -19,4 +19,5 @@ package com.github.clubmanager1999.backend.error
 enum class ErrorCode {
     INTERNAL_ERROR,
     MEMBER_NOT_FOUND,
+    SUBJECT_NOT_FOUND,
 }

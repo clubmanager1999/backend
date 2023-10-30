@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.error
 
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
+import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -52,6 +53,11 @@ class ExceptionHandlerTest {
             Case(
                 MemberNotFoundException(42),
                 ApiError(ErrorCode.MEMBER_NOT_FOUND, "No member with id 42 found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                SubjectNotFoundException("unknown"),
+                ApiError(ErrorCode.SUBJECT_NOT_FOUND, "No member with subject unknown found"),
                 HttpStatus.NOT_FOUND,
             ),
         )

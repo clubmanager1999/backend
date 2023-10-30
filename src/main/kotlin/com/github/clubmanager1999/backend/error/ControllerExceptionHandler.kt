@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.error
 
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
+import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -36,6 +37,14 @@ class ControllerExceptionHandler {
     fun handle(e: MemberNotFoundException): ResponseEntity<ApiError> {
         return ResponseEntity(
             ApiError(ErrorCode.MEMBER_NOT_FOUND, e.message!!),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(SubjectNotFoundException::class)
+    fun handle(e: SubjectNotFoundException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ErrorCode.SUBJECT_NOT_FOUND, e.message!!),
             HttpStatus.NOT_FOUND,
         )
     }

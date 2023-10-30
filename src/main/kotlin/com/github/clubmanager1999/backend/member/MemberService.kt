@@ -38,6 +38,13 @@ class MemberService(
             .orElseThrow { MemberNotFoundException(id) }
     }
 
+    fun get(subject: Subject): ExistingMember {
+        return memberRepository
+            .findBySubject(subject.id)
+            .map { memberEntityMapper.toExistingMember(it) }
+            .orElseThrow { SubjectNotFoundException(subject.id) }
+    }
+
     fun getAll(): List<ExistingMember> {
         return memberRepository.findAll().map { memberEntityMapper.toExistingMember(it) }
     }

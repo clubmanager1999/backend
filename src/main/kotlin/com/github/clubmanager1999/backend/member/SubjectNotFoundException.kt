@@ -16,9 +16,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
-import org.springframework.data.repository.CrudRepository
-import java.util.Optional
-
-interface MemberRepository : CrudRepository<MemberEntity, Long> {
-    fun findBySubject(subject: String): Optional<MemberEntity>
-}
+class SubjectNotFoundException(subject: String) :
+    Exception("No member with subject $subject found")
