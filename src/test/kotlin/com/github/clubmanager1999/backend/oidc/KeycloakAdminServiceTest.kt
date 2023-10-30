@@ -103,4 +103,36 @@ class KeycloakAdminServiceTest {
         `when`(response.entity).thenThrow(RuntimeException())
         keycloakAdminService.logResponseBody(response)
     }
+
+    @Test
+    fun shouldUpdateUser() {
+        val usersResource = keycloak.keycloakAdminClient.realm("clubmanager1999").users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val oidcUser = OidcTestData.createOidcUser()
+        val subject = keycloakAdminService.createUser(oidcUser)
+
+        val newEmail = "robert.paulson@paper-street-soap.co"
+        val newOidcUser = oidcUser.copy(email = newEmail)
+        keycloakAdminService.updateUser(subject, newOidcUser)
+
+        val user = usersResource.get(subject.id).toRepresentation()
+
+        assertThat(user.id).isEqualTo(subject.id)
+        assertThat(user.isEnabled).isTrue()
+        assertThat(user.email).isEqualTo(newEmail)
+    }
+
+    @Test
+    fun shouldFailOnMissingUser() {
+        val oidcUser = OidcTestData.createOidcUser()
+
+        Assertions.assertThatThrownBy { keycloakAdminService.updateUser(Subject("unknown"), oidcUser) }
+            .isInstanceOf(WebApplicationException::class.java)
+            .extracting { (it as WebApplicationException).response.status }
+            .isEqualTo(404)
+    }
 }

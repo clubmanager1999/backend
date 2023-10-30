@@ -64,6 +64,23 @@ class KeycloakAdminService(keycloakAdminConfig: KeycloakAdminConfig) : OidcAdmin
         return Subject(id)
     }
 
+    override fun updateUser(
+        subject: Subject,
+        oidcUser: OidcUser,
+    ) {
+        val user =
+            UserRepresentation().let {
+                it.isEnabled = oidcUser.enabled
+                it.username = oidcUser.username
+                it.email = oidcUser.email
+                it
+            }
+
+        val userResource = usersResource.get(subject.id)
+
+        userResource.update(user)
+    }
+
     fun logResponseBody(response: Response) {
         try {
             val inputStream = response.entity as InputStream

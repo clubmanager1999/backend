@@ -192,4 +192,52 @@ class MemberServiceTest {
         verify(oidcAdminService).createUser(OidcTestData.createOidcUser())
         verifyNoInteractions(memberRepository)
     }
+
+    @Test
+    fun shouldUpdateOidcUser() {
+        val newMember = MemberTestData.createNewMember()
+        val existingMember = MemberTestData.createExistingMember()
+        val savedEntity = MemberTestData.createMemberEntity()
+        val newEntity = savedEntity.copy(id = null)
+
+        `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
+
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
+
+        `when`(
+            memberEntityMapper.toMemberEntity(
+                ID,
+                SUBJECT,
+                newMember,
+            ),
+        )
+            .thenReturn(newEntity)
+
+        `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
+
+        `when`(memberEntityMapper.toExistingMember(savedEntity)).thenReturn(existingMember)
+
+        memberService.update(ID, newMember)
+
+        verify(oidcAdminService).updateUser(Subject(SUBJECT), OidcTestData.createOidcUser())
+    }
+
+    @Test
+    fun shouldNotUpdateMemberIfOidcFails() {
+        val newMember = MemberTestData.createNewMember()
+        val savedEntity = MemberTestData.createMemberEntity()
+        val exception = RuntimeException()
+
+        `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
+
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
+
+        `when`(oidcAdminService.updateUser(any(), any())).thenThrow(exception)
+
+        assertThatThrownBy { memberService.update(ID, newMember) }
+            .isInstanceOf(RuntimeException::class.java)
+
+        verify(oidcAdminService).updateUser(Subject(SUBJECT), OidcTestData.createOidcUser())
+        verify(memberRepository, never()).save(any())
+    }
 }
