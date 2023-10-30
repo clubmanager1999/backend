@@ -81,6 +81,10 @@ class KeycloakAdminService(keycloakAdminConfig: KeycloakAdminConfig) : OidcAdmin
         userResource.update(user)
     }
 
+    override fun deleteUser(subject: Subject) {
+        usersResource.delete(subject.id)
+    }
+
     fun logResponseBody(response: Response) {
         try {
             val inputStream = response.entity as InputStream

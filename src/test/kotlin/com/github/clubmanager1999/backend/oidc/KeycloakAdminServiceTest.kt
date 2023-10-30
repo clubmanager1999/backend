@@ -135,4 +135,34 @@ class KeycloakAdminServiceTest {
             .extracting { (it as WebApplicationException).response.status }
             .isEqualTo(404)
     }
+
+    @Test
+    fun shouldDeleteUser() {
+        val usersResource = keycloak.keycloakAdminClient.realm("clubmanager1999").users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val oidcUser = OidcTestData.createOidcUser()
+        val subject = keycloakAdminService.createUser(oidcUser)
+
+        keycloakAdminService.deleteUser(subject)
+
+        Assertions.assertThatThrownBy { usersResource.get(subject.id).toRepresentation() }
+            .isInstanceOf(WebApplicationException::class.java)
+            .extracting { (it as WebApplicationException).response.status }
+            .isEqualTo(HttpStatus.NOT_FOUND.value())
+    }
+
+    @Test
+    fun shouldNotFailOnDeletingMissingUser() {
+        val usersResource = keycloak.keycloakAdminClient.realm("clubmanager1999").users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        keycloakAdminService.deleteUser(Subject("unknown"))
+    }
 }

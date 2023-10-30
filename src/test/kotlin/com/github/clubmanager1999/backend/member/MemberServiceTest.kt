@@ -240,4 +240,31 @@ class MemberServiceTest {
         verify(oidcAdminService).updateUser(Subject(SUBJECT), OidcTestData.createOidcUser())
         verify(memberRepository, never()).save(any())
     }
+
+    @Test
+    fun shouldDeleteOidcUser() {
+        val savedEntity = MemberTestData.createMemberEntity()
+
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
+
+        memberService.delete(ID)
+
+        verify(oidcAdminService).deleteUser(Subject(SUBJECT))
+    }
+
+    @Test
+    fun shouldNotDeleteMemberIfOidcFails() {
+        val savedEntity = MemberTestData.createMemberEntity()
+        val exception = RuntimeException()
+
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
+
+        `when`(oidcAdminService.deleteUser(any())).thenThrow(exception)
+
+        assertThatThrownBy { memberService.delete(ID) }
+            .isInstanceOf(RuntimeException::class.java)
+
+        verify(oidcAdminService).deleteUser(Subject(SUBJECT))
+        verify(memberRepository, never()).save(any())
+    }
 }

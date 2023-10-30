@@ -26,4 +26,6 @@ interface OidcAdminService {
         subject: Subject,
         oidcUser: OidcUser,
     )
+
+    fun deleteUser(subject: Subject)
 }

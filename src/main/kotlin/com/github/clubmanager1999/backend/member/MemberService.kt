@@ -70,6 +70,10 @@ class MemberService(
     }
 
     fun delete(id: Long) {
+        memberRepository
+            .findById(id)
+            .ifPresent { oidcAdminService.deleteUser(Subject(it.subject)) }
+
         memberRepository.deleteById(id)
     }
 }
