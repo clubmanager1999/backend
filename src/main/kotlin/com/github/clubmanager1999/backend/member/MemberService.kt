@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.member
 
 import com.github.clubmanager1999.backend.oidc.OidcAdminService
 import com.github.clubmanager1999.backend.oidc.OidcUserMapper
+import com.github.clubmanager1999.backend.oidc.Subject
 import org.springframework.stereotype.Service
 
 @Service
@@ -52,9 +53,15 @@ class MemberService(
         id: Long,
         newMember: NewMember,
     ): ExistingMember {
+        val oidcUser = oidcUserMapper.toOidcUser(newMember)
+
         return memberRepository
             .findById(id)
             .orElseThrow { MemberNotFoundException(id) }
+            .let {
+                oidcAdminService.updateUser(Subject(it.subject), oidcUser)
+                it
+            }
             .let {
                 memberEntityMapper.toMemberEntity(id, it.subject, newMember)
             }

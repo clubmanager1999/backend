@@ -21,4 +21,9 @@ import org.springframework.stereotype.Service
 @Service
 interface OidcAdminService {
     fun createUser(oidcUser: OidcUser): Subject
+
+    fun updateUser(
+        subject: Subject,
+        oidcUser: OidcUser,
+    )
 }
