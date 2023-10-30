@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -80,6 +81,16 @@ internal class MemberRepositoryTest {
         val createdMember = memberRepository.save(MemberTestData.createMemberEntity())
 
         assertThat(memberRepository.findById(createdMember.id!!).get())
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(MemberTestData.createMemberEntity())
+    }
+
+    @Test
+    fun shouldFindMemberBySubject() {
+        memberRepository.save(MemberTestData.createMemberEntity())
+
+        assertThat(memberRepository.findBySubject(SUBJECT).get())
             .usingRecursiveComparison()
             .ignoringFields("id")
             .isEqualTo(MemberTestData.createMemberEntity())

@@ -14,11 +14,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.profile
 
-import org.springframework.data.repository.CrudRepository
-import java.util.Optional
+import com.github.clubmanager1999.backend.member.Address
 
-interface MemberRepository : CrudRepository<MemberEntity, Long> {
-    fun findBySubject(subject: String): Optional<MemberEntity>
-}
+data class Profile(
+    val userName: String,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val address: Address,
+)

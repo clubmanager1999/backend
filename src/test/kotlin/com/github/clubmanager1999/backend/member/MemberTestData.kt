@@ -70,7 +70,7 @@ object MemberTestData {
         )
     }
 
-    private fun createAddress(): Address {
+    fun createAddress(): Address {
         return Address(STREET, STREET_NUMBER, ZIP, CITY)
     }
 }
