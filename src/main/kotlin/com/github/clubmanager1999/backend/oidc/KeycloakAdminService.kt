@@ -26,6 +26,7 @@ import org.keycloak.representations.idm.UserRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.InputStream
+import kotlin.time.Duration.Companion.days
 
 @Service
 class KeycloakAdminService(keycloakAdminConfig: KeycloakAdminConfig) : OidcAdminService {
@@ -83,6 +84,15 @@ class KeycloakAdminService(keycloakAdminConfig: KeycloakAdminConfig) : OidcAdmin
 
     override fun deleteUser(subject: Subject) {
         usersResource.delete(subject.id)
+    }
+
+    override fun resetPassword(subject: Subject) {
+        usersResource
+            .get(subject.id)
+            .executeActionsEmail(
+                listOf("VERIFY_EMAIL", "UPDATE_PASSWORD"),
+                3.days.inWholeSeconds.toInt(),
+            )
     }
 
     fun logResponseBody(response: Response) {

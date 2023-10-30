@@ -19,6 +19,7 @@ package com.github.clubmanager1999.backend.member
 import com.github.clubmanager1999.backend.oidc.OidcAdminService
 import com.github.clubmanager1999.backend.oidc.OidcUserMapper
 import com.github.clubmanager1999.backend.oidc.Subject
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -28,6 +29,8 @@ class MemberService(
     val oidcUserMapper: OidcUserMapper,
     val oidcAdminService: OidcAdminService,
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     fun get(id: Long): ExistingMember {
         return memberRepository
             .findById(id)
@@ -42,6 +45,12 @@ class MemberService(
     fun create(newMember: NewMember): ExistingMember {
         val oidcUser = oidcUserMapper.toOidcUser(newMember)
         val subject = oidcAdminService.createUser(oidcUser)
+
+        try {
+            oidcAdminService.resetPassword(subject)
+        } catch (e: Exception) {
+            logger.error("Failed to reset password", e)
+        }
 
         return newMember
             .let { memberEntityMapper.toMemberEntity(null, subject.id, it) }

@@ -60,6 +60,11 @@
         "authorizationServicesEnabled" : true,
         "protocol" : "openid-connect"
       }
-    ]
+    ],
+    "smtpServer" : {
+      "port" : "1025",
+      "host" : "localhost",
+      "from" : "admin@paper-street-soap.co"
+    }
   }
 ]
