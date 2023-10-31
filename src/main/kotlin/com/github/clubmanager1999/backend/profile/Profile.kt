@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.profile
 
 import com.github.clubmanager1999.backend.member.Address
+import com.github.clubmanager1999.backend.membership.ExistingMembership
 
 data class Profile(
     val userName: String,
@@ -24,4 +25,5 @@ data class Profile(
     val lastName: String,
     val email: String,
     val address: Address,
+    val membership: ExistingMembership,
 )

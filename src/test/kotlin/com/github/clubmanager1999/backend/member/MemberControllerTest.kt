@@ -66,6 +66,9 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$.address.streetNumber").value(STREET_NUMBER))
             .andExpect(jsonPath("$.address.city").value(CITY))
             .andExpect(jsonPath("$.address.zip").value(ZIP))
+            .andExpect(jsonPath("$.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
+            .andExpect(jsonPath("$.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
+            .andExpect(jsonPath("$.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
     }
 
     @Test
@@ -85,6 +88,9 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$[0].address.streetNumber").value(STREET_NUMBER))
             .andExpect(jsonPath("$[0].address.city").value(CITY))
             .andExpect(jsonPath("$[0].address.zip").value(ZIP))
+            .andExpect(jsonPath("$[0].membership.id").value(com.github.clubmanager1999.backend.membership.ID))
+            .andExpect(jsonPath("$[0].membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
+            .andExpect(jsonPath("$[0].membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
     }
 
     @Test

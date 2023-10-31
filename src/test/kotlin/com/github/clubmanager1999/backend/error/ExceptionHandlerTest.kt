@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.error
 
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import com.github.clubmanager1999.backend.member.SubjectNotFoundException
+import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -58,6 +59,11 @@ class ExceptionHandlerTest {
             Case(
                 SubjectNotFoundException("unknown"),
                 ApiError(ErrorCode.SUBJECT_NOT_FOUND, "No member with subject unknown found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                MembershipNotFoundException(42),
+                ApiError(ErrorCode.MEMBERSHIP_NOT_FOUND, "No membership with id 42 found"),
                 HttpStatus.NOT_FOUND,
             ),
         )

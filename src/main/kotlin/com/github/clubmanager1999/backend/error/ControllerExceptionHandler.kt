@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.error
 
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import com.github.clubmanager1999.backend.member.SubjectNotFoundException
+import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -45,6 +46,14 @@ class ControllerExceptionHandler {
     fun handle(e: SubjectNotFoundException): ResponseEntity<ApiError> {
         return ResponseEntity(
             ApiError(ErrorCode.SUBJECT_NOT_FOUND, e.message!!),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(MembershipNotFoundException::class)
+    fun handle(e: MembershipNotFoundException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ErrorCode.MEMBERSHIP_NOT_FOUND, e.message!!),
             HttpStatus.NOT_FOUND,
         )
     }

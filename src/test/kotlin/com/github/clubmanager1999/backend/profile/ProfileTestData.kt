@@ -21,6 +21,7 @@ import com.github.clubmanager1999.backend.member.FIRST_NAME
 import com.github.clubmanager1999.backend.member.LAST_NAME
 import com.github.clubmanager1999.backend.member.MemberTestData.createAddress
 import com.github.clubmanager1999.backend.member.USER_NAME
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 
 object ProfileTestData {
     fun createProfile(): Profile {
@@ -30,6 +31,7 @@ object ProfileTestData {
             lastName = LAST_NAME,
             email = EMAIL,
             address = createAddress(),
+            membership = MembershipTestData.createExistingMembership(),
         )
     }
 

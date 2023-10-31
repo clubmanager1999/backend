@@ -16,10 +16,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.membership.MembershipEntityMapper
 import org.springframework.stereotype.Service
 
 @Service
-class MemberEntityMapper {
+class MemberEntityMapper(val membershipEntityMapper: MembershipEntityMapper) {
     fun toExistingMember(memberEntity: MemberEntity): ExistingMember {
         return ExistingMember(
             id = memberEntity.id!!,
@@ -28,6 +29,7 @@ class MemberEntityMapper {
             lastName = memberEntity.lastName,
             email = memberEntity.email,
             address = memberEntity.address,
+            membership = membershipEntityMapper.toExistingMembership(memberEntity.membership),
         )
     }
 
@@ -44,6 +46,7 @@ class MemberEntityMapper {
             lastName = newMember.lastName,
             email = newMember.email,
             address = newMember.address,
+            membership = membershipEntityMapper.toMembershipEntity(newMember.membership),
         )
     }
 }

@@ -16,25 +16,38 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.membership.MembershipEntityMapper
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 class MemberEntityMapperTest {
+    @Mock lateinit var membershipEntityMapper: MembershipEntityMapper
+
     @InjectMocks lateinit var memberEntityMapper: MemberEntityMapper
 
     @Test
     fun shouldMapMemberEntityToExistingMember() {
+        `when`(
+            membershipEntityMapper.toExistingMembership(MembershipTestData.createMembershipEntity()),
+        ).thenReturn(MembershipTestData.createExistingMembership())
         assertThat(memberEntityMapper.toExistingMember(MemberTestData.createMemberEntity()))
             .isEqualTo(MemberTestData.createExistingMember())
     }
 
     @Test
     fun shouldMapNewMemberToMemberEntityWithId() {
+        `when`(
+            membershipEntityMapper.toMembershipEntity(MembershipTestData.createMembershipId()),
+        ).thenReturn(MembershipTestData.createMembershipEntity())
+
         assertThat(
             memberEntityMapper.toMemberEntity(
                 ID,

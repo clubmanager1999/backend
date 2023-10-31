@@ -20,4 +20,5 @@ enum class ErrorCode {
     INTERNAL_ERROR,
     MEMBER_NOT_FOUND,
     SUBJECT_NOT_FOUND,
+    MEMBERSHIP_NOT_FOUND,
 }
