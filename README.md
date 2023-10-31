@@ -12,7 +12,7 @@
 docker compose up
 ```
 
-## Issue token
+## Issue admin token
 
 ```shell
 export TOKEN=$(curl -X POST --user 'clubmanager1999-frontend:z4Zx8Z6nDWlNSU8mQpl0GWo9LTnFrMwO' http://localhost:8081/realms/clubmanager1999/protocol/openid-connect/token -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=password&username=tyler.durden&password=chaos' | jq -r '.access_token')
@@ -28,5 +28,21 @@ curl http://localhost:8080/api/members -H "Authorization: Bearer $TOKEN" -H 'Con
 
 ```shell
 curl http://localhost:8080/api/members -H "Authorization: Bearer $TOKEN"
+```
+
+## Reset password
+
+Open http://localhost:8025/
+
+## Issue user token
+
+```shell
+export TOKEN=$(curl -X POST --user 'clubmanager1999-frontend:z4Zx8Z6nDWlNSU8mQpl0GWo9LTnFrMwO' http://localhost:8081/realms/clubmanager1999/protocol/openid-connect/token -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=password&username=robert.paulson&password=secret' | jq -r '.access_token')
+```
+
+## Get profile
+
+```shell
+curl http://localhost:8080/api/profile -H "Authorization: Bearer $TOKEN"
 ```
 
