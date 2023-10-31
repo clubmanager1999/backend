@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.profile
 
 import com.github.clubmanager1999.backend.member.MemberService
+import com.github.clubmanager1999.backend.membership.MembershipId
 import com.github.clubmanager1999.backend.oidc.Subject
 import org.springframework.stereotype.Service
 
@@ -37,7 +38,7 @@ class ProfileService(
     ): Profile {
         return memberService
             .get(subject)
-            .let { Pair(it.id, profileMapper.toNewMember(it.userName, profileUpdate)) }
+            .let { Pair(it.id, profileMapper.toNewMember(it.userName, MembershipId(it.membership.id), profileUpdate)) }
             .let { memberService.update(it.first, it.second) }
             .let { profileMapper.toProfile(it) }
     }

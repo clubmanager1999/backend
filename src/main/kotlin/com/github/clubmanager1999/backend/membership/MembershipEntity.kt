@@ -14,16 +14,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.membership
 
-import com.github.clubmanager1999.backend.membership.ExistingMembership
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import java.math.BigDecimal
 
-data class ExistingMember(
-    val id: Long,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val address: Address,
-    val membership: ExistingMembership,
+@Entity
+data class MembershipEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long?,
+    val name: String,
+    val fee: BigDecimal,
 )

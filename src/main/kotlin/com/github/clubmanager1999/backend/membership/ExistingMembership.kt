@@ -14,16 +14,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.membership
 
-import com.github.clubmanager1999.backend.membership.ExistingMembership
+import java.math.BigDecimal
 
-data class ExistingMember(
+data class ExistingMembership(
     val id: Long,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val address: Address,
-    val membership: ExistingMembership,
+    val name: String,
+    val fee: BigDecimal,
 )

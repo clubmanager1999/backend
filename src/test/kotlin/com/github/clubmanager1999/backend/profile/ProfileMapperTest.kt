@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.profile
 
 import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.member.USER_NAME
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -36,6 +37,8 @@ class ProfileMapperTest {
 
     @Test
     fun shouldMapToNewMember() {
-        assertThat(profileMapper.toNewMember(USER_NAME, ProfileTestData.createProfileUpdate())).isEqualTo(MemberTestData.createNewMember())
+        assertThat(
+            profileMapper.toNewMember(USER_NAME, MembershipTestData.createMembershipId(), ProfileTestData.createProfileUpdate()),
+        ).isEqualTo(MemberTestData.createNewMember())
     }
 }

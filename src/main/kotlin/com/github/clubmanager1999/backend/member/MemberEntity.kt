@@ -16,11 +16,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.membership.MembershipEntity
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 
 @Entity
 data class MemberEntity(
@@ -31,4 +33,6 @@ data class MemberEntity(
     val lastName: String,
     val email: String,
     @Embedded val address: Address,
+    @ManyToOne
+    val membership: MembershipEntity,
 )

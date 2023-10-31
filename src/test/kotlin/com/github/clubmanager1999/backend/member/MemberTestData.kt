@@ -16,6 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.membership.MembershipEntity
+import com.github.clubmanager1999.backend.membership.MembershipId
+import com.github.clubmanager1999.backend.membership.MembershipTestData.createExistingMembership
+import com.github.clubmanager1999.backend.membership.MembershipTestData.createMembershipEntity
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 
 const val ID = 42L
@@ -44,6 +48,7 @@ object MemberTestData {
             LAST_NAME,
             EMAIL,
             createAddress(),
+            MembershipId(com.github.clubmanager1999.backend.membership.ID),
         )
     }
 
@@ -55,10 +60,15 @@ object MemberTestData {
             LAST_NAME,
             EMAIL,
             createAddress(),
+            createExistingMembership(),
         )
     }
 
     fun createMemberEntity(): MemberEntity {
+        return createMemberEntity(createMembershipEntity())
+    }
+
+    fun createMemberEntity(membershipEntity: MembershipEntity): MemberEntity {
         return MemberEntity(
             ID,
             SUBJECT,
@@ -67,6 +77,7 @@ object MemberTestData {
             LAST_NAME,
             EMAIL,
             createAddress(),
+            membershipEntity,
         )
     }
 

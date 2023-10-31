@@ -14,12 +14,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.membership
 
-import com.github.clubmanager1999.backend.membership.MembershipEntity
-import com.github.clubmanager1999.backend.membership.MembershipRepository
-import com.github.clubmanager1999.backend.membership.MembershipTestData
-import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,8 +36,8 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @SpringBootTest
 @Testcontainers
 @ExtendWith(SpringExtension::class)
-@ContextConfiguration(initializers = [MemberRepositoryTest.DataSourceInitializer::class])
-internal class MemberRepositoryTest {
+@ContextConfiguration(initializers = [MembershipRepositoryTest.DataSourceInitializer::class])
+internal class MembershipRepositoryTest {
     companion object {
         @Container val postgresqlContainer = PostgreSQLContainer("postgres")
     }
@@ -59,76 +55,53 @@ internal class MemberRepositoryTest {
         }
     }
 
-    @Autowired private lateinit var memberRepository: MemberRepository
-
     @Autowired private lateinit var membershipRepository: MembershipRepository
 
-    @MockBean
-    private lateinit var jwtDecoder: JwtDecoder
-
-    private var membershipEntity: MembershipEntity = MembershipTestData.createMembershipEntity()
+    @MockBean private lateinit var jwtDecoder: JwtDecoder
 
     @BeforeEach
     fun beforeEach() {
-        memberRepository.deleteAll()
         membershipRepository.deleteAll()
-        membershipEntity = membershipRepository.save(MembershipTestData.createMembershipEntity())
     }
 
     @Test
-    fun shouldSaveMember() {
-        memberRepository.save(MemberTestData.createMemberEntity(membershipEntity.copy(name = "should be ignored")))
+    fun shouldSaveMembership() {
+        membershipRepository.save(MembershipTestData.createMembershipEntity())
 
-        assertThat(memberRepository.findAll().first())
+        assertThat(membershipRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .ignoringFields("membership.id")
-            .isEqualTo(MemberTestData.createMemberEntity())
+            .isEqualTo(MembershipTestData.createMembershipEntity())
     }
 
     @Test
-    fun shouldFindMemberById() {
-        val createdMember = memberRepository.save(MemberTestData.createMemberEntity(membershipEntity))
+    fun shouldFindMembershipById() {
+        val createdMembership = membershipRepository.save(MembershipTestData.createMembershipEntity())
 
-        assertThat(memberRepository.findById(createdMember.id!!).get())
+        assertThat(membershipRepository.findById(createdMembership.id!!).get())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .ignoringFields("membership.id")
-            .isEqualTo(MemberTestData.createMemberEntity())
+            .isEqualTo(MembershipTestData.createMembershipEntity())
     }
 
     @Test
-    fun shouldFindMemberBySubject() {
-        memberRepository.save(MemberTestData.createMemberEntity(membershipEntity))
-
-        assertThat(memberRepository.findBySubject(SUBJECT).get())
-            .usingRecursiveComparison()
-            .ignoringFields("id")
-            .ignoringFields("membership.id")
-            .isEqualTo(MemberTestData.createMemberEntity())
-    }
-
-    @Test
-    fun shouldUpdateMember() {
-        val createdMember = memberRepository.save(MemberTestData.createMemberEntity(membershipEntity))
-
-        memberRepository.save(
-            createdMember
-                .copy(id = createdMember.id, firstName = "new"),
+    fun shouldUpdateMembership() {
+        val createdMembership = membershipRepository.save(MembershipTestData.createMembershipEntity())
+        membershipRepository.save(
+            MembershipTestData.createMembershipEntity().copy(id = createdMembership.id, name = "new"),
         )
 
-        assertThat(memberRepository.findAll().first())
+        assertThat(membershipRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .ignoringFields("membership.id")
-            .isEqualTo(MemberTestData.createMemberEntity().copy(firstName = "new"))
+            .isEqualTo(MembershipTestData.createMembershipEntity().copy(name = "new"))
     }
 
     @Test
-    fun shouldDeleteMember() {
-        val createdMember = memberRepository.save(MemberTestData.createMemberEntity(membershipEntity))
-        memberRepository.deleteById(createdMember.id!!)
+    fun shouldDeleteMembership() {
+        val createdMembership = membershipRepository.save(MembershipTestData.createMembershipEntity())
+        membershipRepository.deleteById(createdMembership.id!!)
 
-        assertThat(memberRepository.findAll()).isEmpty()
+        assertThat(membershipRepository.findAll()).isEmpty()
     }
 }

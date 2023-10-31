@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.profile
 
 import com.github.clubmanager1999.backend.member.ExistingMember
 import com.github.clubmanager1999.backend.member.NewMember
+import com.github.clubmanager1999.backend.membership.MembershipId
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,11 +30,13 @@ class ProfileMapper {
             lastName = existingMember.lastName,
             email = existingMember.email,
             address = existingMember.address,
+            membership = existingMember.membership,
         )
     }
 
     fun toNewMember(
         userName: String,
+        membershipId: MembershipId,
         profileUpdate: ProfileUpdate,
     ): NewMember {
         return NewMember(
@@ -42,6 +45,7 @@ class ProfileMapper {
             lastName = profileUpdate.lastName,
             email = profileUpdate.email,
             address = profileUpdate.address,
+            membership = membershipId,
         )
     }
 }

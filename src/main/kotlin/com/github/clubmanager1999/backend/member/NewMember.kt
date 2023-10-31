@@ -16,10 +16,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.membership.MembershipId
+
 data class NewMember(
     val userName: String,
     val firstName: String,
     val lastName: String,
     val email: String,
     val address: Address,
+    val membership: MembershipId,
 )

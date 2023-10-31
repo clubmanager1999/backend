@@ -20,6 +20,7 @@ import com.github.clubmanager1999.backend.member.ID
 import com.github.clubmanager1999.backend.member.MemberService
 import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.member.USER_NAME
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.oidc.Subject
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
@@ -59,7 +60,7 @@ class ProfileServiceTest {
 
         `when`(memberService.get(Subject(SUBJECT))).thenReturn(existingMember)
 
-        `when`(profileMapper.toNewMember(USER_NAME, profileUpdate)).thenReturn(newMember)
+        `when`(profileMapper.toNewMember(USER_NAME, MembershipTestData.createMembershipId(), profileUpdate)).thenReturn(newMember)
 
         `when`(memberService.update(ID, newMember)).thenReturn(existingMember)
 
