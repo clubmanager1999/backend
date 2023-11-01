@@ -34,6 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -104,7 +105,8 @@ internal class MemberControllerTest {
                     .content(objectMapper.writeValueAsString(MemberTestData.createExistingMember()))
                     .contentType(MediaType.APPLICATION_JSON),
             )
-            .andExpect(status().isNoContent)
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/api/members/$ID"))
     }
 
     @Test

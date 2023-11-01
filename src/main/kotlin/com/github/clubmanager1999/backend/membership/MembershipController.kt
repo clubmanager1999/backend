@@ -24,9 +24,13 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.util.UriComponents
+import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 class MembershipController(val membershipService: MembershipService) {
+    val uriComponentsBuilder = UriComponentsBuilder.newInstance()
+
     @GetMapping("/api/memberships/{id}")
     fun getMembership(
         @PathVariable id: Long,
@@ -43,9 +47,11 @@ class MembershipController(val membershipService: MembershipService) {
     fun createMembership(
         @RequestBody newMembership: NewMembership,
     ): ResponseEntity<Void> {
-        membershipService.create(newMembership)
+        val existingMembership = membershipService.create(newMembership)
 
-        return ResponseEntity.noContent().build()
+        val uriComponents: UriComponents = uriComponentsBuilder.path("/api/memberships/{id}").buildAndExpand(existingMembership.id)
+
+        return ResponseEntity.created(uriComponents.toUri()).build()
     }
 
     @PutMapping("/api/memberships/{id}")
