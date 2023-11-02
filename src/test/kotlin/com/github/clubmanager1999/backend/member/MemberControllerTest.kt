@@ -110,6 +110,30 @@ internal class MemberControllerTest {
     }
 
     @Test
+    fun shouldCreateMultipleMembers() {
+        `when`(memberService.create(MemberTestData.createNewMember()))
+            .thenReturn(MemberTestData.createExistingMember())
+
+        mockMvc
+            .perform(
+                post("/api/members").withRole(Roles.MEMBER_ADMIN)
+                    .content(objectMapper.writeValueAsString(MemberTestData.createExistingMember()))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/api/members/$ID"))
+
+        mockMvc
+            .perform(
+                post("/api/members").withRole(Roles.MEMBER_ADMIN)
+                    .content(objectMapper.writeValueAsString(MemberTestData.createExistingMember()))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/api/members/$ID"))
+    }
+
+    @Test
     fun shouldUpdateUser() {
         `when`(memberService.update(42, MemberTestData.createNewMember()))
             .thenReturn(MemberTestData.createExistingMember())

@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 class MembershipController(val membershipService: MembershipService) {
-    val uriComponentsBuilder = UriComponentsBuilder.newInstance()
+    val uriComponentsBuilder = UriComponentsBuilder.newInstance().path("/api/memberships/{id}").build()
 
     @GetMapping("/api/memberships/{id}")
     fun getMembership(
@@ -49,7 +49,7 @@ class MembershipController(val membershipService: MembershipService) {
     ): ResponseEntity<Void> {
         val existingMembership = membershipService.create(newMembership)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.path("/api/memberships/{id}").buildAndExpand(existingMembership.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingMembership.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }
