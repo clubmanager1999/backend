@@ -95,6 +95,36 @@ internal class MembershipControllerTest {
     }
 
     @Test
+    fun shouldCreateMultipleMemberships() {
+        `when`(membershipService.create(MembershipTestData.createNewMembership()))
+            .thenReturn(MembershipTestData.createExistingMembership())
+
+        mockMvc
+            .perform(
+                post("/api/memberships")
+                    .withRole(MEMBER_ADMIN)
+                    .content(
+                        objectMapper.writeValueAsString(MembershipTestData.createExistingMembership()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isCreated)
+            .andExpect(MockMvcResultMatchers.header().string("Location", "/api/memberships/$ID"))
+
+        mockMvc
+            .perform(
+                post("/api/memberships")
+                    .withRole(MEMBER_ADMIN)
+                    .content(
+                        objectMapper.writeValueAsString(MembershipTestData.createExistingMembership()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isCreated)
+            .andExpect(MockMvcResultMatchers.header().string("Location", "/api/memberships/$ID"))
+    }
+
+    @Test
     fun shouldUpdateUser() {
         `when`(membershipService.update(43, MembershipTestData.createNewMembership()))
             .thenReturn(MembershipTestData.createExistingMembership())
