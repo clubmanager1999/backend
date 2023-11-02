@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.membership
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.clubmanager1999.backend.security.Roles.MEMBER_ADMIN
+import com.github.clubmanager1999.backend.security.Permission.MANAGE_MEMBERS
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -54,7 +54,7 @@ internal class MembershipControllerTest {
         `when`(membershipService.get(43)).thenReturn(MembershipTestData.createExistingMembership())
 
         mockMvc
-            .perform(get("/api/memberships/43").withRole(MEMBER_ADMIN))
+            .perform(get("/api/memberships/43").withRole(MANAGE_MEMBERS))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(ID))
@@ -68,7 +68,7 @@ internal class MembershipControllerTest {
             .thenReturn(listOf(MembershipTestData.createExistingMembership()))
 
         mockMvc
-            .perform(get("/api/memberships").withRole(MEMBER_ADMIN))
+            .perform(get("/api/memberships").withRole(MANAGE_MEMBERS))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id").value(ID))
@@ -84,7 +84,7 @@ internal class MembershipControllerTest {
         mockMvc
             .perform(
                 post("/api/memberships")
-                    .withRole(MEMBER_ADMIN)
+                    .withRole(MANAGE_MEMBERS)
                     .content(
                         objectMapper.writeValueAsString(MembershipTestData.createExistingMembership()),
                     )
@@ -102,7 +102,7 @@ internal class MembershipControllerTest {
         mockMvc
             .perform(
                 post("/api/memberships")
-                    .withRole(MEMBER_ADMIN)
+                    .withRole(MANAGE_MEMBERS)
                     .content(
                         objectMapper.writeValueAsString(MembershipTestData.createExistingMembership()),
                     )
@@ -114,7 +114,7 @@ internal class MembershipControllerTest {
         mockMvc
             .perform(
                 post("/api/memberships")
-                    .withRole(MEMBER_ADMIN)
+                    .withRole(MANAGE_MEMBERS)
                     .content(
                         objectMapper.writeValueAsString(MembershipTestData.createExistingMembership()),
                     )
@@ -132,7 +132,7 @@ internal class MembershipControllerTest {
         mockMvc
             .perform(
                 put("/api/memberships/43")
-                    .withRole(MEMBER_ADMIN)
+                    .withRole(MANAGE_MEMBERS)
                     .content(objectMapper.writeValueAsString(MembershipTestData.createNewMembership()))
                     .contentType(MediaType.APPLICATION_JSON),
             )
@@ -142,7 +142,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldDeleteUser() {
         mockMvc
-            .perform(delete("/api/memberships/43").withRole(MEMBER_ADMIN))
+            .perform(delete("/api/memberships/43").withRole(MANAGE_MEMBERS))
             .andExpect(status().isNoContent)
 
         verify(membershipService).delete(43)

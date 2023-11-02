@@ -52,7 +52,7 @@ class KeycloakJwtConverterTest {
         val token = keycloakJwtConverter.convert(jwt)
 
         assertThat(token.name).isEqualTo(SUBJECT)
-        assertThat(token.authorities).isEqualTo(listOf(SimpleGrantedAuthority("ROLE_MEMBER_ADMIN")))
+        assertThat(token.authorities).isEqualTo(listOf(SimpleGrantedAuthority("ROLE_${Permission.MANAGE_MEMBERS}")))
     }
 
     @Test
@@ -66,7 +66,7 @@ class KeycloakJwtConverterTest {
         val token = keycloakJwtConverter.convert(jwt)
 
         assertThat(token.name).isNull()
-        assertThat(token.authorities).isEqualTo(listOf(SimpleGrantedAuthority("ROLE_MEMBER_ADMIN")))
+        assertThat(token.authorities).isEqualTo(listOf(SimpleGrantedAuthority("ROLE_${Permission.MANAGE_MEMBERS}")))
     }
 
     @Test

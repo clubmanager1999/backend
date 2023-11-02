@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimNames
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 
-fun MockHttpServletRequestBuilder.withRole(role: Roles): MockHttpServletRequestBuilder {
+fun MockHttpServletRequestBuilder.withRole(role: Permission): MockHttpServletRequestBuilder {
     return this.with(withSubject().authorities(SimpleGrantedAuthority("ROLE_$role")))
 }
 

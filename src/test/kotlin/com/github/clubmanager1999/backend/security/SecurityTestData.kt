@@ -26,7 +26,7 @@ object SecurityTestData {
   "resource_access": {
     "$CLIENT": {
       "roles": [
-        "member-admin"
+        "manage-members"
       ]
     }
   }
