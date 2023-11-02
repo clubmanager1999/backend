@@ -16,6 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.security
 
-enum class Roles {
-    MEMBER_ADMIN,
+enum class Permission {
+    MANAGE_MEMBERS,
 }
