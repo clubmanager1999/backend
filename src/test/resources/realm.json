@@ -32,12 +32,13 @@
         "enabled" : true,
         "serviceAccountClientId" : "clubmanager1999-backend",
         "clientRoles" : {
-          "realm-management" : [ "manage-users" ]
+          "realm-management" : [ "manage-users", "manage-realm", "manage-clients" ]
         }
       }
     ],
     "clients": [
       {
+        "id": "bac2b65d-46a1-49ab-8cb1-e3967ab78628",
         "clientId": "clubmanager1999-frontend",
         "name": "Club 1999 Frontend",
         "clientAuthenticatorType": "client-secret",

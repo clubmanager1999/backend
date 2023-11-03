@@ -19,6 +19,8 @@ package com.github.clubmanager1999.backend.error
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
+import com.github.clubmanager1999.backend.oidc.ClientNotFoundException
+import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -54,6 +56,22 @@ class ControllerExceptionHandler {
     fun handle(e: MembershipNotFoundException): ResponseEntity<ApiError> {
         return ResponseEntity(
             ApiError(ErrorCode.MEMBERSHIP_NOT_FOUND, e.message!!),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(ClientNotFoundException::class)
+    fun handle(e: ClientNotFoundException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ErrorCode.CLIENT_NOT_FOUND, e.message!!),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(RoleNotFoundException::class)
+    fun handle(e: RoleNotFoundException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ErrorCode.ROLE_NOT_FOUND, e.message!!),
             HttpStatus.NOT_FOUND,
         )
     }

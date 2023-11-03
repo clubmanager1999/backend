@@ -19,6 +19,8 @@ package com.github.clubmanager1999.backend.error
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
+import com.github.clubmanager1999.backend.oidc.ClientNotFoundException
+import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -64,6 +66,16 @@ class ExceptionHandlerTest {
             Case(
                 MembershipNotFoundException(42),
                 ApiError(ErrorCode.MEMBERSHIP_NOT_FOUND, "No membership with id 42 found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                ClientNotFoundException("unknown"),
+                ApiError(ErrorCode.CLIENT_NOT_FOUND, "No client with clientId unknown found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                RoleNotFoundException("unknown"),
+                ApiError(ErrorCode.ROLE_NOT_FOUND, "No role with name unknown found"),
                 HttpStatus.NOT_FOUND,
             ),
         )
