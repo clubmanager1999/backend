@@ -14,16 +14,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.security
+package com.github.clubmanager1999.backend.roles
 
-enum class Permission {
-    MANAGE_MEMBERS,
-    MANAGE_ROLES,
-    ;
+import com.github.clubmanager1999.backend.security.Permission
 
-    fun getRoleName(): String {
-        return this.name
-            .lowercase()
-            .replace("_", "-")
-    }
-}
+data class NewPermission(val permission: Permission)

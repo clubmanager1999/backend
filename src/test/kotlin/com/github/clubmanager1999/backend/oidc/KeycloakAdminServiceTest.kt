@@ -16,6 +16,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.oidc
 
+import com.github.clubmanager1999.backend.oidc.OidcTestData.CLIENT
+import com.github.clubmanager1999.backend.oidc.OidcTestData.CLIENT_ID
+import com.github.clubmanager1999.backend.oidc.OidcTestData.REALM
+import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
+import com.github.clubmanager1999.backend.security.KeycloakJwtConfig
+import com.github.clubmanager1999.backend.security.Permission
 import dasniko.testcontainers.keycloak.KeycloakContainer
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
@@ -23,17 +29,23 @@ import jakarta.ws.rs.WebApplicationException
 import jakarta.ws.rs.core.Response
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.keycloak.admin.client.resource.ClientResource
+import org.keycloak.admin.client.resource.RealmResource
+import org.keycloak.admin.client.resource.RolesResource
 import org.keycloak.representations.idm.RealmRepresentation
+import org.keycloak.representations.idm.RoleRepresentation
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.http.HttpStatus
@@ -47,10 +59,10 @@ import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
+@ContextConfiguration(initializers = [KeycloakAdminServiceTest.DataSourceInitializer::class])
 @SpringBootTest
 @Testcontainers
 @ExtendWith(SpringExtension::class)
-@ContextConfiguration(initializers = [KeycloakAdminServiceTest.DataSourceInitializer::class])
 class KeycloakAdminServiceTest {
     companion object {
         private const val PORT_SMTP = 1025
@@ -88,7 +100,7 @@ class KeycloakAdminServiceTest {
                     "from" to "admin@paper-street-soap.co",
                 )
 
-            val realmResource = keycloak.keycloakAdminClient.realm("clubmanager1999")
+            val realmResource = keycloak.keycloakAdminClient.realm(REALM)
             val realmRepresentation = RealmRepresentation()
             realmRepresentation.smtpServer = smtpServer
 
@@ -98,6 +110,8 @@ class KeycloakAdminServiceTest {
 
     @MockBean private lateinit var jwtDecoder: JwtDecoder
 
+    @SpyBean private lateinit var keycloakJwtConfig: KeycloakJwtConfig
+
     @Autowired lateinit var keycloakAdminService: KeycloakAdminService
 
     @BeforeEach
@@ -105,7 +119,18 @@ class KeycloakAdminServiceTest {
         RestAssured.baseURI = "http://${mailhog.host}"
         RestAssured.port = mailhog.getMappedPort(PORT_HTTP)
         RestAssured.basePath = "/api/v2"
+
+        rolesResource
+            .list(false)
+            .filter { it.attributes?.get(ATTRIBUTE_MANAGED_BY)?.contains(CLIENT_ID) ?: false }
+            .forEach {
+                rolesResource.deleteRole(it.name)
+            }
     }
+
+    private final val realmResource: RealmResource = keycloak.keycloakAdminClient.realm(REALM)
+    private final val rolesResource: RolesResource = realmResource.roles()
+    private final val clientResource: ClientResource = realmResource.clients().get(CLIENT)
 
     @Test
     fun shouldCreateUser() {
@@ -234,5 +259,122 @@ class KeycloakAdminServiceTest {
             .body("items[0].To[0].Domain", equalTo("paper-street-soap.co"))
             .body("items[0].MIME.Parts[0].Body", containsString("Verify Email"))
             .body("items[0].MIME.Parts[0].Body", containsString("Update Password"))
+    }
+
+    @Test
+    fun shouldGetRoleByName() {
+        createRole(ROLE)
+        addPermission(ROLE, Permission.MANAGE_MEMBERS)
+
+        assertThat(keycloakAdminService.getRole(ROLE)).isEqualTo(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS)))
+    }
+
+    @Test
+    fun shouldThrowExceptionOnUnknownRole() {
+        assertThatThrownBy { keycloakAdminService.getRole(ROLE) }
+            .isInstanceOf(RoleNotFoundException::class.java)
+            .extracting { (it as RoleNotFoundException).name }
+            .isEqualTo(ROLE)
+    }
+
+    @Test
+    fun shouldThrowExceptionOnUnknownClient() {
+        createRole(ROLE)
+
+        `when`(keycloakJwtConfig.clientName).thenReturn("unknown")
+
+        assertThatThrownBy { keycloakAdminService.getRole(ROLE) }
+            .isInstanceOf(ClientNotFoundException::class.java)
+            .extracting { (it as ClientNotFoundException).clientId }
+            .isEqualTo("unknown")
+    }
+
+    @Test
+    fun shouldGetRoles() {
+        createRole(ROLE)
+        addPermission(ROLE, Permission.MANAGE_MEMBERS)
+        createRole("hidden", "someone else")
+
+        assertThat(keycloakAdminService.getRoles()).containsExactly(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS)))
+    }
+
+    @Test
+    fun shouldCreateRole() {
+        keycloakAdminService.createRole(ROLE)
+
+        assertThat(rolesResource.get(ROLE).toRepresentation().name).isEqualTo(ROLE)
+    }
+
+    @Test
+    fun shouldAddPermission() {
+        createRole(ROLE)
+
+        keycloakAdminService.addPermission(ROLE, Permission.MANAGE_MEMBERS)
+
+        assertThat(
+            rolesResource.get(ROLE).getClientRoleComposites(CLIENT).map { it.name },
+        ).contains(Permission.MANAGE_MEMBERS.getRoleName())
+    }
+
+    @Test
+    fun shouldRemovePermission() {
+        createRole(ROLE)
+        addPermission(ROLE, Permission.MANAGE_MEMBERS)
+
+        assertThat(
+            rolesResource.get(ROLE).getClientRoleComposites(CLIENT).map { it.name },
+        ).contains(Permission.MANAGE_MEMBERS.getRoleName())
+
+        keycloakAdminService.removePermission(ROLE, Permission.MANAGE_MEMBERS)
+
+        assertThat(
+            rolesResource.get(ROLE).getClientRoleComposites(CLIENT).map { it.name },
+        ).doesNotContain(Permission.MANAGE_MEMBERS.getRoleName())
+    }
+
+    @Test
+    fun shouldDeleteRole() {
+        createRole(ROLE)
+
+        keycloakAdminService.deleteRole(ROLE)
+
+        Assertions.assertThatThrownBy { rolesResource.get(ROLE).toRepresentation() }
+            .isInstanceOf(WebApplicationException::class.java)
+            .extracting { (it as WebApplicationException).response.status }
+            .isEqualTo(404)
+    }
+
+    fun createRole(name: String) {
+        rolesResource.create(createRoleRepresentation(name))
+    }
+
+    fun createRole(
+        name: String,
+        managedBy: String,
+    ) {
+        rolesResource.create(createRoleRepresentation(name, managedBy))
+    }
+
+    fun createRoleRepresentation(name: String): RoleRepresentation {
+        return createRoleRepresentation(name, CLIENT_ID)
+    }
+
+    fun createRoleRepresentation(
+        name: String,
+        managedBy: String,
+    ): RoleRepresentation {
+        return RoleRepresentation().let {
+            it.name = name
+            it.singleAttribute(ATTRIBUTE_MANAGED_BY, managedBy)
+            it
+        }
+    }
+
+    fun addPermission(
+        name: String,
+        permission: Permission,
+    ) {
+        val foundPermissionRole = clientResource.roles().get(permission.getRoleName()).toRepresentation()
+        rolesResource.get(name).addComposites(listOf(foundPermissionRole))
     }
 }

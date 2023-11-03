@@ -49,7 +49,7 @@ class WebSecurityConfigTest {
             Endpoint("Update profile", HttpMethod.PUT, "/api/profile"),
         )
 
-    private final val adminEndpoints =
+    private final val memberEndpoints =
         listOf(
             Endpoint("Get member by id", HttpMethod.GET, "/api/members/42"),
             Endpoint("Get all members", HttpMethod.GET, "/api/members"),
@@ -58,7 +58,19 @@ class WebSecurityConfigTest {
             Endpoint("Delete member", HttpMethod.DELETE, "/api/members/42"),
         )
 
-    val allEndpoints = invalidEndpoints + userEndpoints + adminEndpoints
+    private final val roleEndpoints =
+        listOf(
+            Endpoint("Get role by name", HttpMethod.GET, "/api/roles/foo"),
+            Endpoint("Get all roles", HttpMethod.GET, "/api/roles"),
+            Endpoint("Add role", HttpMethod.POST, "/api/roles"),
+            Endpoint("Add permission", HttpMethod.POST, "/api/roles/foo/permissions"),
+            Endpoint("Delete permission", HttpMethod.DELETE, "/api/roles/foo/permissions/foo"),
+            Endpoint("Delete role", HttpMethod.DELETE, "/api/roles/foo"),
+        )
+
+    private final val adminEndpoints = memberEndpoints + roleEndpoints
+
+    private final val allEndpoints = invalidEndpoints + userEndpoints + adminEndpoints
 
     @TestFactory
     fun shouldReturnUnauthorizedOnMissingToken(): List<DynamicTest> {

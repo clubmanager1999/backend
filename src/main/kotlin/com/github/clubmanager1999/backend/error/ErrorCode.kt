@@ -21,4 +21,6 @@ enum class ErrorCode {
     MEMBER_NOT_FOUND,
     SUBJECT_NOT_FOUND,
     MEMBERSHIP_NOT_FOUND,
+    CLIENT_NOT_FOUND,
+    ROLE_NOT_FOUND,
 }
