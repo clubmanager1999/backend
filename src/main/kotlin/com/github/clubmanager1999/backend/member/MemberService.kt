@@ -34,19 +34,19 @@ class MemberService(
     fun get(id: Long): ExistingMember {
         return memberRepository
             .findById(id)
-            .map { memberEntityMapper.toExistingMember(it) }
+            .map { memberEntityMapper.toExistingMember(getRoles(it), it) }
             .orElseThrow { MemberNotFoundException(id) }
     }
 
     fun get(subject: Subject): ExistingMember {
         return memberRepository
             .findBySubject(subject.id)
-            .map { memberEntityMapper.toExistingMember(it) }
+            .map { memberEntityMapper.toExistingMember(getRoles(it), it) }
             .orElseThrow { SubjectNotFoundException(subject.id) }
     }
 
     fun getAll(): List<ExistingMember> {
-        return memberRepository.findAll().map { memberEntityMapper.toExistingMember(it) }
+        return memberRepository.findAll().map { memberEntityMapper.toExistingMember(getRoles(it), it) }
     }
 
     fun create(newMember: NewMember): ExistingMember {
@@ -62,7 +62,7 @@ class MemberService(
         return newMember
             .let { memberEntityMapper.toMemberEntity(null, subject.id, it) }
             .let { memberRepository.save(it) }
-            .let { memberEntityMapper.toExistingMember(it) }
+            .let { memberEntityMapper.toExistingMember(getRoles(it), it) }
     }
 
     fun update(
@@ -82,7 +82,7 @@ class MemberService(
                 memberEntityMapper.toMemberEntity(id, it.subject, newMember)
             }
             .let { memberRepository.save(it) }
-            .let { memberEntityMapper.toExistingMember(it) }
+            .let { memberEntityMapper.toExistingMember(getRoles(it), it) }
     }
 
     fun delete(id: Long) {
@@ -91,5 +91,29 @@ class MemberService(
             .ifPresent { oidcAdminService.deleteUser(Subject(it.subject)) }
 
         memberRepository.deleteById(id)
+    }
+
+    fun getRoles(memberEntity: MemberEntity): List<String> {
+        return oidcAdminService.getUserRoles(Subject(memberEntity.subject)).map { it.name }
+    }
+
+    fun addRoleToMember(
+        id: Long,
+        role: String,
+    ) {
+        memberRepository
+            .findById(id)
+            .orElseThrow { MemberNotFoundException(id) }
+            .let { oidcAdminService.addRoleToUser(Subject(it.subject), role) }
+    }
+
+    fun removeRoleFromMember(
+        id: Long,
+        role: String,
+    ) {
+        memberRepository
+            .findById(id)
+            .orElseThrow { MemberNotFoundException(id) }
+            .let { oidcAdminService.removeRoleFromUser(Subject(it.subject), role) }
     }
 }

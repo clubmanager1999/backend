@@ -21,7 +21,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class MemberEntityMapper(val membershipEntityMapper: MembershipEntityMapper) {
-    fun toExistingMember(memberEntity: MemberEntity): ExistingMember {
+    fun toExistingMember(
+        roles: List<String>,
+        memberEntity: MemberEntity,
+    ): ExistingMember {
         return ExistingMember(
             id = memberEntity.id!!,
             userName = memberEntity.userName,
@@ -30,6 +33,7 @@ class MemberEntityMapper(val membershipEntityMapper: MembershipEntityMapper) {
             email = memberEntity.email,
             address = memberEntity.address,
             membership = membershipEntityMapper.toExistingMembership(memberEntity.membership),
+            roles = roles,
         )
     }
 

@@ -166,6 +166,39 @@ class KeycloakAdminService(
             .deleteRole(name)
     }
 
+    override fun getUserRoles(subject: Subject): List<OidcRole> {
+        return usersResource.get(subject.id)
+            .roles()
+            .realmLevel()
+            .listEffective(false)
+            .filter { it.attributes?.get(ATTRIBUTE_MANAGED_BY)?.contains(keycloakAdminConfig.clientId) ?: false }
+            .map { OidcRole(it.name, getPermissions(it.name)) }
+    }
+
+    override fun addRoleToUser(
+        subject: Subject,
+        role: String,
+    ) {
+        val roleRepresentation = getRoleRepresentation(role)
+
+        usersResource.get(subject.id)
+            .roles()
+            .realmLevel()
+            .add(listOf(roleRepresentation))
+    }
+
+    override fun removeRoleFromUser(
+        subject: Subject,
+        role: String,
+    ) {
+        val roleRepresentation = getRoleRepresentation(role)
+
+        usersResource.get(subject.id)
+            .roles()
+            .realmLevel()
+            .remove(listOf(roleRepresentation))
+    }
+
     fun getRoleRepresentation(name: String): RoleRepresentation {
         return getRoleRepresentation(rolesResource, name)
     }

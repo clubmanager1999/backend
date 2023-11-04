@@ -344,6 +344,68 @@ class KeycloakAdminServiceTest {
             .isEqualTo(404)
     }
 
+    @Test
+    fun shouldGetUserRoles() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val oidcUser = OidcTestData.createOidcUser()
+        val subject = keycloakAdminService.createUser(oidcUser)
+
+        createRole(ROLE)
+        val role = rolesResource.get(ROLE).toRepresentation()
+        usersResource.get(subject.id).roles().realmLevel().add(listOf(role))
+
+        assertThat(keycloakAdminService.getUserRoles(subject)).containsExactly(OidcRole(ROLE, emptyList()))
+    }
+
+    @Test
+    fun shouldAddRoleToUser() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val oidcUser = OidcTestData.createOidcUser()
+        val subject = keycloakAdminService.createUser(oidcUser)
+
+        createRole(ROLE)
+
+        keycloakAdminService.addRoleToUser(subject, ROLE)
+
+        assertThat(
+            usersResource.get(subject.id).roles().realmLevel().listAll().map {
+                it.name
+            }.filter { !it.contains("default") },
+        ).containsExactly(ROLE)
+    }
+
+    @Test
+    fun shouldRemoveRoleFromUser() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val oidcUser = OidcTestData.createOidcUser()
+        val subject = keycloakAdminService.createUser(oidcUser)
+
+        createRole(ROLE)
+        val role = rolesResource.get(ROLE).toRepresentation()
+        usersResource.get(subject.id).roles().realmLevel().add(listOf(role))
+
+        keycloakAdminService.removeRoleFromUser(subject, ROLE)
+
+        assertThat(
+            usersResource.get(subject.id).roles().realmLevel().listAll().map { it.name }.filter { !it.contains("default") },
+        ).isEmpty()
+    }
+
     fun createRole(name: String) {
         rolesResource.create(createRoleRepresentation(name))
     }

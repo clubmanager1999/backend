@@ -66,6 +66,8 @@ class WebSecurityConfigTest {
             Endpoint("Add permission", HttpMethod.POST, "/api/roles/foo/permissions"),
             Endpoint("Delete permission", HttpMethod.DELETE, "/api/roles/foo/permissions/foo"),
             Endpoint("Delete role", HttpMethod.DELETE, "/api/roles/foo"),
+            Endpoint("Add role to member", HttpMethod.POST, "/api/members/42/roles"),
+            Endpoint("Remove role from member", HttpMethod.DELETE, "/api/members/42/roles/foo"),
         )
 
     private final val adminEndpoints = memberEndpoints + roleEndpoints

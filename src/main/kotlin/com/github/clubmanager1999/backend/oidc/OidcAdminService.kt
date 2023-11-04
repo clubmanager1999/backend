@@ -49,4 +49,16 @@ interface OidcAdminService {
     )
 
     fun deleteRole(name: String)
+
+    fun getUserRoles(subject: Subject): List<OidcRole>
+
+    fun addRoleToUser(
+        subject: Subject,
+        role: String,
+    )
+
+    fun removeRoleFromUser(
+        subject: Subject,
+        role: String,
+    )
 }

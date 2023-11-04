@@ -26,4 +26,5 @@ data class ExistingMember(
     val email: String,
     val address: Address,
     val membership: ExistingMembership,
+    val roles: List<String>,
 )

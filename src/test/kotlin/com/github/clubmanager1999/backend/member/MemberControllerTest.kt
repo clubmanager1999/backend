@@ -17,6 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.member
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
+import com.github.clubmanager1999.backend.roles.NewRole
 import com.github.clubmanager1999.backend.security.Permission
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test
@@ -70,6 +72,7 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
             .andExpect(jsonPath("$.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
             .andExpect(jsonPath("$.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$.roles[0]").value(ROLE))
     }
 
     @Test
@@ -92,6 +95,7 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$[0].membership.id").value(com.github.clubmanager1999.backend.membership.ID))
             .andExpect(jsonPath("$[0].membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
             .andExpect(jsonPath("$[0].membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$[0].roles[0]").value(ROLE))
     }
 
     @Test
@@ -154,5 +158,27 @@ internal class MemberControllerTest {
             .andExpect(status().isNoContent)
 
         verify(memberService).delete(42)
+    }
+
+    @Test
+    fun shouldAddRoleToMember() {
+        mockMvc
+            .perform(
+                post("/api/members/$ID/roles").withRole(Permission.MANAGE_ROLES)
+                    .content(objectMapper.writeValueAsString(NewRole(ROLE)))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isNoContent)
+
+        verify(memberService).addRoleToMember(ID, ROLE)
+    }
+
+    @Test
+    fun shouldRemoveRoleFromMember() {
+        mockMvc
+            .perform(delete("/api/members/$ID/roles/$ROLE").withRole(Permission.MANAGE_ROLES))
+            .andExpect(status().isNoContent)
+
+        verify(memberService).removeRoleFromMember(ID, ROLE)
     }
 }
