@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.security
 
 enum class Permission {
     MANAGE_MEMBERS,
+    MANAGE_MEMBERSHIPS,
     MANAGE_ROLES,
     ;
 
