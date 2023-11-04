@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.member
 
 import com.github.clubmanager1999.backend.membership.MembershipEntityMapper
 import com.github.clubmanager1999.backend.membership.MembershipTestData
+import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -38,7 +39,7 @@ class MemberEntityMapperTest {
         `when`(
             membershipEntityMapper.toExistingMembership(MembershipTestData.createMembershipEntity()),
         ).thenReturn(MembershipTestData.createExistingMembership())
-        assertThat(memberEntityMapper.toExistingMember(MemberTestData.createMemberEntity()))
+        assertThat(memberEntityMapper.toExistingMember(listOf(ROLE), MemberTestData.createMemberEntity()))
             .isEqualTo(MemberTestData.createExistingMember())
     }
 

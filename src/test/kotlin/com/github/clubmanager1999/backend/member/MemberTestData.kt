@@ -20,6 +20,7 @@ import com.github.clubmanager1999.backend.membership.MembershipEntity
 import com.github.clubmanager1999.backend.membership.MembershipId
 import com.github.clubmanager1999.backend.membership.MembershipTestData.createExistingMembership
 import com.github.clubmanager1999.backend.membership.MembershipTestData.createMembershipEntity
+import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 
 const val ID = 42L
@@ -61,6 +62,7 @@ object MemberTestData {
             EMAIL,
             createAddress(),
             createExistingMembership(),
+            listOf(ROLE),
         )
     }
 
