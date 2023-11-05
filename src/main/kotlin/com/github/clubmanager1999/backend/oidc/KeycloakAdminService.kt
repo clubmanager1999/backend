@@ -65,8 +65,6 @@ class KeycloakAdminService(
 
     private final val clientsResource: ClientsResource = realmResource.clients()
 
-    private final val permissionMap = Permission.entries.associateBy { it.getRoleName() }
-
     override fun createUser(oidcUser: OidcUser): Subject {
         val user =
             UserRepresentation().let {
@@ -233,7 +231,7 @@ class KeycloakAdminService(
 
     fun getPermissions(name: String): List<Permission> {
         return getClientRoles(rolesResource, name)
-            .mapNotNull { permissionMap[it.name] }
+            .mapNotNull { Permission.byRoleName[it.name] }
     }
 
     fun getClientRoles(

@@ -27,4 +27,8 @@ enum class Permission {
             .lowercase()
             .replace("_", "-")
     }
+
+    companion object {
+        val byRoleName = Permission.entries.associateBy { it.getRoleName() }
+    }
 }

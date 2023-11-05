@@ -34,8 +34,7 @@ class KeycloakJwtConverter(private val config: KeycloakJwtConfig) :
             resourceAccess
                 ?.get(config.clientName)
                 ?.get("roles")
-                ?.map { it.uppercase() }
-                ?.map { it.replace("-", "_") }
+                ?.mapNotNull { Permission.byRoleName[it] }
                 ?.map { SimpleGrantedAuthority("ROLE_$it") }
 
         return JwtAuthenticationToken(source, roles, name)
