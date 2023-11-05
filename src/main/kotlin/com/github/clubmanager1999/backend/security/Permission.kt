@@ -20,6 +20,7 @@ enum class Permission {
     MANAGE_MEMBERS,
     MANAGE_MEMBERSHIPS,
     MANAGE_ROLES,
+    MANAGE_TRANSACTIONS,
     ;
 
     fun getRoleName(): String {

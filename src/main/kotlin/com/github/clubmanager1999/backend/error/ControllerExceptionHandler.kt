@@ -21,6 +21,7 @@ import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
 import com.github.clubmanager1999.backend.oidc.ClientNotFoundException
 import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
+import com.github.clubmanager1999.backend.transaction.TransactionNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -72,6 +73,14 @@ class ControllerExceptionHandler {
     fun handle(e: RoleNotFoundException): ResponseEntity<ApiError> {
         return ResponseEntity(
             ApiError(ErrorCode.ROLE_NOT_FOUND, e.message!!),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(TransactionNotFoundException::class)
+    fun handle(e: TransactionNotFoundException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ErrorCode.TRANSACTION_NOT_FOUND, e.message!!),
             HttpStatus.NOT_FOUND,
         )
     }

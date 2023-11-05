@@ -37,6 +37,8 @@ class WebSecurityConfig(private val keycloakJwtConverter: KeycloakJwtConverter) 
 
             it.requestMatchers("/api/roles/**").hasRole(Permission.MANAGE_ROLES.toString())
 
+            it.requestMatchers("/api/transactions/**").hasRole(Permission.MANAGE_TRANSACTIONS.toString())
+
             it.anyRequest().authenticated()
         }
 

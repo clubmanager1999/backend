@@ -79,7 +79,16 @@ class WebSecurityConfigTest {
             Endpoint("Remove role from member", HttpMethod.DELETE, "/api/members/42/roles/foo"),
         )
 
-    private final val adminEndpoints = memberEndpoints + membershipEndpoints + roleEndpoints
+    private final val transactionEndpoints =
+        listOf(
+            Endpoint("Get transaction by id", HttpMethod.GET, "/api/transactions/44"),
+            Endpoint("Get all transactions", HttpMethod.GET, "/api/transactions"),
+            Endpoint("Add transaction", HttpMethod.POST, "/api/transactions"),
+            Endpoint("Update transaction", HttpMethod.PUT, "/api/transactions/44"),
+            Endpoint("Delete transaction", HttpMethod.DELETE, "/api/transactions/44"),
+        )
+
+    private final val adminEndpoints = memberEndpoints + membershipEndpoints + roleEndpoints + transactionEndpoints
 
     private final val allEndpoints = invalidEndpoints + userEndpoints + adminEndpoints
 
