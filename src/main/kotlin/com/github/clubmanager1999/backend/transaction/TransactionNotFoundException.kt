@@ -14,14 +14,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.error
+package com.github.clubmanager1999.backend.transaction
 
-enum class ErrorCode {
-    INTERNAL_ERROR,
-    MEMBER_NOT_FOUND,
-    SUBJECT_NOT_FOUND,
-    MEMBERSHIP_NOT_FOUND,
-    CLIENT_NOT_FOUND,
-    ROLE_NOT_FOUND,
-    TRANSACTION_NOT_FOUND,
-}
+class TransactionNotFoundException(id: Long) : Exception("No transaction with id $id found")

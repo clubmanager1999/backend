@@ -22,6 +22,7 @@ import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
 import com.github.clubmanager1999.backend.oidc.ClientNotFoundException
 import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
+import com.github.clubmanager1999.backend.transaction.TransactionNotFoundException
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito.reset
@@ -76,6 +77,11 @@ class ExceptionHandlerTest {
             Case(
                 RoleNotFoundException("unknown"),
                 ApiError(ErrorCode.ROLE_NOT_FOUND, "No role with name unknown found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                TransactionNotFoundException(42),
+                ApiError(ErrorCode.TRANSACTION_NOT_FOUND, "No transaction with id 42 found"),
                 HttpStatus.NOT_FOUND,
             ),
         )
