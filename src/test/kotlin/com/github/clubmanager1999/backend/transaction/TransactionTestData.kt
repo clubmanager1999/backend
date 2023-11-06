@@ -63,4 +63,14 @@ object TransactionTestData {
             amount = AMOUNT,
         )
     }
+
+    fun createTransactionImport(): TransactionImport {
+        return TransactionImport(
+            bookingDay = BOOKING_DAY,
+            valueDay = VALUE_DAY,
+            name = NAME,
+            purpose = PURPOSE,
+            amount = AMOUNT,
+        )
+    }
 }

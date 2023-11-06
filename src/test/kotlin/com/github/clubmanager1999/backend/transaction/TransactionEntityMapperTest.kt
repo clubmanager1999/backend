@@ -54,4 +54,12 @@ class TransactionEntityMapperTest {
         )
             .isEqualTo(TransactionTestData.createTransactionEntity())
     }
+
+    @Test
+    fun shouldMapTransactionImportToTransactionEntityWithId() {
+        assertThat(
+            transactionEntityMapper.toTransactionEntity(TransactionTestData.createTransactionImport()),
+        )
+            .isEqualTo(TransactionTestData.createTransactionEntity().copy(id = null))
+    }
 }

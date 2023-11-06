@@ -120,4 +120,26 @@ class TransactionServiceTest {
 
         verify(transactionRepository).deleteById(42)
     }
+
+    @Test
+    fun shouldImportTransactions() {
+        `when`(transactionRepository.findAll()).thenReturn(emptyList())
+
+        `when`(
+            transactionEntityMapper.toTransactionEntity(TransactionTestData.createTransactionImport()),
+        ).thenReturn(TransactionTestData.createTransactionEntity())
+
+        transactionService.import(listOf(TransactionTestData.createTransactionImport()))
+
+        verify(transactionRepository).save(TransactionTestData.createTransactionEntity())
+    }
+
+    @Test
+    fun shouldNotImportExistingTransactions() {
+        `when`(transactionRepository.findAll()).thenReturn(listOf(TransactionTestData.createTransactionEntity()))
+
+        transactionService.import(listOf(TransactionTestData.createTransactionImport()))
+
+        verify(transactionRepository, never()).save(any())
+    }
 }

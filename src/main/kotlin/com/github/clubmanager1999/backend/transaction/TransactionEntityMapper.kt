@@ -55,4 +55,15 @@ class TransactionEntityMapper {
             amount = newTransaction.amount,
         )
     }
+
+    fun toTransactionEntity(transactionImport: TransactionImport): TransactionEntity {
+        return TransactionEntity(
+            id = null,
+            bookingDay = transactionImport.bookingDay,
+            valueDay = transactionImport.valueDay,
+            name = transactionImport.name,
+            purpose = transactionImport.purpose,
+            amount = transactionImport.amount,
+        )
+    }
 }
