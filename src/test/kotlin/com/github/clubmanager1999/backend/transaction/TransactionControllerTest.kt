@@ -159,4 +159,20 @@ internal class TransactionControllerTest {
 
         verify(transactionService).delete(ID)
     }
+
+    @Test
+    fun shouldImportTransactions() {
+        mockMvc
+            .perform(
+                post("/api/transactions/imports")
+                    .withRole(MANAGE_TRANSACTIONS)
+                    .content(
+                        objectMapper.writeValueAsString(listOf(TransactionTestData.createTransactionImport())),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isNoContent)
+
+        verify(transactionService).import(listOf(TransactionTestData.createTransactionImport()))
+    }
 }

@@ -56,4 +56,13 @@ class TransactionService(
     fun delete(id: Long) {
         transactionRepository.deleteById(id)
     }
+
+    fun import(transactionImports: List<TransactionImport>) {
+        val existingTransactions = transactionRepository.findAll().map { it.transactionKey() }.toSet()
+
+        transactionImports
+            .filterNot { existingTransactions.contains(it.transactionKey()) }
+            .map { transactionEntityMapper.toTransactionEntity(it) }
+            .forEach { transactionRepository.save(it) }
+    }
 }

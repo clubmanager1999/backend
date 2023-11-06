@@ -72,4 +72,13 @@ class TransactionController(val transactionService: TransactionService) {
 
         return ResponseEntity.noContent().build()
     }
+
+    @PostMapping("/api/transactions/imports")
+    fun import(
+        @RequestBody transactionImports: List<TransactionImport>,
+    ): ResponseEntity<Void> {
+        transactionService.import(transactionImports)
+
+        return ResponseEntity.noContent().build()
+    }
 }
