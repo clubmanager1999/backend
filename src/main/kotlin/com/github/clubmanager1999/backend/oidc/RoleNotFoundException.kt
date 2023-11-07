@@ -16,4 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.oidc
 
-class RoleNotFoundException(val name: String) : Exception("No role with name $name found")
+import com.github.clubmanager1999.backend.error.ErrorCode
+import com.github.clubmanager1999.backend.error.NotFoundException
+
+class RoleNotFoundException(val name: String) : NotFoundException(ErrorCode.ROLE_NOT_FOUND, "role", "name", name)

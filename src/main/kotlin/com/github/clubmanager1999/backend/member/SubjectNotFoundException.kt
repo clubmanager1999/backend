@@ -16,5 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
-class SubjectNotFoundException(subject: String) :
-    Exception("No member with subject $subject found")
+import com.github.clubmanager1999.backend.error.ErrorCode
+import com.github.clubmanager1999.backend.error.NotFoundException
+
+class SubjectNotFoundException(subject: String) : NotFoundException(ErrorCode.SUBJECT_NOT_FOUND, "member", "subject", subject)
