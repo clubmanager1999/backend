@@ -14,23 +14,30 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.security
+package com.github.clubmanager1999.backend.donor
 
-enum class Permission {
-    MANAGE_MEMBERS,
-    MANAGE_MEMBERSHIPS,
-    MANAGE_ROLES,
-    MANAGE_TRANSACTIONS,
-    MANAGE_DONORS,
-    ;
+import org.springframework.stereotype.Service
 
-    fun getRoleName(): String {
-        return this.name
-            .lowercase()
-            .replace("_", "-")
+@Service
+class DonorEntityMapper {
+    fun toExistingDonor(donorEntity: DonorEntity): ExistingDonor {
+        return ExistingDonor(
+            id = donorEntity.id!!,
+            firstName = donorEntity.firstName,
+            lastName = donorEntity.lastName,
+            address = donorEntity.address,
+        )
     }
 
-    companion object {
-        val byRoleName = Permission.entries.associateBy { it.getRoleName() }
+    fun toDonorEntity(
+        id: Long?,
+        newDonor: NewDonor,
+    ): DonorEntity {
+        return DonorEntity(
+            id = id,
+            firstName = newDonor.firstName,
+            lastName = newDonor.lastName,
+            address = newDonor.address,
+        )
     }
 }

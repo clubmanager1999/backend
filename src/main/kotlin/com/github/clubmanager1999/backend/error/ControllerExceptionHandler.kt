@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
+import com.github.clubmanager1999.backend.donor.DonorNotFoundException
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
@@ -81,6 +82,14 @@ class ControllerExceptionHandler {
     fun handle(e: TransactionNotFoundException): ResponseEntity<ApiError> {
         return ResponseEntity(
             ApiError(ErrorCode.TRANSACTION_NOT_FOUND, e.message!!),
+            HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(DonorNotFoundException::class)
+    fun handle(e: DonorNotFoundException): ResponseEntity<ApiError> {
+        return ResponseEntity(
+            ApiError(ErrorCode.DONOR_NOT_FOUND, e.message!!),
             HttpStatus.NOT_FOUND,
         )
     }
