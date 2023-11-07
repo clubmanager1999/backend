@@ -16,4 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.membership
 
-class MembershipNotFoundException(id: Long) : Exception("No membership with id $id found")
+import com.github.clubmanager1999.backend.error.ErrorCode
+import com.github.clubmanager1999.backend.error.NotFoundException
+
+class MembershipNotFoundException(id: Long) : NotFoundException(ErrorCode.MEMBERSHIP_NOT_FOUND, "membership", "id", id)

@@ -16,4 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
-class TransactionNotFoundException(id: Long) : Exception("No transaction with id $id found")
+import com.github.clubmanager1999.backend.error.ErrorCode
+import com.github.clubmanager1999.backend.error.NotFoundException
+
+class TransactionNotFoundException(id: Long) : NotFoundException(ErrorCode.TRANSACTION_NOT_FOUND, "transaction", "id", id)

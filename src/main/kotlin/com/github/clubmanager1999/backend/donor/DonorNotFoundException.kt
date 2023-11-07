@@ -16,4 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.donor
 
-class DonorNotFoundException(id: Long) : Exception("No donor with id $id found")
+import com.github.clubmanager1999.backend.error.ErrorCode
+import com.github.clubmanager1999.backend.error.NotFoundException
+
+class DonorNotFoundException(id: Long) : NotFoundException(ErrorCode.DONOR_NOT_FOUND, "donor", "id", id)

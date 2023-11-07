@@ -14,9 +14,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.oidc
+package com.github.clubmanager1999.backend.error
 
-import com.github.clubmanager1999.backend.error.ErrorCode
-import com.github.clubmanager1999.backend.error.NotFoundException
-
-class ClientNotFoundException(val clientId: String) : NotFoundException(ErrorCode.CLIENT_NOT_FOUND, "client", "clientId", clientId)
+open class BusinessException(val errorCode: ErrorCode, val errorMessage: String) : Exception(errorMessage)
