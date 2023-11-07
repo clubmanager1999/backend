@@ -24,4 +24,5 @@ enum class ErrorCode {
     CLIENT_NOT_FOUND,
     ROLE_NOT_FOUND,
     TRANSACTION_NOT_FOUND,
+    DONOR_NOT_FOUND,
 }

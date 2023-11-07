@@ -22,9 +22,9 @@ import java.time.LocalDate
 object TransactionTestData {
     const val ID = 44L
 
-    val BOOKING_DAY = LocalDate.now()
+    val BOOKING_DAY = LocalDate.of(2023, 11, 6)
 
-    val VALUE_DAY = LocalDate.now().plusDays(1)
+    val VALUE_DAY = BOOKING_DAY.plusDays(1)
 
     const val NAME = "Robert Paulson"
 
