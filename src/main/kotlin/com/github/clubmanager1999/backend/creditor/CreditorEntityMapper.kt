@@ -14,16 +14,26 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.error
+package com.github.clubmanager1999.backend.creditor
 
-enum class ErrorCode {
-    INTERNAL_ERROR,
-    MEMBER_NOT_FOUND,
-    SUBJECT_NOT_FOUND,
-    MEMBERSHIP_NOT_FOUND,
-    CLIENT_NOT_FOUND,
-    ROLE_NOT_FOUND,
-    TRANSACTION_NOT_FOUND,
-    DONOR_NOT_FOUND,
-    CREDITOR_NOT_FOUND,
+import org.springframework.stereotype.Service
+
+@Service
+class CreditorEntityMapper {
+    fun toExistingCreditor(creditorEntity: CreditorEntity): ExistingCreditor {
+        return ExistingCreditor(
+            id = creditorEntity.id!!,
+            name = creditorEntity.name,
+        )
+    }
+
+    fun toCreditorEntity(
+        id: Long?,
+        newCreditor: NewCreditor,
+    ): CreditorEntity {
+        return CreditorEntity(
+            id = id,
+            name = newCreditor.name,
+        )
+    }
 }
