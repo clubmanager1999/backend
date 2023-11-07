@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
+import com.github.clubmanager1999.backend.creditor.CreditorNotFoundException
 import com.github.clubmanager1999.backend.donor.DonorNotFoundException
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import com.github.clubmanager1999.backend.member.SubjectNotFoundException
@@ -88,6 +89,11 @@ class ExceptionHandlerTest {
             Case(
                 DonorNotFoundException(42),
                 ApiError(ErrorCode.DONOR_NOT_FOUND, "No donor with id 42 found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                CreditorNotFoundException(42),
+                ApiError(ErrorCode.CREDITOR_NOT_FOUND, "No creditor with id 42 found"),
                 HttpStatus.NOT_FOUND,
             ),
         )
