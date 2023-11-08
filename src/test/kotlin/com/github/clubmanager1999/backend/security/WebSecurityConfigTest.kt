@@ -106,9 +106,18 @@ class WebSecurityConfigTest {
             Endpoint("Delete creditor", HttpMethod.DELETE, "/api/creditors/45"),
         )
 
+    private final val receiptEndpoints =
+        listOf(
+            Endpoint("Get receipt by id", HttpMethod.GET, "/api/receipts/45"),
+            Endpoint("Get all receipts", HttpMethod.GET, "/api/receipts"),
+            Endpoint("Add receipt", HttpMethod.POST, "/api/receipts"),
+            Endpoint("Update receipt", HttpMethod.PUT, "/api/receipts/45"),
+            Endpoint("Delete receipt", HttpMethod.DELETE, "/api/receipts/45"),
+        )
+
     private final val adminEndpoints =
         memberEndpoints + membershipEndpoints + roleEndpoints + transactionEndpoints + donorEndpoints +
-            creditorEndpoints
+            creditorEndpoints + receiptEndpoints
 
     private final val allEndpoints = invalidEndpoints + userEndpoints + adminEndpoints
 

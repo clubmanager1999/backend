@@ -23,6 +23,7 @@ import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
 import com.github.clubmanager1999.backend.oidc.ClientNotFoundException
 import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
+import com.github.clubmanager1999.backend.receipt.ReceiptNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
 import com.github.clubmanager1999.backend.transaction.TransactionNotFoundException
 import org.junit.jupiter.api.DynamicTest
@@ -94,6 +95,11 @@ class ExceptionHandlerTest {
             Case(
                 CreditorNotFoundException(42),
                 ApiError(ErrorCode.CREDITOR_NOT_FOUND, "No creditor with id 42 found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                ReceiptNotFoundException(42),
+                ApiError(ErrorCode.RECEIPT_NOT_FOUND, "No receipt with id 42 found"),
                 HttpStatus.NOT_FOUND,
             ),
         )
