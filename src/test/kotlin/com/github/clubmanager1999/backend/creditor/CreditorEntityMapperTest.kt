@@ -44,4 +44,12 @@ class CreditorEntityMapperTest {
         )
             .isEqualTo(CreditorTestData.createCreditorEntity())
     }
+
+    @Test
+    fun shouldMapCreditorIdToCreditorEntityWithId() {
+        assertThat(
+            creditorEntityMapper.toCreditorEntity(CreditorId(ID)),
+        )
+            .isEqualTo(CreditorTestData.createCreditorEntity().copy(name = ""))
+    }
 }

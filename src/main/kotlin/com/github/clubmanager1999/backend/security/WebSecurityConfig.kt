@@ -43,6 +43,8 @@ class WebSecurityConfig(private val keycloakJwtConverter: KeycloakJwtConverter) 
 
             it.requestMatchers("/api/creditors/**").hasRole(Permission.MANAGE_CREDITORS.toString())
 
+            it.requestMatchers("/api/receipts/**").hasRole(Permission.MANAGE_RECEIPTS.toString())
+
             it.anyRequest().authenticated()
         }
 

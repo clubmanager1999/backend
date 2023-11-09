@@ -23,6 +23,7 @@ enum class Permission {
     MANAGE_TRANSACTIONS,
     MANAGE_DONORS,
     MANAGE_CREDITORS,
+    MANAGE_RECEIPTS,
     ;
 
     fun getRoleName(): String {

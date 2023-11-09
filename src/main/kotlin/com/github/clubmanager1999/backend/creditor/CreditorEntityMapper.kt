@@ -36,4 +36,11 @@ class CreditorEntityMapper {
             name = newCreditor.name,
         )
     }
+
+    fun toCreditorEntity(creditorId: CreditorId): CreditorEntity {
+        return CreditorEntity(
+            id = creditorId.id,
+            name = "",
+        )
+    }
 }
