@@ -62,4 +62,8 @@ object ReceiptTestData {
             creditor = creditorEntity,
         )
     }
+
+    fun createReceiptId(): ReceiptId {
+        return ReceiptId(ID)
+    }
 }

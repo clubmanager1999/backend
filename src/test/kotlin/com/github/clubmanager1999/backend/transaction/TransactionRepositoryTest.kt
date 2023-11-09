@@ -16,6 +16,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
+import com.github.clubmanager1999.backend.creditor.CreditorRepository
+import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.donor.DonorRepository
+import com.github.clubmanager1999.backend.donor.DonorTestData
+import com.github.clubmanager1999.backend.member.MemberRepository
+import com.github.clubmanager1999.backend.member.MemberTestData
+import com.github.clubmanager1999.backend.membership.MembershipRepository
+import com.github.clubmanager1999.backend.membership.MembershipTestData
+import com.github.clubmanager1999.backend.receipt.ReceiptRepository
+import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -59,47 +69,107 @@ internal class TransactionRepositoryTest {
 
     @MockBean private lateinit var jwtDecoder: JwtDecoder
 
+    @Autowired private lateinit var memberRepository: MemberRepository
+
+    @Autowired private lateinit var membershipRepository: MembershipRepository
+
+    @Autowired private lateinit var donorRepository: DonorRepository
+
+    @Autowired private lateinit var creditorRepository: CreditorRepository
+
+    @Autowired private lateinit var receiptRepository: ReceiptRepository
+
+    private var memberEntity = MemberTestData.createMemberEntity()
+    private var membershipEntity = MembershipTestData.createMembershipEntity()
+    private var donorEntity = DonorTestData.createDonorEntity()
+    private var creditorEntity = CreditorTestData.createCreditorEntity()
+    private var receiptEntity = ReceiptTestData.createReceiptEntity()
+
     @BeforeEach
     fun beforeEach() {
         transactionRepository.deleteAll()
+        memberRepository.deleteAll()
+        membershipRepository.deleteAll()
+        memberRepository.deleteAll()
+        donorRepository.deleteAll()
+        receiptRepository.deleteAll()
+        creditorRepository.deleteAll()
+        membershipEntity = membershipRepository.save(MembershipTestData.createMembershipEntity())
+        memberEntity = memberRepository.save(MemberTestData.createMemberEntity(membershipEntity))
+        donorEntity = donorRepository.save(DonorTestData.createDonorEntity())
+        creditorEntity = creditorRepository.save(CreditorTestData.createCreditorEntity())
+        receiptEntity = receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
     }
 
     @Test
     fun shouldSaveTransaction() {
-        transactionRepository.save(TransactionTestData.createTransactionEntity())
+        transactionRepository.save(TransactionTestData.createTransactionEntity(memberEntity, donorEntity, creditorEntity, receiptEntity))
 
         assertThat(transactionRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
+            .ignoringFields("member.id")
+            .ignoringFields("member.membership.id")
+            .ignoringFields("donor.id")
+            .ignoringFields("creditor.id")
+            .ignoringFields("receipt.id")
+            .ignoringFields("receipt.creditor.id")
             .isEqualTo(TransactionTestData.createTransactionEntity())
     }
 
     @Test
     fun shouldFindTransactionById() {
-        val createdTransaction = transactionRepository.save(TransactionTestData.createTransactionEntity())
+        val createdTransaction =
+            transactionRepository.save(
+                TransactionTestData.createTransactionEntity(memberEntity, donorEntity, creditorEntity, receiptEntity),
+            )
 
         assertThat(transactionRepository.findById(createdTransaction.id!!).get())
             .usingRecursiveComparison()
             .ignoringFields("id")
+            .ignoringFields("member.id")
+            .ignoringFields("member.membership.id")
+            .ignoringFields("donor.id")
+            .ignoringFields("creditor.id")
+            .ignoringFields("receipt.id")
+            .ignoringFields("receipt.creditor.id")
             .isEqualTo(TransactionTestData.createTransactionEntity())
     }
 
     @Test
     fun shouldUpdateTransaction() {
-        val createdTransaction = transactionRepository.save(TransactionTestData.createTransactionEntity())
+        val createdTransaction =
+            transactionRepository.save(
+                TransactionTestData.createTransactionEntity(memberEntity, donorEntity, creditorEntity, receiptEntity),
+            )
+
         transactionRepository.save(
-            TransactionTestData.createTransactionEntity().copy(id = createdTransaction.id, name = "new"),
+            TransactionTestData.createTransactionEntity(
+                memberEntity,
+                donorEntity,
+                creditorEntity,
+                receiptEntity,
+            ).copy(id = createdTransaction.id, name = "new"),
         )
 
         assertThat(transactionRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
+            .ignoringFields("member.id")
+            .ignoringFields("member.membership.id")
+            .ignoringFields("donor.id")
+            .ignoringFields("creditor.id")
+            .ignoringFields("receipt.id")
+            .ignoringFields("receipt.creditor.id")
             .isEqualTo(TransactionTestData.createTransactionEntity().copy(name = "new"))
     }
 
     @Test
     fun shouldDeleteTransaction() {
-        val createdTransaction = transactionRepository.save(TransactionTestData.createTransactionEntity())
+        val createdTransaction =
+            transactionRepository.save(
+                TransactionTestData.createTransactionEntity(memberEntity, donorEntity, creditorEntity, receiptEntity),
+            )
         transactionRepository.deleteById(createdTransaction.id!!)
 
         assertThat(transactionRepository.findAll()).isEmpty()

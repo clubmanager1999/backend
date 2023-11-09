@@ -58,4 +58,12 @@ class MemberEntityMapperTest {
         )
             .isEqualTo(MemberTestData.createMemberEntity())
     }
+
+    @Test
+    fun shouldMapMemberIdToMemberEntity() {
+        assertThat(
+            memberEntityMapper.toMemberEntity(MemberId(ID)).id,
+        )
+            .isEqualTo(ID)
+    }
 }

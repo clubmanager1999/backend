@@ -86,4 +86,8 @@ object MemberTestData {
     fun createAddress(): Address {
         return Address(STREET, STREET_NUMBER, ZIP, CITY)
     }
+
+    fun createMemberId(): MemberId {
+        return MemberId(ID)
+    }
 }

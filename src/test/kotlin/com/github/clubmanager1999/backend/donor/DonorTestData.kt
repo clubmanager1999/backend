@@ -50,4 +50,8 @@ object DonorTestData {
             address = createAddress(),
         )
     }
+
+    fun createDonorId(): DonorId {
+        return DonorId(ID)
+    }
 }

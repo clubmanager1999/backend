@@ -40,4 +40,8 @@ object CreditorTestData {
             name = NAME,
         )
     }
+
+    fun createCreditorId(): CreditorId {
+        return CreditorId(ID)
+    }
 }

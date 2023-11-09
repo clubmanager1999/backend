@@ -126,7 +126,11 @@ class TransactionServiceTest {
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
 
         `when`(
-            transactionEntityMapper.toTransactionEntity(TransactionTestData.createTransactionImport()),
+            transactionEntityMapper.toNewTransaction(TransactionTestData.createTransactionImport(), null, null, null, null),
+        ).thenReturn(TransactionTestData.createNewTransaction())
+
+        `when`(
+            transactionEntityMapper.toTransactionEntity(null, TransactionTestData.createNewTransaction()),
         ).thenReturn(TransactionTestData.createTransactionEntity())
 
         transactionService.import(listOf(TransactionTestData.createTransactionImport()))

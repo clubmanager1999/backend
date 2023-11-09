@@ -57,4 +57,12 @@ class ReceiptEntityMapperTest {
         )
             .isEqualTo(ReceiptTestData.createReceiptEntity())
     }
+
+    @Test
+    fun shouldMapReceiptIdToReceiptEntity() {
+        assertThat(
+            receiptEntityMapper.toReceiptEntity(ReceiptId(ID)).id,
+        )
+            .isEqualTo(ID)
+    }
 }

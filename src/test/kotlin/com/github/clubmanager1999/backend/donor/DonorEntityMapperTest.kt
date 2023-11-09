@@ -43,4 +43,12 @@ class DonorEntityMapperTest {
         )
             .isEqualTo(DonorTestData.createDonorEntity())
     }
+
+    @Test
+    fun shouldMapDonorIdToDonorEntity() {
+        assertThat(
+            donorEntityMapper.toDonorEntity(DonorId(ID)).id,
+        )
+            .isEqualTo(ID)
+    }
 }
