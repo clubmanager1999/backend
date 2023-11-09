@@ -16,8 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.membership.MembershipEntity
 import com.github.clubmanager1999.backend.membership.MembershipEntityMapper
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class MemberEntityMapper(val membershipEntityMapper: MembershipEntityMapper) {
@@ -51,6 +53,19 @@ class MemberEntityMapper(val membershipEntityMapper: MembershipEntityMapper) {
             email = newMember.email,
             address = newMember.address,
             membership = membershipEntityMapper.toMembershipEntity(newMember.membership),
+        )
+    }
+
+    fun toMemberEntity(memberId: MemberId): MemberEntity {
+        return MemberEntity(
+            id = memberId.id,
+            subject = "",
+            userName = "",
+            firstName = "",
+            lastName = "",
+            email = "",
+            address = Address("", "", "", ""),
+            membership = MembershipEntity(-1, "", BigDecimal.ZERO),
         )
     }
 }

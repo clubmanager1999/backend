@@ -16,6 +16,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
+import com.github.clubmanager1999.backend.creditor.CreditorEntity
+import com.github.clubmanager1999.backend.creditor.CreditorId
+import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.donor.DonorEntity
+import com.github.clubmanager1999.backend.donor.DonorId
+import com.github.clubmanager1999.backend.donor.DonorTestData
+import com.github.clubmanager1999.backend.member.MemberEntity
+import com.github.clubmanager1999.backend.member.MemberId
+import com.github.clubmanager1999.backend.member.MemberTestData
+import com.github.clubmanager1999.backend.receipt.ReceiptEntity
+import com.github.clubmanager1999.backend.receipt.ReceiptId
+import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -39,6 +51,10 @@ object TransactionTestData {
             name = NAME,
             purpose = PURPOSE,
             amount = AMOUNT,
+            member = MemberId(com.github.clubmanager1999.backend.member.ID),
+            donor = DonorId(com.github.clubmanager1999.backend.donor.ID),
+            creditor = CreditorId(CreditorTestData.ID),
+            receipt = ReceiptId(ReceiptTestData.ID),
         )
     }
 
@@ -50,10 +66,28 @@ object TransactionTestData {
             name = NAME,
             purpose = PURPOSE,
             amount = AMOUNT,
+            member = MemberTestData.createExistingMember(),
+            donor = DonorTestData.createExistingDonor(),
+            creditor = CreditorTestData.createExistingCreditor(),
+            receipt = ReceiptTestData.createExistingReceipt(),
         )
     }
 
     fun createTransactionEntity(): TransactionEntity {
+        return createTransactionEntity(
+            MemberTestData.createMemberEntity(),
+            DonorTestData.createDonorEntity(),
+            CreditorTestData.createCreditorEntity(),
+            ReceiptTestData.createReceiptEntity(),
+        )
+    }
+
+    fun createTransactionEntity(
+        memberEntity: MemberEntity,
+        donorEntity: DonorEntity,
+        creditorEntity: CreditorEntity,
+        receiptEntity: ReceiptEntity,
+    ): TransactionEntity {
         return TransactionEntity(
             id = ID,
             bookingDay = BOOKING_DAY,
@@ -61,6 +95,10 @@ object TransactionTestData {
             name = NAME,
             purpose = PURPOSE,
             amount = AMOUNT,
+            member = memberEntity,
+            donor = donorEntity,
+            creditor = creditorEntity,
+            receipt = receiptEntity,
         )
     }
 

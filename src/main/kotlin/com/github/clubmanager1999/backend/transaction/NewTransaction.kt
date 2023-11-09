@@ -16,6 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
+import com.github.clubmanager1999.backend.creditor.CreditorId
+import com.github.clubmanager1999.backend.donor.DonorId
+import com.github.clubmanager1999.backend.member.MemberId
+import com.github.clubmanager1999.backend.receipt.ReceiptId
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -25,4 +29,8 @@ data class NewTransaction(
     val name: String,
     val purpose: String,
     val amount: BigDecimal,
+    val member: MemberId?,
+    val donor: DonorId?,
+    val creditor: CreditorId?,
+    val receipt: ReceiptId?,
 )

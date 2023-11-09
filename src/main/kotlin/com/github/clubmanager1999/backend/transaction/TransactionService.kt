@@ -62,7 +62,8 @@ class TransactionService(
 
         transactionImports
             .filterNot { existingTransactions.contains(it.transactionKey()) }
-            .map { transactionEntityMapper.toTransactionEntity(it) }
+            .map { transactionEntityMapper.toNewTransaction(it, null, null, null, null) }
+            .map { transactionEntityMapper.toTransactionEntity(null, it) }
             .forEach { transactionRepository.save(it) }
     }
 }

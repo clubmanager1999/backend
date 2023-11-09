@@ -16,10 +16,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
+import com.github.clubmanager1999.backend.creditor.CreditorEntity
+import com.github.clubmanager1999.backend.donor.DonorEntity
+import com.github.clubmanager1999.backend.member.MemberEntity
+import com.github.clubmanager1999.backend.receipt.ReceiptEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -31,4 +36,12 @@ data class TransactionEntity(
     val name: String,
     val purpose: String,
     val amount: BigDecimal,
+    @ManyToOne
+    val member: MemberEntity?,
+    @ManyToOne
+    val donor: DonorEntity?,
+    @ManyToOne
+    val creditor: CreditorEntity?,
+    @ManyToOne
+    val receipt: ReceiptEntity?,
 )

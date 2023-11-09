@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.donor
 
+import com.github.clubmanager1999.backend.member.Address
 import org.springframework.stereotype.Service
 
 @Service
@@ -38,6 +39,15 @@ class DonorEntityMapper {
             firstName = newDonor.firstName,
             lastName = newDonor.lastName,
             address = newDonor.address,
+        )
+    }
+
+    fun toDonorEntity(donorId: DonorId): DonorEntity {
+        return DonorEntity(
+            id = donorId.id,
+            firstName = "",
+            lastName = "",
+            address = Address("", "", "", ""),
         )
     }
 }

@@ -16,8 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.receipt
 
+import com.github.clubmanager1999.backend.creditor.CreditorEntity
 import com.github.clubmanager1999.backend.creditor.CreditorEntityMapper
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class ReceiptEntityMapper(val creditorEntityMapper: CreditorEntityMapper) {
@@ -41,6 +43,16 @@ class ReceiptEntityMapper(val creditorEntityMapper: CreditorEntityMapper) {
             validFrom = newReceipt.validFrom,
             validTo = newReceipt.validTo,
             creditor = creditorEntityMapper.toCreditorEntity(newReceipt.creditor),
+        )
+    }
+
+    fun toReceiptEntity(receiptId: ReceiptId): ReceiptEntity {
+        return ReceiptEntity(
+            id = receiptId.id,
+            name = "",
+            validFrom = LocalDate.MIN,
+            validTo = LocalDate.MIN,
+            creditor = CreditorEntity(null, ""),
         )
     }
 }
