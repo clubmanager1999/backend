@@ -16,21 +16,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
-import com.github.clubmanager1999.backend.creditor.CreditorEntityMapper
-import com.github.clubmanager1999.backend.creditor.CreditorId
-import com.github.clubmanager1999.backend.donor.DonorEntityMapper
-import com.github.clubmanager1999.backend.donor.DonorId
-import com.github.clubmanager1999.backend.member.MemberEntityMapper
-import com.github.clubmanager1999.backend.member.MemberId
 import com.github.clubmanager1999.backend.receipt.ReceiptEntityMapper
 import com.github.clubmanager1999.backend.receipt.ReceiptId
+import com.github.clubmanager1999.backend.transaction.reference.NewReference
+import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntityMapper
 import org.springframework.stereotype.Service
 
 @Service
 class TransactionEntityMapper(
-    val memberEntityMapper: MemberEntityMapper,
-    val donorEntityMapper: DonorEntityMapper,
-    val creditorEntityMapper: CreditorEntityMapper,
+    val referenceEntityMapper: ReferenceEntityMapper,
     val receiptEntityMapper: ReceiptEntityMapper,
 ) {
     fun toExistingTransaction(transactionEntity: TransactionEntity): ExistingTransaction {
@@ -41,9 +35,7 @@ class TransactionEntityMapper(
             name = transactionEntity.name,
             purpose = transactionEntity.purpose,
             amount = transactionEntity.amount,
-            member = transactionEntity.member?.let { memberEntityMapper.toExistingMember(emptyList(), it) },
-            donor = transactionEntity.donor?.let { donorEntityMapper.toExistingDonor(it) },
-            creditor = transactionEntity.creditor?.let { creditorEntityMapper.toExistingCreditor(it) },
+            reference = transactionEntity.reference?.let { referenceEntityMapper.toExistingReference(it) },
             receipt = transactionEntity.receipt?.let { receiptEntityMapper.toExistingReceipt(it) },
         )
     }
@@ -59,18 +51,14 @@ class TransactionEntityMapper(
             name = newTransaction.name,
             purpose = newTransaction.purpose,
             amount = newTransaction.amount,
-            member = newTransaction.member?.let { memberEntityMapper.toMemberEntity(it) },
-            donor = newTransaction.donor?.let { donorEntityMapper.toDonorEntity(it) },
-            creditor = newTransaction.creditor?.let { creditorEntityMapper.toCreditorEntity(it) },
+            reference = newTransaction.reference?.let { referenceEntityMapper.toReferenceEntity(it) },
             receipt = newTransaction.receipt?.let { receiptEntityMapper.toReceiptEntity(it) },
         )
     }
 
     fun toNewTransaction(
         transactionImport: TransactionImport,
-        memberId: MemberId?,
-        donorId: DonorId?,
-        creditorId: CreditorId?,
+        newReference: NewReference?,
         receiptId: ReceiptId?,
     ): NewTransaction {
         return NewTransaction(
@@ -79,9 +67,7 @@ class TransactionEntityMapper(
             name = transactionImport.name,
             purpose = transactionImport.purpose,
             amount = transactionImport.amount,
-            member = memberId,
-            donor = donorId,
-            creditor = creditorId,
+            reference = newReference,
             receipt = receiptId,
         )
     }

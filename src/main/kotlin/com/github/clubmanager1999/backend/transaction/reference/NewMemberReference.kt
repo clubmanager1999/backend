@@ -14,20 +14,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.transaction
+package com.github.clubmanager1999.backend.transaction.reference
 
-import com.github.clubmanager1999.backend.receipt.ExistingReceipt
-import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
-import java.math.BigDecimal
-import java.time.LocalDate
+import com.github.clubmanager1999.backend.member.MemberId
 
-data class ExistingTransaction(
-    val id: Long,
-    val bookingDay: LocalDate,
-    val valueDay: LocalDate,
-    val name: String,
-    val purpose: String,
-    val amount: BigDecimal,
-    val reference: ExistingReference?,
-    val receipt: ExistingReceipt?,
-)
+data class NewMemberReference(val member: MemberId) : NewReference

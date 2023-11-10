@@ -17,5 +17,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend
 
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FUNCTION)
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 annotation class ExcludeFromJacocoGeneratedReport

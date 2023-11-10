@@ -14,20 +14,21 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.transaction
+package com.github.clubmanager1999.backend.transaction.reference
 
-import com.github.clubmanager1999.backend.receipt.ExistingReceipt
-import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
-import java.math.BigDecimal
-import java.time.LocalDate
+import com.github.clubmanager1999.backend.ExcludeFromJacocoGeneratedReport
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Inheritance
+import jakarta.persistence.InheritanceType
 
-data class ExistingTransaction(
-    val id: Long,
-    val bookingDay: LocalDate,
-    val valueDay: LocalDate,
-    val name: String,
-    val purpose: String,
-    val amount: BigDecimal,
-    val reference: ExistingReference?,
-    val receipt: ExistingReceipt?,
-)
+@Entity
+@ExcludeFromJacocoGeneratedReport
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+abstract class ReferenceEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    open val id: Long? = null
+}

@@ -16,15 +16,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
-import com.github.clubmanager1999.backend.creditor.CreditorEntityMapper
-import com.github.clubmanager1999.backend.creditor.CreditorTestData
-import com.github.clubmanager1999.backend.donor.DonorEntityMapper
-import com.github.clubmanager1999.backend.donor.DonorTestData
-import com.github.clubmanager1999.backend.member.MemberEntityMapper
-import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.receipt.ReceiptEntityMapper
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.ID
+import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntityMapper
+import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -35,11 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 class TransactionEntityMapperTest {
-    @Mock lateinit var memberEntityMapper: MemberEntityMapper
-
-    @Mock lateinit var donorEntityMapper: DonorEntityMapper
-
-    @Mock lateinit var creditorEntityMapper: CreditorEntityMapper
+    @Mock lateinit var referenceEntityMapper: ReferenceEntityMapper
 
     @Mock lateinit var receiptEntityMapper: ReceiptEntityMapper
 
@@ -48,16 +40,8 @@ class TransactionEntityMapperTest {
     @Test
     fun shouldMapTransactionEntityToExistingTransaction() {
         `when`(
-            memberEntityMapper.toExistingMember(emptyList(), MemberTestData.createMemberEntity()),
-        ).thenReturn(MemberTestData.createExistingMember())
-
-        `when`(
-            donorEntityMapper.toExistingDonor(DonorTestData.createDonorEntity()),
-        ).thenReturn(DonorTestData.createExistingDonor())
-
-        `when`(
-            creditorEntityMapper.toExistingCreditor(CreditorTestData.createCreditorEntity()),
-        ).thenReturn(CreditorTestData.createExistingCreditor())
+            referenceEntityMapper.toExistingReference(ReferenceTestData.createReferenceEntity()),
+        ).thenReturn(ReferenceTestData.createExistingReference())
 
         `when`(
             receiptEntityMapper.toExistingReceipt(ReceiptTestData.createReceiptEntity()),
@@ -75,27 +59,19 @@ class TransactionEntityMapperTest {
     fun shouldMapTransactionEntityToExistingTransactionWithoutOtherEntities() {
         assertThat(
             transactionEntityMapper.toExistingTransaction(
-                TransactionTestData.createTransactionEntity().copy(member = null, donor = null, creditor = null, receipt = null),
+                TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null),
             ),
         )
             .isEqualTo(
-                TransactionTestData.createExistingTransaction().copy(member = null, donor = null, creditor = null, receipt = null),
+                TransactionTestData.createExistingTransaction().copy(reference = null, receipt = null),
             )
     }
 
     @Test
     fun shouldMapNewTransactionToTransactionEntityWithId() {
         `when`(
-            memberEntityMapper.toMemberEntity(MemberTestData.createMemberId()),
-        ).thenReturn(MemberTestData.createMemberEntity())
-
-        `when`(
-            donorEntityMapper.toDonorEntity(DonorTestData.createDonorId()),
-        ).thenReturn(DonorTestData.createDonorEntity())
-
-        `when`(
-            creditorEntityMapper.toCreditorEntity(CreditorTestData.createCreditorId()),
-        ).thenReturn(CreditorTestData.createCreditorEntity())
+            referenceEntityMapper.toReferenceEntity(ReferenceTestData.createNewReference()),
+        ).thenReturn(ReferenceTestData.createReferenceEntity())
 
         `when`(
             receiptEntityMapper.toReceiptEntity(ReceiptTestData.createReceiptId()),
@@ -112,10 +88,10 @@ class TransactionEntityMapperTest {
         assertThat(
             transactionEntityMapper.toTransactionEntity(
                 ID,
-                TransactionTestData.createNewTransaction().copy(member = null, donor = null, creditor = null, receipt = null),
+                TransactionTestData.createNewTransaction().copy(reference = null, receipt = null),
             ),
         )
-            .isEqualTo(TransactionTestData.createTransactionEntity().copy(member = null, donor = null, creditor = null, receipt = null))
+            .isEqualTo(TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null))
     }
 
     @Test
@@ -123,9 +99,7 @@ class TransactionEntityMapperTest {
         assertThat(
             transactionEntityMapper.toNewTransaction(
                 TransactionTestData.createTransactionImport(),
-                MemberTestData.createMemberId(),
-                DonorTestData.createDonorId(),
-                CreditorTestData.createCreditorId(),
+                ReferenceTestData.createNewReference(),
                 ReceiptTestData.createReceiptId(),
             ),
         )
