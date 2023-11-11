@@ -28,7 +28,7 @@ object ReceiptTestData {
 
     val VALID_FROM = LocalDate.of(2023, 11, 6)
 
-    val VALID_TO = VALID_FROM.plusDays(1)
+    val VALID_TO = VALID_FROM.plusDays(2)
 
     fun createNewReceipt(): NewReceipt {
         return NewReceipt(

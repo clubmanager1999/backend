@@ -16,6 +16,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.receipt
 
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import java.time.LocalDate
 
-interface ReceiptRepository : CrudRepository<ReceiptEntity, Long>
+interface ReceiptRepository : CrudRepository<ReceiptEntity, Long> {
+    @Query("select r from ReceiptEntity r where r.creditor.id = :creditorId and r.validFrom <= :date and :date <= r.validTo")
+    fun findAllByCreditorAndDate(
+        creditorId: Long,
+        date: LocalDate,
+    ): List<ReceiptEntity>
+}

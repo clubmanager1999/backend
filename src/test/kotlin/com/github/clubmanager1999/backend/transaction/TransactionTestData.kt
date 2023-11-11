@@ -20,6 +20,7 @@ import com.github.clubmanager1999.backend.receipt.ReceiptEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptId
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
+import com.github.clubmanager1999.backend.transaction.reference.NewReference
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 import java.math.BigDecimal
@@ -39,14 +40,21 @@ object TransactionTestData {
     val AMOUNT = BigDecimal("42.42")
 
     fun createNewTransaction(): NewTransaction {
+        return createNewTransaction(ReferenceTestData.createNewReference(), ReceiptId(ReceiptTestData.ID))
+    }
+
+    fun createNewTransaction(
+        reference: NewReference?,
+        receipt: ReceiptId?,
+    ): NewTransaction {
         return NewTransaction(
             bookingDay = BOOKING_DAY,
             valueDay = VALUE_DAY,
             name = NAME,
             purpose = PURPOSE,
             amount = AMOUNT,
-            reference = ReferenceTestData.createNewReference(),
-            receipt = ReceiptId(ReceiptTestData.ID),
+            reference = reference,
+            receipt = receipt,
         )
     }
 
@@ -72,8 +80,8 @@ object TransactionTestData {
     }
 
     fun createTransactionEntity(
-        reference: ReferenceEntity,
-        receiptEntity: ReceiptEntity,
+        reference: ReferenceEntity?,
+        receiptEntity: ReceiptEntity?,
     ): TransactionEntity {
         return TransactionEntity(
             id = ID,

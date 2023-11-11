@@ -107,4 +107,16 @@ class ReferenceEntityMapperTest {
         assertThat(referenceEntityMapper.toReferenceEntity(NewMemberReference(member = MemberTestData.createMemberId())))
             .isEqualTo(MemberReferenceEntity(id = null, member = MemberTestData.createMemberEntity()))
     }
+
+    @Test
+    fun shouldMapExistingCreditorReferenceToNewReference() {
+        assertThat(referenceEntityMapper.toNewReference(ExistingCreditorReference(creditor = CreditorTestData.createExistingCreditor())))
+            .isEqualTo(NewCreditorReference(creditor = CreditorTestData.createCreditorId()))
+
+        assertThat(referenceEntityMapper.toNewReference(ExistingDonorReference(donor = DonorTestData.createExistingDonor())))
+            .isEqualTo(NewDonorReference(donor = DonorTestData.createDonorId()))
+
+        assertThat(referenceEntityMapper.toNewReference(ExistingMemberReference(member = MemberTestData.createExistingMember())))
+            .isEqualTo(NewMemberReference(member = MemberTestData.createMemberId()))
+    }
 }
