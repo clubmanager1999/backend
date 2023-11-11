@@ -27,4 +27,5 @@ enum class ErrorCode {
     DONOR_NOT_FOUND,
     CREDITOR_NOT_FOUND,
     RECEIPT_NOT_FOUND,
+    MAPPING_NOT_FOUND,
 }
