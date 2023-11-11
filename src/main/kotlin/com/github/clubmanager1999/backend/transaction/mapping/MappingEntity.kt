@@ -14,26 +14,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.security
+package com.github.clubmanager1999.backend.transaction.mapping
 
-enum class Permission {
-    MANAGE_MEMBERS,
-    MANAGE_MEMBERSHIPS,
-    MANAGE_ROLES,
-    MANAGE_TRANSACTIONS,
-    MANAGE_DONORS,
-    MANAGE_CREDITORS,
-    MANAGE_RECEIPTS,
-    MANAGE_MAPPINGS,
-    ;
+import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToOne
 
-    fun getRoleName(): String {
-        return this.name
-            .lowercase()
-            .replace("_", "-")
-    }
-
-    companion object {
-        val byRoleName = Permission.entries.associateBy { it.getRoleName() }
-    }
-}
+@Entity
+data class MappingEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long?,
+    val matcher: String,
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    val reference: ReferenceEntity,
+)

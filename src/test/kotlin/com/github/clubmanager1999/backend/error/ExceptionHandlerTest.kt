@@ -26,6 +26,7 @@ import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
 import com.github.clubmanager1999.backend.receipt.ReceiptNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
 import com.github.clubmanager1999.backend.transaction.TransactionNotFoundException
+import com.github.clubmanager1999.backend.transaction.mapping.MappingNotFoundException
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito.reset
@@ -100,6 +101,11 @@ class ExceptionHandlerTest {
             Case(
                 ReceiptNotFoundException(42),
                 ApiError(ErrorCode.RECEIPT_NOT_FOUND, "No receipt with id 42 found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                MappingNotFoundException(42),
+                ApiError(ErrorCode.MAPPING_NOT_FOUND, "No mapping with id 42 found"),
                 HttpStatus.NOT_FOUND,
             ),
         )
