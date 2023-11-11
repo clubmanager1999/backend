@@ -18,6 +18,8 @@ package com.github.clubmanager1999.backend.receipt
 
 import com.github.clubmanager1999.backend.creditor.CreditorRepository
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.receipt.ReceiptTestData.VALID_FROM
+import com.github.clubmanager1999.backend.receipt.ReceiptTestData.VALID_TO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -111,5 +113,62 @@ internal class ReceiptRepositoryTest {
         receiptRepository.deleteById(createdReceipt.id!!)
 
         assertThat(receiptRepository.findAll()).isEmpty()
+    }
+
+    @Test
+    fun shouldFindByCreditorAndDateEqValidFrom() {
+        receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+
+        assertThat(receiptRepository.findAllByCreditorAndDate(creditorEntity.id!!, VALID_FROM)[0])
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(ReceiptTestData.createReceiptEntity(creditorEntity))
+    }
+
+    @Test
+    fun shouldFindBothByCreditorAndDateEqValidFrom() {
+        val receipt1 = receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+        val receipt2 = receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+
+        assertThat(receipt1.id).isNotEqualTo(receipt2.id)
+
+        assertThat(receiptRepository.findAllByCreditorAndDate(creditorEntity.id!!, VALID_FROM))
+            .containsExactly(receipt1, receipt2)
+    }
+
+    @Test
+    fun shouldFindByCreditorAndDateGtValidFrom() {
+        receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+
+        assertThat(receiptRepository.findAllByCreditorAndDate(creditorEntity.id!!, VALID_FROM.plusDays(1))[0])
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(ReceiptTestData.createReceiptEntity(creditorEntity))
+    }
+
+    @Test
+    fun shouldFindByCreditorAndDateEqValidTo() {
+        receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+
+        assertThat(receiptRepository.findAllByCreditorAndDate(creditorEntity.id!!, VALID_TO)[0])
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(ReceiptTestData.createReceiptEntity(creditorEntity))
+    }
+
+    @Test
+    fun shouldNotFindByCreditorAndDateLtValidFrom() {
+        receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+
+        assertThat(receiptRepository.findAllByCreditorAndDate(creditorEntity.id!!, VALID_FROM.minusDays(1)))
+            .isEmpty()
+    }
+
+    @Test
+    fun shouldNotFindByCreditorAndDateGtValidTo() {
+        receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+
+        assertThat(receiptRepository.findAllByCreditorAndDate(creditorEntity.id!!, VALID_TO.plusDays(2)))
+            .isEmpty()
     }
 }

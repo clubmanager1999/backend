@@ -16,7 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.receipt
 
+import com.github.clubmanager1999.backend.creditor.CreditorId
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class ReceiptService(
@@ -28,6 +30,16 @@ class ReceiptService(
             .findById(id)
             .map { receiptEntityMapper.toExistingReceipt(it) }
             .orElseThrow { ReceiptNotFoundException(id) }
+    }
+
+    fun findByCreditorAndDate(
+        creditorId: CreditorId,
+        date: LocalDate,
+    ): ExistingReceipt? {
+        return receiptRepository
+            .findAllByCreditorAndDate(creditorId.id, date)
+            .map { receiptEntityMapper.toExistingReceipt(it) }
+            .firstOrNull()
     }
 
     fun getAll(): List<ExistingReceipt> {

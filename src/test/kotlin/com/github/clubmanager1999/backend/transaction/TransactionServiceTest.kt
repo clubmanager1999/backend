@@ -16,6 +16,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
+import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.receipt.ReceiptService
+import com.github.clubmanager1999.backend.receipt.ReceiptTestData
+import com.github.clubmanager1999.backend.transaction.mapping.MappingService
+import com.github.clubmanager1999.backend.transaction.mapping.MappingTestData
+import com.github.clubmanager1999.backend.transaction.reference.CreditorReferenceEntity
+import com.github.clubmanager1999.backend.transaction.reference.ExistingCreditorReference
+import com.github.clubmanager1999.backend.transaction.reference.NewCreditorReference
+import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntityMapper
+import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -34,6 +44,12 @@ class TransactionServiceTest {
     @Mock lateinit var transactionEntityMapper: TransactionEntityMapper
 
     @Mock lateinit var transactionRepository: TransactionRepository
+
+    @Mock lateinit var mappingService: MappingService
+
+    @Mock lateinit var referenceEntityMapper: ReferenceEntityMapper
+
+    @Mock lateinit var receiptService: ReceiptService
 
     @InjectMocks lateinit var transactionService: TransactionService
 
@@ -123,19 +139,23 @@ class TransactionServiceTest {
 
     @Test
     fun shouldImportTransactions() {
+        val import = TransactionTestData.createTransactionImport()
+        val newTransaction = TransactionTestData.createNewTransaction(null, null)
+        val transactionEntity = TransactionTestData.createTransactionEntity(null, null)
+
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
 
         `when`(
-            transactionEntityMapper.toNewTransaction(TransactionTestData.createTransactionImport(), null, null),
-        ).thenReturn(TransactionTestData.createNewTransaction())
+            transactionEntityMapper.toNewTransaction(import, null, null),
+        ).thenReturn(newTransaction)
 
         `when`(
-            transactionEntityMapper.toTransactionEntity(null, TransactionTestData.createNewTransaction()),
-        ).thenReturn(TransactionTestData.createTransactionEntity())
+            transactionEntityMapper.toTransactionEntity(null, newTransaction),
+        ).thenReturn(transactionEntity)
 
-        transactionService.import(listOf(TransactionTestData.createTransactionImport()))
+        transactionService.import(listOf(import))
 
-        verify(transactionRepository).save(TransactionTestData.createTransactionEntity())
+        verify(transactionRepository).save(transactionEntity)
     }
 
     @Test
@@ -145,5 +165,69 @@ class TransactionServiceTest {
         transactionService.import(listOf(TransactionTestData.createTransactionImport()))
 
         verify(transactionRepository, never()).save(any())
+    }
+
+    @Test
+    fun shouldImportTransactionsWithCreditor() {
+        val mapping = MappingTestData.createExistingMapping()
+        val newReference = ReferenceTestData.createNewReference()
+        val referenceEntity = ReferenceTestData.createReferenceEntity()
+        val import = TransactionTestData.createTransactionImport()
+        val newTransaction = TransactionTestData.createNewTransaction(newReference, null)
+        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, null)
+
+        `when`(transactionRepository.findAll()).thenReturn(emptyList())
+
+        `when`(mappingService.getAll()).thenReturn(listOf(mapping))
+
+        `when`(
+            referenceEntityMapper.toNewReference(mapping.reference),
+        ).thenReturn(newReference)
+
+        `when`(
+            transactionEntityMapper.toNewTransaction(import, newReference, null),
+        ).thenReturn(newTransaction)
+
+        `when`(
+            transactionEntityMapper.toTransactionEntity(null, newTransaction),
+        ).thenReturn(transactionEntity)
+
+        transactionService.import(listOf(import))
+
+        verify(transactionRepository).save(transactionEntity)
+    }
+
+    @Test
+    fun shouldImportTransactionsWithCreditorAndReceipt() {
+        val mapping = MappingTestData.createExistingMapping(ExistingCreditorReference(creditor = CreditorTestData.createExistingCreditor()))
+        val newReference = NewCreditorReference(creditor = CreditorTestData.createCreditorId())
+        val referenceEntity = CreditorReferenceEntity(id = null, creditor = CreditorTestData.createCreditorEntity())
+        val import = TransactionTestData.createTransactionImport()
+        val newTransaction = TransactionTestData.createNewTransaction(newReference, ReceiptTestData.createReceiptId())
+        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, ReceiptTestData.createReceiptEntity())
+
+        `when`(transactionRepository.findAll()).thenReturn(emptyList())
+
+        `when`(mappingService.getAll()).thenReturn(listOf(mapping))
+
+        `when`(
+            referenceEntityMapper.toNewReference(mapping.reference),
+        ).thenReturn(newReference)
+
+        `when`(
+            receiptService.findByCreditorAndDate(CreditorTestData.createCreditorId(), TransactionTestData.VALUE_DAY),
+        ).thenReturn(ReceiptTestData.createExistingReceipt())
+
+        `when`(
+            transactionEntityMapper.toNewTransaction(import, newReference, ReceiptTestData.createReceiptId()),
+        ).thenReturn(newTransaction)
+
+        `when`(
+            transactionEntityMapper.toTransactionEntity(null, newTransaction),
+        ).thenReturn(transactionEntity)
+
+        transactionService.import(listOf(import))
+
+        verify(transactionRepository).save(transactionEntity)
     }
 }

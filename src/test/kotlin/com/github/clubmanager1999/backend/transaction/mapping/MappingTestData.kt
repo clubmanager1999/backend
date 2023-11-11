@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 
@@ -32,10 +33,14 @@ object MappingTestData {
     }
 
     fun createExistingMapping(): ExistingMapping {
+        return createExistingMapping(ReferenceTestData.createExistingReference())
+    }
+
+    fun createExistingMapping(reference: ExistingReference): ExistingMapping {
         return ExistingMapping(
             id = ID,
             matcher = MATCHER,
-            reference = ReferenceTestData.createExistingReference(),
+            reference = reference,
         )
     }
 

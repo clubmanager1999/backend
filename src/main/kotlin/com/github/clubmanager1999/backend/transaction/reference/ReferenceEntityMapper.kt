@@ -17,8 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction.reference
 
 import com.github.clubmanager1999.backend.creditor.CreditorEntityMapper
+import com.github.clubmanager1999.backend.creditor.CreditorId
 import com.github.clubmanager1999.backend.donor.DonorEntityMapper
+import com.github.clubmanager1999.backend.donor.DonorId
 import com.github.clubmanager1999.backend.member.MemberEntityMapper
+import com.github.clubmanager1999.backend.member.MemberId
 import org.springframework.stereotype.Service
 
 @Service
@@ -56,6 +59,20 @@ class ReferenceEntityMapper(
             }
             is NewMemberReference -> {
                 MemberReferenceEntity(id = null, member = memberEntityMapper.toMemberEntity(newReference.member))
+            }
+        }
+    }
+
+    fun toNewReference(existingReference: ExistingReference): NewReference {
+        return when (existingReference) {
+            is ExistingCreditorReference -> {
+                NewCreditorReference(creditor = CreditorId(existingReference.creditor.id))
+            }
+            is ExistingDonorReference -> {
+                NewDonorReference(donor = DonorId(existingReference.donor.id))
+            }
+            is ExistingMemberReference -> {
+                NewMemberReference(member = MemberId(existingReference.member.id))
             }
         }
     }

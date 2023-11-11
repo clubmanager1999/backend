@@ -17,6 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.receipt
 
 import com.github.clubmanager1999.backend.creditor.CreditorEntityMapper
+import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.transaction.TransactionTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -122,5 +124,38 @@ class ReceiptServiceTest {
         receiptService.delete(42)
 
         verify(receiptRepository).deleteById(42)
+    }
+
+    @Test
+    fun shouldFindByCreditorAndDate() {
+        val existingReceipt = ReceiptTestData.createExistingReceipt()
+        val savedEntity = ReceiptTestData.createReceiptEntity()
+
+        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
+
+        `when`(
+            receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, TransactionTestData.VALUE_DAY),
+        ).thenReturn(listOf(savedEntity))
+
+        assertThat(
+            receiptService.findByCreditorAndDate(CreditorTestData.createCreditorId(), TransactionTestData.VALUE_DAY),
+        ).isEqualTo(existingReceipt)
+    }
+
+    @Test
+    fun shouldFindFirstByCreditorAndDate() {
+        val existingReceipt = ReceiptTestData.createExistingReceipt()
+        val savedEntity = ReceiptTestData.createReceiptEntity()
+        val secondEntity = ReceiptTestData.createReceiptEntity().copy(id = 1337)
+
+        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
+
+        `when`(
+            receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, TransactionTestData.VALUE_DAY),
+        ).thenReturn(listOf(savedEntity, secondEntity))
+
+        assertThat(
+            receiptService.findByCreditorAndDate(CreditorTestData.createCreditorId(), TransactionTestData.VALUE_DAY),
+        ).isEqualTo(existingReceipt)
     }
 }
