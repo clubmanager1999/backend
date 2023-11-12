@@ -16,8 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
-import com.github.clubmanager1999.backend.member.MemberTestData
-import com.github.clubmanager1999.backend.transaction.reference.ExistingMemberReference
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -27,7 +25,15 @@ class MappingMappingExtensionsTest {
         assertThat(
             MappingTestData.createMappingEntity().toExistingMapping(),
         )
-            .isEqualTo(MappingTestData.createExistingMapping(ExistingMemberReference(member = MemberTestData.createExistingMember())))
+            .isEqualTo(MappingTestData.createExistingMapping())
+    }
+
+    @Test
+    fun shouldMapMappingEntityToExistingMappingWithoutOptionalProperties() {
+        assertThat(
+            MappingTestData.createMappingEntity().copy(purpose = null).toExistingMapping(),
+        )
+            .isEqualTo(MappingTestData.createExistingMapping().copy(purpose = null))
     }
 
     @Test
@@ -36,5 +42,13 @@ class MappingMappingExtensionsTest {
             MappingTestData.createNewMapping().toMappingEntity(ID),
         )
             .isEqualTo(MappingTestData.createFlatMappingEntity())
+    }
+
+    @Test
+    fun shouldMapNewMappingToMappingEntityWithIdWithoutOptionalProperties() {
+        assertThat(
+            MappingTestData.createNewMapping().copy(purpose = null).toMappingEntity(ID),
+        )
+            .isEqualTo(MappingTestData.createFlatMappingEntity().copy(purpose = null))
     }
 }

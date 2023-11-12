@@ -16,9 +16,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
 import com.github.clubmanager1999.backend.transaction.reference.NewReference
 
 data class NewMapping(
     val matcher: String,
     val reference: NewReference,
+    val purpose: PurposeId?,
 )

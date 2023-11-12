@@ -16,6 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.purpose.toExistingPurpose
+import com.github.clubmanager1999.backend.transaction.purpose.toPurposeEntity
 import com.github.clubmanager1999.backend.transaction.reference.toExistingReference
 import com.github.clubmanager1999.backend.transaction.reference.toReferenceEntity
 
@@ -24,6 +26,7 @@ fun MappingEntity.toExistingMapping(): ExistingMapping {
         id = this.id!!,
         matcher = this.matcher,
         reference = this.reference.toExistingReference(),
+        purpose = this.purpose?.toExistingPurpose(),
     )
 }
 
@@ -32,5 +35,6 @@ fun NewMapping.toMappingEntity(id: Long?): MappingEntity {
         id = id,
         matcher = this.matcher,
         reference = this.reference.toReferenceEntity(),
+        purpose = this.purpose?.toPurposeEntity(),
     )
 }

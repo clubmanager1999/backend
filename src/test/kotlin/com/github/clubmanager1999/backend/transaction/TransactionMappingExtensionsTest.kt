@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.transaction
 
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.ID
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -34,10 +35,10 @@ class TransactionMappingExtensionsTest {
     @Test
     fun shouldMapTransactionEntityToExistingTransactionWithoutOtherEntities() {
         assertThat(
-            TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null).toExistingTransaction(),
+            TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null, purpose = null).toExistingTransaction(),
         )
             .isEqualTo(
-                TransactionTestData.createExistingTransaction().copy(reference = null, receipt = null),
+                TransactionTestData.createExistingTransaction().copy(reference = null, receipt = null, purpose = null),
             )
     }
 
@@ -52,11 +53,11 @@ class TransactionMappingExtensionsTest {
     @Test
     fun shouldMapNewTransactionToTransactionEntityWithIdWithoutOtherEntities() {
         assertThat(
-            TransactionTestData.createNewTransaction().copy(reference = null, receipt = null).toTransactionEntity(
+            TransactionTestData.createNewTransaction().copy(reference = null, receipt = null, purpose = null).toTransactionEntity(
                 ID,
             ),
         )
-            .isEqualTo(TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null))
+            .isEqualTo(TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null, purpose = null))
     }
 
     @Test
@@ -65,6 +66,7 @@ class TransactionMappingExtensionsTest {
             TransactionTestData.createTransactionImport().toNewTransaction(
                 ReferenceTestData.createNewReference(),
                 ReceiptTestData.createReceiptId(),
+                PurposeTestData.createPurposeId(),
             ),
         )
             .isEqualTo(TransactionTestData.createNewTransaction())

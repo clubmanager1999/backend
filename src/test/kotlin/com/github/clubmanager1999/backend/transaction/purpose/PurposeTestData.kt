@@ -40,4 +40,8 @@ object PurposeTestData {
             name = NAME,
         )
     }
+
+    fun createPurposeId(): PurposeId {
+        return PurposeId(ID)
+    }
 }

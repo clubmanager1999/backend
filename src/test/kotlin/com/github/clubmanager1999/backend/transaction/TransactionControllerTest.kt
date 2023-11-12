@@ -154,6 +154,8 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$.receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))
             .andExpect(jsonPath("$.receipt.validTo").value(ReceiptTestData.VALID_TO.toString()))
             .andExpect(jsonPath("$.receipt.creditor.id").value(CreditorTestData.ID))
+            .andExpect(jsonPath("$.purpose.id").value(com.github.clubmanager1999.backend.transaction.purpose.ID))
+            .andExpect(jsonPath("$.purpose.name").value(com.github.clubmanager1999.backend.transaction.purpose.NAME))
     }
 
     @Test
@@ -188,6 +190,8 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$[0].receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))
             .andExpect(jsonPath("$[0].receipt.validTo").value(ReceiptTestData.VALID_TO.toString()))
             .andExpect(jsonPath("$[0].receipt.creditor.id").value(CreditorTestData.ID))
+            .andExpect(jsonPath("$[0].purpose.id").value(com.github.clubmanager1999.backend.transaction.purpose.ID))
+            .andExpect(jsonPath("$[0].purpose.name").value(com.github.clubmanager1999.backend.transaction.purpose.NAME))
     }
 
     @Test
