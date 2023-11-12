@@ -20,25 +20,24 @@ import org.springframework.stereotype.Service
 
 @Service
 class MappingService(
-    val mappingEntityMapper: MappingEntityMapper,
     val mappingRepository: MappingRepository,
 ) {
     fun get(id: Long): ExistingMapping {
         return mappingRepository
             .findById(id)
-            .map { mappingEntityMapper.toExistingMapping(it) }
+            .map { it.toExistingMapping() }
             .orElseThrow { MappingNotFoundException(id) }
     }
 
     fun getAll(): List<ExistingMapping> {
-        return mappingRepository.findAll().map { mappingEntityMapper.toExistingMapping(it) }
+        return mappingRepository.findAll().map { it.toExistingMapping() }
     }
 
     fun create(newMapping: NewMapping): ExistingMapping {
         return newMapping
-            .let { mappingEntityMapper.toMappingEntity(null, it) }
+            .toMappingEntity(null)
             .let { mappingRepository.save(it) }
-            .let { mappingEntityMapper.toExistingMapping(it) }
+            .toExistingMapping()
     }
 
     fun update(
@@ -48,9 +47,9 @@ class MappingService(
         return mappingRepository
             .findById(id)
             .orElseThrow { MappingNotFoundException(id) }
-            .let { mappingEntityMapper.toMappingEntity(id, newMapping) }
+            .let { newMapping.toMappingEntity(it.id) }
             .let { mappingRepository.save(it) }
-            .let { mappingEntityMapper.toExistingMapping(it) }
+            .toExistingMapping()
     }
 
     fun delete(id: Long) {

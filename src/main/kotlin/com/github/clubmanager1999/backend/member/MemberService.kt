@@ -24,32 +24,31 @@ import org.springframework.stereotype.Service
 
 @Service
 class MemberService(
-    val memberEntityMapper: MemberEntityMapper,
     val memberRepository: MemberRepository,
     val oidcUserMapper: OidcUserMapper,
     val oidcAdminService: OidcAdminService,
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun get(id: Long): ExistingMember {
+    fun get(id: Long): ExistingMemberWithRoles {
         return memberRepository
             .findById(id)
-            .map { memberEntityMapper.toExistingMember(getRoles(it), it) }
+            .map { it.toExistingMember().withRoles(getRoles(it)) }
             .orElseThrow { MemberNotFoundException(id) }
     }
 
-    fun get(subject: Subject): ExistingMember {
+    fun get(subject: Subject): ExistingMemberWithRoles {
         return memberRepository
             .findBySubject(subject.id)
-            .map { memberEntityMapper.toExistingMember(getRoles(it), it) }
+            .map { it.toExistingMember().withRoles(getRoles(it)) }
             .orElseThrow { SubjectNotFoundException(subject.id) }
     }
 
-    fun getAll(): List<ExistingMember> {
-        return memberRepository.findAll().map { memberEntityMapper.toExistingMember(getRoles(it), it) }
+    fun getAll(): List<ExistingMemberWithRoles> {
+        return memberRepository.findAll().map { it.toExistingMember().withRoles(getRoles(it)) }
     }
 
-    fun create(newMember: NewMember): ExistingMember {
+    fun create(newMember: NewMember): ExistingMemberWithRoles {
         val oidcUser = oidcUserMapper.toOidcUser(newMember)
         val subject = oidcAdminService.createUser(oidcUser)
 
@@ -60,15 +59,15 @@ class MemberService(
         }
 
         return newMember
-            .let { memberEntityMapper.toMemberEntity(null, subject.id, it) }
+            .toMemberEntity(null, subject.id)
             .let { memberRepository.save(it) }
-            .let { memberEntityMapper.toExistingMember(getRoles(it), it) }
+            .let { it.toExistingMember().withRoles(getRoles(it)) }
     }
 
     fun update(
         id: Long,
         newMember: NewMember,
-    ): ExistingMember {
+    ): ExistingMemberWithRoles {
         val oidcUser = oidcUserMapper.toOidcUser(newMember)
 
         return memberRepository
@@ -79,10 +78,10 @@ class MemberService(
                 it
             }
             .let {
-                memberEntityMapper.toMemberEntity(id, it.subject, newMember)
+                newMember.toMemberEntity(it.id, it.subject)
             }
             .let { memberRepository.save(it) }
-            .let { memberEntityMapper.toExistingMember(getRoles(it), it) }
+            .let { it.toExistingMember().withRoles(getRoles(it)) }
     }
 
     fun delete(id: Long) {

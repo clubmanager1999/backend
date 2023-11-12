@@ -16,7 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.receipt
 
-import com.github.clubmanager1999.backend.creditor.CreditorEntityMapper
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
 import com.github.clubmanager1999.backend.transaction.TransactionTestData
 import org.assertj.core.api.Assertions.assertThat
@@ -34,10 +33,6 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class ReceiptServiceTest {
-    @Mock lateinit var receiptEntityMapper: ReceiptEntityMapper
-
-    @Mock lateinit var creditorEntityMapper: CreditorEntityMapper
-
     @Mock lateinit var receiptRepository: ReceiptRepository
 
     @InjectMocks lateinit var receiptService: ReceiptService
@@ -46,8 +41,6 @@ class ReceiptServiceTest {
     fun shouldGetReceiptById() {
         val existingReceipt = ReceiptTestData.createExistingReceipt()
         val savedEntity = ReceiptTestData.createReceiptEntity()
-
-        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
 
         `when`(receiptRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
@@ -69,8 +62,6 @@ class ReceiptServiceTest {
 
         `when`(receiptRepository.findAll()).thenReturn(listOf(savedEntity))
 
-        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
-
         assertThat(receiptService.getAll()).containsExactly(existingReceipt)
     }
 
@@ -79,13 +70,9 @@ class ReceiptServiceTest {
         val newReceipt = ReceiptTestData.createNewReceipt()
         val existingReceipt = ReceiptTestData.createExistingReceipt()
         val savedEntity = ReceiptTestData.createReceiptEntity()
-        val newEntity = savedEntity.copy(id = null)
-
-        `when`(receiptEntityMapper.toReceiptEntity(null, newReceipt)).thenReturn(newEntity)
+        val newEntity = ReceiptTestData.createFlatReceiptEntity().copy(id = null)
 
         `when`(receiptRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
 
         assertThat(receiptService.create(newReceipt)).isEqualTo(existingReceipt)
     }
@@ -95,15 +82,11 @@ class ReceiptServiceTest {
         val newReceipt = ReceiptTestData.createNewReceipt()
         val existingReceipt = ReceiptTestData.createExistingReceipt()
         val savedEntity = ReceiptTestData.createReceiptEntity()
-        val newEntity = savedEntity.copy(id = null)
+        val updatedEntity = ReceiptTestData.createFlatReceiptEntity()
 
         `when`(receiptRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
-        `when`(receiptEntityMapper.toReceiptEntity(42, newReceipt)).thenReturn(newEntity)
-
-        `when`(receiptRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
+        `when`(receiptRepository.save(updatedEntity)).thenReturn(savedEntity)
 
         assertThat(receiptService.update(42, newReceipt)).isEqualTo(existingReceipt)
     }
@@ -131,8 +114,6 @@ class ReceiptServiceTest {
         val existingReceipt = ReceiptTestData.createExistingReceipt()
         val savedEntity = ReceiptTestData.createReceiptEntity()
 
-        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
-
         `when`(
             receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, TransactionTestData.VALUE_DAY),
         ).thenReturn(listOf(savedEntity))
@@ -147,8 +128,6 @@ class ReceiptServiceTest {
         val existingReceipt = ReceiptTestData.createExistingReceipt()
         val savedEntity = ReceiptTestData.createReceiptEntity()
         val secondEntity = ReceiptTestData.createReceiptEntity().copy(id = 1337)
-
-        `when`(receiptEntityMapper.toExistingReceipt(savedEntity)).thenReturn(existingReceipt)
 
         `when`(
             receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, TransactionTestData.VALUE_DAY),

@@ -19,6 +19,7 @@ package com.github.clubmanager1999.backend.transaction
 import com.github.clubmanager1999.backend.receipt.ReceiptEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptId
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
+import com.github.clubmanager1999.backend.receipt.toReceiptEntity
 import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
 import com.github.clubmanager1999.backend.transaction.reference.NewReference
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
@@ -77,6 +78,10 @@ object TransactionTestData {
 
     fun createTransactionEntity(): TransactionEntity {
         return createTransactionEntity(ReferenceTestData.createReferenceEntity(), ReceiptTestData.createReceiptEntity())
+    }
+
+    fun createFlatTransactionEntity(): TransactionEntity {
+        return createTransactionEntity(ReferenceTestData.createFlatReferenceEntity(), ReceiptTestData.createReceiptId().toReceiptEntity())
     }
 
     fun createTransactionEntity(

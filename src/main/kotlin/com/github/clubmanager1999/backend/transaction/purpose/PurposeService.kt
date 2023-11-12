@@ -20,25 +20,24 @@ import org.springframework.stereotype.Service
 
 @Service
 class PurposeService(
-    val purposeEntityMapper: PurposeEntityMapper,
     val purposeRepository: PurposeRepository,
 ) {
     fun get(id: Long): ExistingPurpose {
         return purposeRepository
             .findById(id)
-            .map { purposeEntityMapper.toExistingPurpose(it) }
+            .map { it.toExistingPurpose() }
             .orElseThrow { PurposeNotFoundException(id) }
     }
 
     fun getAll(): List<ExistingPurpose> {
-        return purposeRepository.findAll().map { purposeEntityMapper.toExistingPurpose(it) }
+        return purposeRepository.findAll().map { it.toExistingPurpose() }
     }
 
     fun create(newPurpose: NewPurpose): ExistingPurpose {
         return newPurpose
-            .let { purposeEntityMapper.toPurposeEntity(null, it) }
+            .toPurposeEntity(null)
             .let { purposeRepository.save(it) }
-            .let { purposeEntityMapper.toExistingPurpose(it) }
+            .toExistingPurpose()
     }
 
     fun update(
@@ -48,9 +47,9 @@ class PurposeService(
         return purposeRepository
             .findById(id)
             .orElseThrow { PurposeNotFoundException(id) }
-            .let { purposeEntityMapper.toPurposeEntity(id, newPurpose) }
+            .let { newPurpose.toPurposeEntity(id) }
             .let { purposeRepository.save(it) }
-            .let { purposeEntityMapper.toExistingPurpose(it) }
+            .toExistingPurpose()
     }
 
     fun delete(id: Long) {

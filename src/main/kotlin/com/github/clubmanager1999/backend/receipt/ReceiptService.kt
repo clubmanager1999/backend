@@ -22,13 +22,12 @@ import java.time.LocalDate
 
 @Service
 class ReceiptService(
-    val receiptEntityMapper: ReceiptEntityMapper,
     val receiptRepository: ReceiptRepository,
 ) {
     fun get(id: Long): ExistingReceipt {
         return receiptRepository
             .findById(id)
-            .map { receiptEntityMapper.toExistingReceipt(it) }
+            .map { it.toExistingReceipt() }
             .orElseThrow { ReceiptNotFoundException(id) }
     }
 
@@ -38,19 +37,19 @@ class ReceiptService(
     ): ExistingReceipt? {
         return receiptRepository
             .findAllByCreditorAndDate(creditorId.id, date)
-            .map { receiptEntityMapper.toExistingReceipt(it) }
+            .map { it.toExistingReceipt() }
             .firstOrNull()
     }
 
     fun getAll(): List<ExistingReceipt> {
-        return receiptRepository.findAll().map { receiptEntityMapper.toExistingReceipt(it) }
+        return receiptRepository.findAll().map { it.toExistingReceipt() }
     }
 
     fun create(newReceipt: NewReceipt): ExistingReceipt {
         return newReceipt
-            .let { receiptEntityMapper.toReceiptEntity(null, it) }
+            .toReceiptEntity(null)
             .let { receiptRepository.save(it) }
-            .let { receiptEntityMapper.toExistingReceipt(it) }
+            .toExistingReceipt()
     }
 
     fun update(
@@ -60,9 +59,9 @@ class ReceiptService(
         return receiptRepository
             .findById(id)
             .orElseThrow { ReceiptNotFoundException(id) }
-            .let { receiptEntityMapper.toReceiptEntity(id, newReceipt) }
+            .let { newReceipt.toReceiptEntity(it.id) }
             .let { receiptRepository.save(it) }
-            .let { receiptEntityMapper.toExistingReceipt(it) }
+            .toExistingReceipt()
     }
 
     fun delete(id: Long) {

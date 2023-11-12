@@ -35,12 +35,12 @@ class MemberController(val memberService: MemberService) {
     @GetMapping("/api/members/{id}")
     fun getMember(
         @PathVariable id: Long,
-    ): ExistingMember {
+    ): ExistingMemberWithRoles {
         return memberService.get(id)
     }
 
     @GetMapping("/api/members")
-    fun getAllMembers(): List<ExistingMember> {
+    fun getAllMembers(): List<ExistingMemberWithRoles> {
         return memberService.getAll()
     }
 

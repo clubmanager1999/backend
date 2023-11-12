@@ -14,31 +14,27 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.profile
+package com.github.clubmanager1999.backend.transaction.mapping
 
 import com.github.clubmanager1999.backend.member.MemberTestData
-import com.github.clubmanager1999.backend.member.USER_NAME
-import com.github.clubmanager1999.backend.membership.MembershipTestData
+import com.github.clubmanager1999.backend.transaction.reference.ExistingMemberReference
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
-class ProfileMapperTest {
-    @InjectMocks lateinit var profileMapper: ProfileMapper
-
+class MappingMappingExtensionsTest {
     @Test
-    fun shouldMapToProfile() {
-        assertThat(profileMapper.toProfile(MemberTestData.createExistingMember()))
-            .isEqualTo(ProfileTestData.createProfile())
+    fun shouldMapMappingEntityToExistingMapping() {
+        assertThat(
+            MappingTestData.createMappingEntity().toExistingMapping(),
+        )
+            .isEqualTo(MappingTestData.createExistingMapping(ExistingMemberReference(member = MemberTestData.createExistingMember())))
     }
 
     @Test
-    fun shouldMapToNewMember() {
+    fun shouldMapNewMappingToMappingEntityWithId() {
         assertThat(
-            profileMapper.toNewMember(USER_NAME, MembershipTestData.createMembershipId(), ProfileTestData.createProfileUpdate()),
-        ).isEqualTo(MemberTestData.createNewMember())
+            MappingTestData.createNewMapping().toMappingEntity(ID),
+        )
+            .isEqualTo(MappingTestData.createFlatMappingEntity())
     }
 }

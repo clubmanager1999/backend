@@ -17,14 +17,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction
 
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.creditor.toCreditorEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptService
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
+import com.github.clubmanager1999.backend.receipt.toReceiptEntity
 import com.github.clubmanager1999.backend.transaction.mapping.MappingService
 import com.github.clubmanager1999.backend.transaction.mapping.MappingTestData
 import com.github.clubmanager1999.backend.transaction.reference.CreditorReferenceEntity
 import com.github.clubmanager1999.backend.transaction.reference.ExistingCreditorReference
-import com.github.clubmanager1999.backend.transaction.reference.NewCreditorReference
-import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntityMapper
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -41,13 +41,9 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class TransactionServiceTest {
-    @Mock lateinit var transactionEntityMapper: TransactionEntityMapper
-
     @Mock lateinit var transactionRepository: TransactionRepository
 
     @Mock lateinit var mappingService: MappingService
-
-    @Mock lateinit var referenceEntityMapper: ReferenceEntityMapper
 
     @Mock lateinit var receiptService: ReceiptService
 
@@ -57,8 +53,6 @@ class TransactionServiceTest {
     fun shouldGetTransactionById() {
         val existingTransaction = TransactionTestData.createExistingTransaction()
         val savedEntity = TransactionTestData.createTransactionEntity()
-
-        `when`(transactionEntityMapper.toExistingTransaction(savedEntity)).thenReturn(existingTransaction)
 
         `when`(transactionRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
@@ -80,8 +74,6 @@ class TransactionServiceTest {
 
         `when`(transactionRepository.findAll()).thenReturn(listOf(savedEntity))
 
-        `when`(transactionEntityMapper.toExistingTransaction(savedEntity)).thenReturn(existingTransaction)
-
         assertThat(transactionService.getAll()).containsExactly(existingTransaction)
     }
 
@@ -90,13 +82,9 @@ class TransactionServiceTest {
         val newTransaction = TransactionTestData.createNewTransaction()
         val existingTransaction = TransactionTestData.createExistingTransaction()
         val savedEntity = TransactionTestData.createTransactionEntity()
-        val newEntity = savedEntity.copy(id = null)
-
-        `when`(transactionEntityMapper.toTransactionEntity(null, newTransaction)).thenReturn(newEntity)
+        val newEntity = TransactionTestData.createFlatTransactionEntity().copy(id = null)
 
         `when`(transactionRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(transactionEntityMapper.toExistingTransaction(savedEntity)).thenReturn(existingTransaction)
 
         assertThat(transactionService.create(newTransaction)).isEqualTo(existingTransaction)
     }
@@ -106,15 +94,11 @@ class TransactionServiceTest {
         val newTransaction = TransactionTestData.createNewTransaction()
         val existingTransaction = TransactionTestData.createExistingTransaction()
         val savedEntity = TransactionTestData.createTransactionEntity()
-        val newEntity = savedEntity.copy(id = null)
+        val updatedEntity = TransactionTestData.createFlatTransactionEntity()
 
         `when`(transactionRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
-        `when`(transactionEntityMapper.toTransactionEntity(42, newTransaction)).thenReturn(newEntity)
-
-        `when`(transactionRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(transactionEntityMapper.toExistingTransaction(savedEntity)).thenReturn(existingTransaction)
+        `when`(transactionRepository.save(updatedEntity)).thenReturn(savedEntity)
 
         assertThat(transactionService.update(42, newTransaction)).isEqualTo(existingTransaction)
     }
@@ -140,18 +124,9 @@ class TransactionServiceTest {
     @Test
     fun shouldImportTransactions() {
         val import = TransactionTestData.createTransactionImport()
-        val newTransaction = TransactionTestData.createNewTransaction(null, null)
-        val transactionEntity = TransactionTestData.createTransactionEntity(null, null)
+        val transactionEntity = TransactionTestData.createTransactionEntity(null, null).copy(id = null)
 
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
-
-        `when`(
-            transactionEntityMapper.toNewTransaction(import, null, null),
-        ).thenReturn(newTransaction)
-
-        `when`(
-            transactionEntityMapper.toTransactionEntity(null, newTransaction),
-        ).thenReturn(transactionEntity)
 
         transactionService.import(listOf(import))
 
@@ -170,27 +145,13 @@ class TransactionServiceTest {
     @Test
     fun shouldImportTransactionsWithCreditor() {
         val mapping = MappingTestData.createExistingMapping()
-        val newReference = ReferenceTestData.createNewReference()
-        val referenceEntity = ReferenceTestData.createReferenceEntity()
+        val referenceEntity = ReferenceTestData.createFlatReferenceEntity()
         val import = TransactionTestData.createTransactionImport()
-        val newTransaction = TransactionTestData.createNewTransaction(newReference, null)
-        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, null)
+        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, null).copy(id = null)
 
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
 
         `when`(mappingService.getAll()).thenReturn(listOf(mapping))
-
-        `when`(
-            referenceEntityMapper.toNewReference(mapping.reference),
-        ).thenReturn(newReference)
-
-        `when`(
-            transactionEntityMapper.toNewTransaction(import, newReference, null),
-        ).thenReturn(newTransaction)
-
-        `when`(
-            transactionEntityMapper.toTransactionEntity(null, newTransaction),
-        ).thenReturn(transactionEntity)
 
         transactionService.import(listOf(import))
 
@@ -200,31 +161,21 @@ class TransactionServiceTest {
     @Test
     fun shouldImportTransactionsWithCreditorAndReceipt() {
         val mapping = MappingTestData.createExistingMapping(ExistingCreditorReference(creditor = CreditorTestData.createExistingCreditor()))
-        val newReference = NewCreditorReference(creditor = CreditorTestData.createCreditorId())
-        val referenceEntity = CreditorReferenceEntity(id = null, creditor = CreditorTestData.createCreditorEntity())
+        val referenceEntity = CreditorReferenceEntity(id = null, creditor = CreditorTestData.createCreditorId().toCreditorEntity())
         val import = TransactionTestData.createTransactionImport()
-        val newTransaction = TransactionTestData.createNewTransaction(newReference, ReceiptTestData.createReceiptId())
-        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, ReceiptTestData.createReceiptEntity())
+        val transactionEntity =
+            TransactionTestData.createTransactionEntity(
+                referenceEntity,
+                ReceiptTestData.createReceiptId().toReceiptEntity(),
+            ).copy(id = null)
 
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
 
         `when`(mappingService.getAll()).thenReturn(listOf(mapping))
 
         `when`(
-            referenceEntityMapper.toNewReference(mapping.reference),
-        ).thenReturn(newReference)
-
-        `when`(
             receiptService.findByCreditorAndDate(CreditorTestData.createCreditorId(), TransactionTestData.VALUE_DAY),
         ).thenReturn(ReceiptTestData.createExistingReceipt())
-
-        `when`(
-            transactionEntityMapper.toNewTransaction(import, newReference, ReceiptTestData.createReceiptId()),
-        ).thenReturn(newTransaction)
-
-        `when`(
-            transactionEntityMapper.toTransactionEntity(null, newTransaction),
-        ).thenReturn(transactionEntity)
 
         transactionService.import(listOf(import))
 

@@ -19,8 +19,6 @@ package com.github.clubmanager1999.backend.profile
 import com.github.clubmanager1999.backend.member.ID
 import com.github.clubmanager1999.backend.member.MemberService
 import com.github.clubmanager1999.backend.member.MemberTestData
-import com.github.clubmanager1999.backend.member.USER_NAME
-import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.oidc.Subject
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
@@ -34,37 +32,28 @@ import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 class ProfileServiceTest {
-    @Mock lateinit var profileMapper: ProfileMapper
-
     @Mock lateinit var memberService: MemberService
 
     @InjectMocks lateinit var profileService: ProfileService
 
     @Test
     fun shouldGetProfile() {
-        val existingMember = MemberTestData.createExistingMember()
-        val profile = ProfileTestData.createProfile()
+        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
 
-        `when`(memberService.get(Subject(SUBJECT))).thenReturn(existingMember)
-
-        `when`(profileMapper.toProfile(existingMember)).thenReturn(profile)
+        `when`(memberService.get(Subject(SUBJECT))).thenReturn(existingMemberWithRoles)
 
         assertThat(profileService.get(Subject(SUBJECT))).isEqualTo(ProfileTestData.createProfile())
     }
 
     @Test
     fun shouldUpdateProfile() {
-        val existingMember = MemberTestData.createExistingMember()
+        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
         val newMember = MemberTestData.createNewMember()
         val profileUpdate = ProfileTestData.createProfileUpdate()
 
-        `when`(memberService.get(Subject(SUBJECT))).thenReturn(existingMember)
+        `when`(memberService.get(Subject(SUBJECT))).thenReturn(existingMemberWithRoles)
 
-        `when`(profileMapper.toNewMember(USER_NAME, MembershipTestData.createMembershipId(), profileUpdate)).thenReturn(newMember)
-
-        `when`(memberService.update(ID, newMember)).thenReturn(existingMember)
-
-        `when`(profileMapper.toProfile(existingMember)).thenReturn(ProfileTestData.createProfile())
+        `when`(memberService.update(ID, newMember)).thenReturn(existingMemberWithRoles)
 
         assertThat(profileService.update(Subject(SUBJECT), profileUpdate)).isEqualTo(ProfileTestData.createProfile())
 

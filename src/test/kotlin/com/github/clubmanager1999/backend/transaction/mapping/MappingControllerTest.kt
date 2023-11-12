@@ -25,7 +25,6 @@ import com.github.clubmanager1999.backend.member.STREET
 import com.github.clubmanager1999.backend.member.STREET_NUMBER
 import com.github.clubmanager1999.backend.member.USER_NAME
 import com.github.clubmanager1999.backend.member.ZIP
-import com.github.clubmanager1999.backend.oidc.OidcTestData
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_MAPPINGS
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test
@@ -80,7 +79,6 @@ internal class MappingControllerTest {
             .andExpect(jsonPath("$.reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
             .andExpect(jsonPath("$.reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
             .andExpect(jsonPath("$.reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
-            .andExpect(jsonPath("$.reference.member.roles").value(OidcTestData.ROLE))
     }
 
     @Test
@@ -106,7 +104,6 @@ internal class MappingControllerTest {
             .andExpect(jsonPath("$[0].reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
             .andExpect(jsonPath("$[0].reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
             .andExpect(jsonPath("$[0].reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
-            .andExpect(jsonPath("$[0].reference.member.roles").value(OidcTestData.ROLE))
     }
 
     @Test

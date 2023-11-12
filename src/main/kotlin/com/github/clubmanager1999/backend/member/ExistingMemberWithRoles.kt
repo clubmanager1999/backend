@@ -14,26 +14,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.transaction.purpose
+package com.github.clubmanager1999.backend.member
 
-import org.springframework.stereotype.Service
+import com.github.clubmanager1999.backend.membership.ExistingMembership
 
-@Service
-class PurposeEntityMapper {
-    fun toExistingPurpose(purposeEntity: PurposeEntity): ExistingPurpose {
-        return ExistingPurpose(
-            id = purposeEntity.id!!,
-            name = purposeEntity.name,
-        )
-    }
-
-    fun toPurposeEntity(
-        id: Long?,
-        newPurpose: NewPurpose,
-    ): PurposeEntity {
-        return PurposeEntity(
-            id = id,
-            name = newPurpose.name,
-        )
-    }
-}
+data class ExistingMemberWithRoles(
+    val id: Long,
+    val userName: String,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val address: Address,
+    val membership: ExistingMembership,
+    val roles: List<String>,
+)

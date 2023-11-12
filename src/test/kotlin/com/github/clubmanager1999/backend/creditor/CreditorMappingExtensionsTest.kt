@@ -14,33 +14,34 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.transaction.purpose
+package com.github.clubmanager1999.backend.creditor
 
+import com.github.clubmanager1999.backend.creditor.CreditorTestData.ID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
-class PurposeEntityMapperTest {
-    @InjectMocks lateinit var purposeEntityMapper: PurposeEntityMapper
-
+class CreditorMappingExtensionsTest {
     @Test
-    fun shouldMapPurposeEntityToExistingPurpose() {
+    fun shouldMapCreditorEntityToExistingCreditor() {
         assertThat(
-            purposeEntityMapper.toExistingPurpose(
-                PurposeTestData.createPurposeEntity(),
-            ),
+            CreditorTestData.createCreditorEntity().toExistingCreditor(),
         )
-            .isEqualTo(PurposeTestData.createExistingPurpose())
+            .isEqualTo(CreditorTestData.createExistingCreditor())
     }
 
     @Test
-    fun shouldMapNewPurposeToPurposeEntityWithId() {
+    fun shouldMapNewCreditorToCreditorEntityWithId() {
         assertThat(
-            purposeEntityMapper.toPurposeEntity(ID, PurposeTestData.createNewPurpose()),
+            CreditorTestData.createNewCreditor().toCreditorEntity(ID),
         )
-            .isEqualTo(PurposeTestData.createPurposeEntity())
+            .isEqualTo(CreditorTestData.createCreditorEntity())
+    }
+
+    @Test
+    fun shouldMapCreditorIdToCreditorEntityWithId() {
+        assertThat(
+            CreditorId(ID).toCreditorEntity(),
+        )
+            .isEqualTo(CreditorTestData.createCreditorEntity().copy(name = ""))
     }
 }

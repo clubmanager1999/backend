@@ -31,8 +31,6 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class CreditorServiceTest {
-    @Mock lateinit var creditorEntityMapper: CreditorEntityMapper
-
     @Mock lateinit var creditorRepository: CreditorRepository
 
     @InjectMocks lateinit var creditorService: CreditorService
@@ -41,8 +39,6 @@ class CreditorServiceTest {
     fun shouldGetCreditorById() {
         val existingCreditor = CreditorTestData.createExistingCreditor()
         val savedEntity = CreditorTestData.createCreditorEntity()
-
-        `when`(creditorEntityMapper.toExistingCreditor(savedEntity)).thenReturn(existingCreditor)
 
         `when`(creditorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
@@ -64,8 +60,6 @@ class CreditorServiceTest {
 
         `when`(creditorRepository.findAll()).thenReturn(listOf(savedEntity))
 
-        `when`(creditorEntityMapper.toExistingCreditor(savedEntity)).thenReturn(existingCreditor)
-
         assertThat(creditorService.getAll()).containsExactly(existingCreditor)
     }
 
@@ -76,11 +70,7 @@ class CreditorServiceTest {
         val savedEntity = CreditorTestData.createCreditorEntity()
         val newEntity = savedEntity.copy(id = null)
 
-        `when`(creditorEntityMapper.toCreditorEntity(null, newCreditor)).thenReturn(newEntity)
-
         `when`(creditorRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(creditorEntityMapper.toExistingCreditor(savedEntity)).thenReturn(existingCreditor)
 
         assertThat(creditorService.create(newCreditor)).isEqualTo(existingCreditor)
     }
@@ -90,15 +80,10 @@ class CreditorServiceTest {
         val newCreditor = CreditorTestData.createNewCreditor()
         val existingCreditor = CreditorTestData.createExistingCreditor()
         val savedEntity = CreditorTestData.createCreditorEntity()
-        val newEntity = savedEntity.copy(id = null)
 
         `when`(creditorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
-        `when`(creditorEntityMapper.toCreditorEntity(42, newCreditor)).thenReturn(newEntity)
-
-        `when`(creditorRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(creditorEntityMapper.toExistingCreditor(savedEntity)).thenReturn(existingCreditor)
+        `when`(creditorRepository.save(savedEntity)).thenReturn(savedEntity)
 
         assertThat(creditorService.update(42, newCreditor)).isEqualTo(existingCreditor)
     }

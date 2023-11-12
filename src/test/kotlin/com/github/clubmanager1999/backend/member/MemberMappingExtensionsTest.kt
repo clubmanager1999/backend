@@ -16,53 +16,41 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
-import com.github.clubmanager1999.backend.membership.MembershipEntityMapper
 import com.github.clubmanager1999.backend.membership.MembershipTestData
+import com.github.clubmanager1999.backend.membership.toMembershipEntity
 import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
-class MemberEntityMapperTest {
-    @Mock lateinit var membershipEntityMapper: MembershipEntityMapper
-
-    @InjectMocks lateinit var memberEntityMapper: MemberEntityMapper
-
+class MemberMappingExtensionsTest {
     @Test
     fun shouldMapMemberEntityToExistingMember() {
-        `when`(
-            membershipEntityMapper.toExistingMembership(MembershipTestData.createMembershipEntity()),
-        ).thenReturn(MembershipTestData.createExistingMembership())
-        assertThat(memberEntityMapper.toExistingMember(listOf(ROLE), MemberTestData.createMemberEntity()))
+        assertThat(MemberTestData.createMemberEntity().toExistingMember())
             .isEqualTo(MemberTestData.createExistingMember())
     }
 
     @Test
-    fun shouldMapNewMemberToMemberEntityWithId() {
-        `when`(
-            membershipEntityMapper.toMembershipEntity(MembershipTestData.createMembershipId()),
-        ).thenReturn(MembershipTestData.createMembershipEntity())
+    fun shouldMapExistingMemberToExistingMemberWithRoles() {
+        assertThat(MemberTestData.createExistingMember().withRoles(listOf(ROLE)))
+            .isEqualTo(MemberTestData.createExistingMemberWithRoles())
+    }
 
+    @Test
+    fun shouldMapNewMemberToMemberEntityWithId() {
         assertThat(
-            memberEntityMapper.toMemberEntity(
+            MemberTestData.createNewMember().toMemberEntity(
                 ID,
                 SUBJECT,
-                MemberTestData.createNewMember(),
             ),
         )
-            .isEqualTo(MemberTestData.createMemberEntity())
+            .isEqualTo(MemberTestData.createMemberEntity(MembershipTestData.createMembershipId().toMembershipEntity()))
     }
 
     @Test
     fun shouldMapMemberIdToMemberEntity() {
         assertThat(
-            memberEntityMapper.toMemberEntity(MemberId(ID)).id,
+            MemberId(ID).toMemberEntity().id,
         )
             .isEqualTo(ID)
     }

@@ -28,7 +28,6 @@ import com.github.clubmanager1999.backend.member.STREET
 import com.github.clubmanager1999.backend.member.STREET_NUMBER
 import com.github.clubmanager1999.backend.member.USER_NAME
 import com.github.clubmanager1999.backend.member.ZIP
-import com.github.clubmanager1999.backend.oidc.OidcTestData
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_TRANSACTIONS
 import com.github.clubmanager1999.backend.security.withRole
@@ -150,7 +149,6 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$.reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
             .andExpect(jsonPath("$.reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
             .andExpect(jsonPath("$.reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
-            .andExpect(jsonPath("$.reference.member.roles").value(OidcTestData.ROLE))
             .andExpect(jsonPath("$.receipt.id").value(ReceiptTestData.ID))
             .andExpect(jsonPath("$.receipt.name").value(ReceiptTestData.NAME))
             .andExpect(jsonPath("$.receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))
@@ -185,7 +183,6 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$[0].reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
             .andExpect(jsonPath("$[0].reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
             .andExpect(jsonPath("$[0].reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
-            .andExpect(jsonPath("$[0].reference.member.roles[0]").value(OidcTestData.ROLE))
             .andExpect(jsonPath("$[0].receipt.id").value(ReceiptTestData.ID))
             .andExpect(jsonPath("$[0].receipt.name").value(ReceiptTestData.NAME))
             .andExpect(jsonPath("$[0].receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))

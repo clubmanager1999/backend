@@ -14,16 +14,25 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.creditor
 
-import com.github.clubmanager1999.backend.membership.ExistingMembership
+fun CreditorEntity.toExistingCreditor(): ExistingCreditor {
+    return ExistingCreditor(
+        id = this.id!!,
+        name = this.name,
+    )
+}
 
-data class ExistingMember(
-    val id: Long,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val address: Address,
-    val membership: ExistingMembership,
-)
+fun NewCreditor.toCreditorEntity(id: Long?): CreditorEntity {
+    return CreditorEntity(
+        id = id,
+        name = this.name,
+    )
+}
+
+fun CreditorId.toCreditorEntity(): CreditorEntity {
+    return CreditorEntity(
+        id = this.id,
+        name = "",
+    )
+}

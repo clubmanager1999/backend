@@ -31,8 +31,6 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class DonorServiceTest {
-    @Mock lateinit var donorEntityMapper: DonorEntityMapper
-
     @Mock lateinit var donorRepository: DonorRepository
 
     @InjectMocks lateinit var donorService: DonorService
@@ -41,8 +39,6 @@ class DonorServiceTest {
     fun shouldGetDonorById() {
         val existingDonor = DonorTestData.createExistingDonor()
         val savedEntity = DonorTestData.createDonorEntity()
-
-        `when`(donorEntityMapper.toExistingDonor(savedEntity)).thenReturn(existingDonor)
 
         `when`(donorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
@@ -64,8 +60,6 @@ class DonorServiceTest {
 
         `when`(donorRepository.findAll()).thenReturn(listOf(savedEntity))
 
-        `when`(donorEntityMapper.toExistingDonor(savedEntity)).thenReturn(existingDonor)
-
         assertThat(donorService.getAll()).containsExactly(existingDonor)
     }
 
@@ -76,11 +70,7 @@ class DonorServiceTest {
         val savedEntity = DonorTestData.createDonorEntity()
         val newEntity = savedEntity.copy(id = null)
 
-        `when`(donorEntityMapper.toDonorEntity(null, newDonor)).thenReturn(newEntity)
-
         `when`(donorRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(donorEntityMapper.toExistingDonor(savedEntity)).thenReturn(existingDonor)
 
         assertThat(donorService.create(newDonor)).isEqualTo(existingDonor)
     }
@@ -90,15 +80,10 @@ class DonorServiceTest {
         val newDonor = DonorTestData.createNewDonor()
         val existingDonor = DonorTestData.createExistingDonor()
         val savedEntity = DonorTestData.createDonorEntity()
-        val newEntity = savedEntity.copy(id = null)
 
         `when`(donorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
-        `when`(donorEntityMapper.toDonorEntity(42, newDonor)).thenReturn(newEntity)
-
-        `when`(donorRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(donorEntityMapper.toExistingDonor(savedEntity)).thenReturn(existingDonor)
+        `when`(donorRepository.save(savedEntity)).thenReturn(savedEntity)
 
         assertThat(donorService.update(42, newDonor)).isEqualTo(existingDonor)
     }

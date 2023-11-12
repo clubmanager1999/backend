@@ -31,8 +31,6 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class MappingServiceTest {
-    @Mock lateinit var mappingEntityMapper: MappingEntityMapper
-
     @Mock lateinit var mappingRepository: MappingRepository
 
     @InjectMocks lateinit var mappingService: MappingService
@@ -41,9 +39,6 @@ class MappingServiceTest {
     fun shouldGetMappingById() {
         val existingMapping = MappingTestData.createExistingMapping()
         val savedEntity = MappingTestData.createMappingEntity()
-
-        `when`(mappingEntityMapper.toExistingMapping(savedEntity)).thenReturn(existingMapping)
-
         `when`(mappingRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
         assertThat(mappingService.get(42)).isEqualTo(existingMapping)
@@ -64,8 +59,6 @@ class MappingServiceTest {
 
         `when`(mappingRepository.findAll()).thenReturn(listOf(savedEntity))
 
-        `when`(mappingEntityMapper.toExistingMapping(savedEntity)).thenReturn(existingMapping)
-
         assertThat(mappingService.getAll()).containsExactly(existingMapping)
     }
 
@@ -74,13 +67,9 @@ class MappingServiceTest {
         val newMapping = MappingTestData.createNewMapping()
         val existingMapping = MappingTestData.createExistingMapping()
         val savedEntity = MappingTestData.createMappingEntity()
-        val newEntity = savedEntity.copy(id = null)
-
-        `when`(mappingEntityMapper.toMappingEntity(null, newMapping)).thenReturn(newEntity)
+        val newEntity = MappingTestData.createFlatMappingEntity().copy(id = null)
 
         `when`(mappingRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(mappingEntityMapper.toExistingMapping(savedEntity)).thenReturn(existingMapping)
 
         assertThat(mappingService.create(newMapping)).isEqualTo(existingMapping)
     }
@@ -90,15 +79,11 @@ class MappingServiceTest {
         val newMapping = MappingTestData.createNewMapping()
         val existingMapping = MappingTestData.createExistingMapping()
         val savedEntity = MappingTestData.createMappingEntity()
-        val newEntity = savedEntity.copy(id = null)
+        val updatedEntity = MappingTestData.createFlatMappingEntity()
 
         `when`(mappingRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
-        `when`(mappingEntityMapper.toMappingEntity(42, newMapping)).thenReturn(newEntity)
-
-        `when`(mappingRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(mappingEntityMapper.toExistingMapping(savedEntity)).thenReturn(existingMapping)
+        `when`(mappingRepository.save(updatedEntity)).thenReturn(savedEntity)
 
         assertThat(mappingService.update(42, newMapping)).isEqualTo(existingMapping)
     }
