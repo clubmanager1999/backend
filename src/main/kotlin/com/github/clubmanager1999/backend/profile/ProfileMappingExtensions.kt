@@ -16,29 +16,31 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.profile
 
-import com.github.clubmanager1999.backend.member.MemberService
+import com.github.clubmanager1999.backend.member.ExistingMemberWithRoles
+import com.github.clubmanager1999.backend.member.NewMember
 import com.github.clubmanager1999.backend.membership.MembershipId
-import com.github.clubmanager1999.backend.oidc.Subject
-import org.springframework.stereotype.Service
 
-@Service
-class ProfileService(
-    val memberService: MemberService,
-) {
-    fun get(subject: Subject): Profile {
-        return memberService
-            .get(subject)
-            .toProfile()
-    }
+fun ExistingMemberWithRoles.toProfile(): Profile {
+    return Profile(
+        userName = this.userName,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        email = this.email,
+        address = this.address,
+        membership = this.membership,
+    )
+}
 
-    fun update(
-        subject: Subject,
-        profileUpdate: ProfileUpdate,
-    ): Profile {
-        return memberService
-            .get(subject)
-            .let { Pair(it.id, profileUpdate.toNewMember(it.userName, MembershipId(it.membership.id))) }
-            .let { memberService.update(it.first, it.second) }
-            .toProfile()
-    }
+fun ProfileUpdate.toNewMember(
+    userName: String,
+    membershipId: MembershipId,
+): NewMember {
+    return NewMember(
+        userName = userName,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        email = this.email,
+        address = this.address,
+        membership = membershipId,
+    )
 }

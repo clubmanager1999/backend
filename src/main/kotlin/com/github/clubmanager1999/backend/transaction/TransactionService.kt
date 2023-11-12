@@ -20,33 +20,31 @@ import com.github.clubmanager1999.backend.receipt.ReceiptId
 import com.github.clubmanager1999.backend.receipt.ReceiptService
 import com.github.clubmanager1999.backend.transaction.mapping.MappingService
 import com.github.clubmanager1999.backend.transaction.reference.NewCreditorReference
-import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntityMapper
+import com.github.clubmanager1999.backend.transaction.reference.toNewReference
 import org.springframework.stereotype.Service
 
 @Service
 class TransactionService(
-    val transactionEntityMapper: TransactionEntityMapper,
     val transactionRepository: TransactionRepository,
     val mappingService: MappingService,
-    val referenceEntityMapper: ReferenceEntityMapper,
     val receiptService: ReceiptService,
 ) {
     fun get(id: Long): ExistingTransaction {
         return transactionRepository
             .findById(id)
-            .map { transactionEntityMapper.toExistingTransaction(it) }
+            .map { it.toExistingTransaction() }
             .orElseThrow { TransactionNotFoundException(id) }
     }
 
     fun getAll(): List<ExistingTransaction> {
-        return transactionRepository.findAll().map { transactionEntityMapper.toExistingTransaction(it) }
+        return transactionRepository.findAll().map { it.toExistingTransaction() }
     }
 
     fun create(newTransaction: NewTransaction): ExistingTransaction {
         return newTransaction
-            .let { transactionEntityMapper.toTransactionEntity(null, it) }
+            .toTransactionEntity(null)
             .let { transactionRepository.save(it) }
-            .let { transactionEntityMapper.toExistingTransaction(it) }
+            .toExistingTransaction()
     }
 
     fun update(
@@ -56,9 +54,9 @@ class TransactionService(
         return transactionRepository
             .findById(id)
             .orElseThrow { TransactionNotFoundException(id) }
-            .let { transactionEntityMapper.toTransactionEntity(id, newTransaction) }
+            .let { newTransaction.toTransactionEntity(it.id) }
             .let { transactionRepository.save(it) }
-            .let { transactionEntityMapper.toExistingTransaction(it) }
+            .toExistingTransaction()
     }
 
     fun delete(id: Long) {
@@ -71,18 +69,18 @@ class TransactionService(
 
         fun toNewTransaction(transactionImport: TransactionImport): NewTransaction {
             val mapping = mappings.find { transactionImport.description.lowercase().contains(it.matcher.lowercase()) }
-            val reference = mapping?.reference?.let { referenceEntityMapper.toNewReference(it) }
+            val reference = mapping?.reference?.toNewReference()
             val creditorReference = reference as? NewCreditorReference
             val receipt = creditorReference?.let { receiptService.findByCreditorAndDate(it.creditor, transactionImport.valueDay) }
             val receiptId = receipt?.let { ReceiptId(it.id) }
 
-            return transactionEntityMapper.toNewTransaction(transactionImport, reference, receiptId)
+            return transactionImport.toNewTransaction(reference, receiptId)
         }
 
         transactionImports
             .filterNot { existingTransactions.contains(it.transactionKey()) }
             .map { toNewTransaction(it) }
-            .map { transactionEntityMapper.toTransactionEntity(null, it) }
+            .map { it.toTransactionEntity(null) }
             .forEach { transactionRepository.save(it) }
     }
 }

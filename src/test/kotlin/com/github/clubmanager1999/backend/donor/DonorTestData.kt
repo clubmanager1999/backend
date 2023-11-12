@@ -51,6 +51,15 @@ object DonorTestData {
         )
     }
 
+    fun createFlatDonorEntity(): DonorEntity {
+        return DonorEntity(
+            id = ID,
+            firstName = "",
+            lastName = "",
+            address = createAddress(),
+        )
+    }
+
     fun createDonorId(): DonorId {
         return DonorId(ID)
     }

@@ -20,25 +20,24 @@ import org.springframework.stereotype.Service
 
 @Service
 class MembershipService(
-    val membershipEntityMapper: MembershipEntityMapper,
     val membershipRepository: MembershipRepository,
 ) {
     fun get(id: Long): ExistingMembership {
         return membershipRepository
             .findById(id)
-            .map { membershipEntityMapper.toExistingMembership(it) }
+            .map { it.toExistingMembership() }
             .orElseThrow { MembershipNotFoundException(id) }
     }
 
     fun getAll(): List<ExistingMembership> {
-        return membershipRepository.findAll().map { membershipEntityMapper.toExistingMembership(it) }
+        return membershipRepository.findAll().map { it.toExistingMembership() }
     }
 
     fun create(newMembership: NewMembership): ExistingMembership {
         return newMembership
-            .let { membershipEntityMapper.toMembershipEntity(null, it) }
+            .toMembershipEntity(null)
             .let { membershipRepository.save(it) }
-            .let { membershipEntityMapper.toExistingMembership(it) }
+            .toExistingMembership()
     }
 
     fun update(
@@ -48,9 +47,9 @@ class MembershipService(
         return membershipRepository
             .findById(id)
             .orElseThrow { MembershipNotFoundException(id) }
-            .let { membershipEntityMapper.toMembershipEntity(id, newMembership) }
+            .let { newMembership.toMembershipEntity(it.id) }
             .let { membershipRepository.save(it) }
-            .let { membershipEntityMapper.toExistingMembership(it) }
+            .toExistingMembership()
     }
 
     fun delete(id: Long) {

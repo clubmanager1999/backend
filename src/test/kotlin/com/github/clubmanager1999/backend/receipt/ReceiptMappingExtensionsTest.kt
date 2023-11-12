@@ -16,52 +16,33 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.receipt
 
-import com.github.clubmanager1999.backend.creditor.CreditorEntityMapper
-import com.github.clubmanager1999.backend.creditor.CreditorId
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.creditor.toCreditorEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData.ID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
-class ReceiptEntityMapperTest {
-    @Mock lateinit var creditorEntityMapper: CreditorEntityMapper
-
-    @InjectMocks lateinit var receiptEntityMapper: ReceiptEntityMapper
-
+class ReceiptMappingExtensionsTest {
     @Test
     fun shouldMapReceiptEntityToExistingReceipt() {
-        `when`(
-            creditorEntityMapper.toExistingCreditor(CreditorTestData.createCreditorEntity()),
-        ).thenReturn(CreditorTestData.createExistingCreditor())
-
         assertThat(
-            receiptEntityMapper.toExistingReceipt(
-                ReceiptTestData.createReceiptEntity(),
-            ),
+            ReceiptTestData.createReceiptEntity().toExistingReceipt(),
         )
             .isEqualTo(ReceiptTestData.createExistingReceipt())
     }
 
     @Test
     fun shouldMapNewReceiptToReceiptEntityWithId() {
-        `when`(creditorEntityMapper.toCreditorEntity(CreditorId(CreditorTestData.ID))).thenReturn(CreditorTestData.createCreditorEntity())
-
         assertThat(
-            receiptEntityMapper.toReceiptEntity(ID, ReceiptTestData.createNewReceipt()),
+            ReceiptTestData.createNewReceipt().toReceiptEntity(ID),
         )
-            .isEqualTo(ReceiptTestData.createReceiptEntity())
+            .isEqualTo(ReceiptTestData.createReceiptEntity(CreditorTestData.createCreditorId().toCreditorEntity()))
     }
 
     @Test
     fun shouldMapReceiptIdToReceiptEntity() {
         assertThat(
-            receiptEntityMapper.toReceiptEntity(ReceiptId(ID)).id,
+            ReceiptId(ID).toReceiptEntity().id,
         )
             .isEqualTo(ID)
     }

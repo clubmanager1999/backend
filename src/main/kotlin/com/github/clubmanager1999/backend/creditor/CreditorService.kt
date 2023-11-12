@@ -20,25 +20,24 @@ import org.springframework.stereotype.Service
 
 @Service
 class CreditorService(
-    val creditorEntityMapper: CreditorEntityMapper,
     val creditorRepository: CreditorRepository,
 ) {
     fun get(id: Long): ExistingCreditor {
         return creditorRepository
             .findById(id)
-            .map { creditorEntityMapper.toExistingCreditor(it) }
+            .map { it.toExistingCreditor() }
             .orElseThrow { CreditorNotFoundException(id) }
     }
 
     fun getAll(): List<ExistingCreditor> {
-        return creditorRepository.findAll().map { creditorEntityMapper.toExistingCreditor(it) }
+        return creditorRepository.findAll().map { it.toExistingCreditor() }
     }
 
     fun create(newCreditor: NewCreditor): ExistingCreditor {
         return newCreditor
-            .let { creditorEntityMapper.toCreditorEntity(null, it) }
+            .toCreditorEntity(null)
             .let { creditorRepository.save(it) }
-            .let { creditorEntityMapper.toExistingCreditor(it) }
+            .toExistingCreditor()
     }
 
     fun update(
@@ -48,9 +47,9 @@ class CreditorService(
         return creditorRepository
             .findById(id)
             .orElseThrow { CreditorNotFoundException(id) }
-            .let { creditorEntityMapper.toCreditorEntity(id, newCreditor) }
+            .let { newCreditor.toCreditorEntity(it.id) }
             .let { creditorRepository.save(it) }
-            .let { creditorEntityMapper.toExistingCreditor(it) }
+            .toExistingCreditor()
     }
 
     fun delete(id: Long) {

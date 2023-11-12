@@ -31,8 +31,6 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class PurposeServiceTest {
-    @Mock lateinit var purposeEntityMapper: PurposeEntityMapper
-
     @Mock lateinit var purposeRepository: PurposeRepository
 
     @InjectMocks lateinit var purposeService: PurposeService
@@ -42,18 +40,16 @@ class PurposeServiceTest {
         val existingPurpose = PurposeTestData.createExistingPurpose()
         val savedEntity = PurposeTestData.createPurposeEntity()
 
-        `when`(purposeEntityMapper.toExistingPurpose(savedEntity)).thenReturn(existingPurpose)
+        `when`(purposeRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        `when`(purposeRepository.findById(42)).thenReturn(Optional.of(savedEntity))
-
-        assertThat(purposeService.get(42)).isEqualTo(existingPurpose)
+        assertThat(purposeService.get(ID)).isEqualTo(existingPurpose)
     }
 
     @Test
     fun shouldThrowExceptionIfPurposeIsNotFoundById() {
-        `when`(purposeRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(purposeRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { purposeService.get(42) }
+        assertThatThrownBy { purposeService.get(ID) }
             .isInstanceOf(PurposeNotFoundException::class.java)
     }
 
@@ -63,8 +59,6 @@ class PurposeServiceTest {
         val savedEntity = PurposeTestData.createPurposeEntity()
 
         `when`(purposeRepository.findAll()).thenReturn(listOf(savedEntity))
-
-        `when`(purposeEntityMapper.toExistingPurpose(savedEntity)).thenReturn(existingPurpose)
 
         assertThat(purposeService.getAll()).containsExactly(existingPurpose)
     }
@@ -76,11 +70,7 @@ class PurposeServiceTest {
         val savedEntity = PurposeTestData.createPurposeEntity()
         val newEntity = savedEntity.copy(id = null)
 
-        `when`(purposeEntityMapper.toPurposeEntity(null, newPurpose)).thenReturn(newEntity)
-
         `when`(purposeRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(purposeEntityMapper.toExistingPurpose(savedEntity)).thenReturn(existingPurpose)
 
         assertThat(purposeService.create(newPurpose)).isEqualTo(existingPurpose)
     }
@@ -90,25 +80,20 @@ class PurposeServiceTest {
         val newPurpose = PurposeTestData.createNewPurpose()
         val existingPurpose = PurposeTestData.createExistingPurpose()
         val savedEntity = PurposeTestData.createPurposeEntity()
-        val newEntity = savedEntity.copy(id = null)
 
-        `when`(purposeRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(purposeRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        `when`(purposeEntityMapper.toPurposeEntity(42, newPurpose)).thenReturn(newEntity)
+        `when`(purposeRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        `when`(purposeRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(purposeEntityMapper.toExistingPurpose(savedEntity)).thenReturn(existingPurpose)
-
-        assertThat(purposeService.update(42, newPurpose)).isEqualTo(existingPurpose)
+        assertThat(purposeService.update(ID, newPurpose)).isEqualTo(existingPurpose)
     }
 
     @Test
     fun shouldThrowExceptionIfUpdatePurposeIsNotFound() {
         val newPurpose = PurposeTestData.createNewPurpose()
-        `when`(purposeRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(purposeRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { purposeService.update(42, newPurpose) }
+        assertThatThrownBy { purposeService.update(ID, newPurpose) }
             .isInstanceOf(PurposeNotFoundException::class.java)
 
         verify(purposeRepository, never()).save(any())
@@ -116,8 +101,8 @@ class PurposeServiceTest {
 
     @Test
     fun shouldDeletePurpose() {
-        purposeService.delete(42)
+        purposeService.delete(ID)
 
-        verify(purposeRepository).deleteById(42)
+        verify(purposeRepository).deleteById(ID)
     }
 }

@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.transaction.reference
 
 import com.github.clubmanager1999.backend.member.MemberEntity
 import com.github.clubmanager1999.backend.member.MemberTestData
+import com.github.clubmanager1999.backend.member.toMemberEntity
 
 object ReferenceTestData {
     const val ID = 48L
@@ -32,6 +33,10 @@ object ReferenceTestData {
 
     fun createReferenceEntity(): ReferenceEntity {
         return createReferenceEntity(MemberTestData.createMemberEntity())
+    }
+
+    fun createFlatReferenceEntity(): ReferenceEntity {
+        return MemberReferenceEntity(id = null, member = MemberTestData.createMemberId().toMemberEntity())
     }
 
     fun createReferenceEntity(memberEntity: MemberEntity): ReferenceEntity {

@@ -20,25 +20,24 @@ import org.springframework.stereotype.Service
 
 @Service
 class DonorService(
-    val donorEntityMapper: DonorEntityMapper,
     val donorRepository: DonorRepository,
 ) {
     fun get(id: Long): ExistingDonor {
         return donorRepository
             .findById(id)
-            .map { donorEntityMapper.toExistingDonor(it) }
+            .map { it.toExistingDonor() }
             .orElseThrow { DonorNotFoundException(id) }
     }
 
     fun getAll(): List<ExistingDonor> {
-        return donorRepository.findAll().map { donorEntityMapper.toExistingDonor(it) }
+        return donorRepository.findAll().map { it.toExistingDonor() }
     }
 
     fun create(newDonor: NewDonor): ExistingDonor {
         return newDonor
-            .let { donorEntityMapper.toDonorEntity(null, it) }
+            .toDonorEntity(null)
             .let { donorRepository.save(it) }
-            .let { donorEntityMapper.toExistingDonor(it) }
+            .toExistingDonor()
     }
 
     fun update(
@@ -48,9 +47,9 @@ class DonorService(
         return donorRepository
             .findById(id)
             .orElseThrow { DonorNotFoundException(id) }
-            .let { donorEntityMapper.toDonorEntity(id, newDonor) }
+            .let { newDonor.toDonorEntity(it.id) }
             .let { donorRepository.save(it) }
-            .let { donorEntityMapper.toExistingDonor(it) }
+            .toExistingDonor()
     }
 
     fun delete(id: Long) {

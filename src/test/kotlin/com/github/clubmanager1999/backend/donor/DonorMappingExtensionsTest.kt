@@ -14,33 +14,33 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.creditor
+package com.github.clubmanager1999.backend.donor
 
-import org.springframework.stereotype.Service
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
-@Service
-class CreditorEntityMapper {
-    fun toExistingCreditor(creditorEntity: CreditorEntity): ExistingCreditor {
-        return ExistingCreditor(
-            id = creditorEntity.id!!,
-            name = creditorEntity.name,
+class DonorMappingExtensionsTest {
+    @Test
+    fun shouldMapDonorEntityToExistingDonor() {
+        assertThat(
+            DonorTestData.createDonorEntity().toExistingDonor(),
         )
+            .isEqualTo(DonorTestData.createExistingDonor())
     }
 
-    fun toCreditorEntity(
-        id: Long?,
-        newCreditor: NewCreditor,
-    ): CreditorEntity {
-        return CreditorEntity(
-            id = id,
-            name = newCreditor.name,
+    @Test
+    fun shouldMapNewDonorToDonorEntityWithId() {
+        assertThat(
+            DonorTestData.createNewDonor().toDonorEntity(ID),
         )
+            .isEqualTo(DonorTestData.createDonorEntity())
     }
 
-    fun toCreditorEntity(creditorId: CreditorId): CreditorEntity {
-        return CreditorEntity(
-            id = creditorId.id,
-            name = "",
+    @Test
+    fun shouldMapDonorIdToDonorEntity() {
+        assertThat(
+            DonorId(ID).toDonorEntity().id,
         )
+            .isEqualTo(ID)
     }
 }

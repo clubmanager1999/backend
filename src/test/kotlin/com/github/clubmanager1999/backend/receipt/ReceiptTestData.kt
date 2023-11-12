@@ -19,6 +19,7 @@ package com.github.clubmanager1999.backend.receipt
 import com.github.clubmanager1999.backend.creditor.CreditorEntity
 import com.github.clubmanager1999.backend.creditor.CreditorId
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.creditor.toCreditorEntity
 import java.time.LocalDate
 
 object ReceiptTestData {
@@ -51,6 +52,10 @@ object ReceiptTestData {
 
     fun createReceiptEntity(): ReceiptEntity {
         return createReceiptEntity(CreditorTestData.createCreditorEntity())
+    }
+
+    fun createFlatReceiptEntity(): ReceiptEntity {
+        return createReceiptEntity(CreditorTestData.createCreditorId().toCreditorEntity())
     }
 
     fun createReceiptEntity(creditorEntity: CreditorEntity): ReceiptEntity {

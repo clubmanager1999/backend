@@ -48,6 +48,10 @@ object MappingTestData {
         return createMappingEntity(ReferenceTestData.createReferenceEntity())
     }
 
+    fun createFlatMappingEntity(): MappingEntity {
+        return createMappingEntity(ReferenceTestData.createFlatReferenceEntity())
+    }
+
     fun createMappingEntity(referenceEntity: ReferenceEntity): MappingEntity {
         return MappingEntity(
             id = ID,

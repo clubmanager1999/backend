@@ -31,8 +31,6 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class MembershipServiceTest {
-    @Mock lateinit var membershipEntityMapper: MembershipEntityMapper
-
     @Mock lateinit var membershipRepository: MembershipRepository
 
     @InjectMocks lateinit var membershipService: MembershipService
@@ -41,8 +39,6 @@ class MembershipServiceTest {
     fun shouldGetMembershipById() {
         val existingMembership = MembershipTestData.createExistingMembership()
         val savedEntity = MembershipTestData.createMembershipEntity()
-
-        `when`(membershipEntityMapper.toExistingMembership(savedEntity)).thenReturn(existingMembership)
 
         `when`(membershipRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
@@ -64,8 +60,6 @@ class MembershipServiceTest {
 
         `when`(membershipRepository.findAll()).thenReturn(listOf(savedEntity))
 
-        `when`(membershipEntityMapper.toExistingMembership(savedEntity)).thenReturn(existingMembership)
-
         assertThat(membershipService.getAll()).containsExactly(existingMembership)
     }
 
@@ -76,11 +70,7 @@ class MembershipServiceTest {
         val savedEntity = MembershipTestData.createMembershipEntity()
         val newEntity = savedEntity.copy(id = null)
 
-        `when`(membershipEntityMapper.toMembershipEntity(null, newMembership)).thenReturn(newEntity)
-
         `when`(membershipRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(membershipEntityMapper.toExistingMembership(savedEntity)).thenReturn(existingMembership)
 
         assertThat(membershipService.create(newMembership)).isEqualTo(existingMembership)
     }
@@ -90,15 +80,10 @@ class MembershipServiceTest {
         val newMembership = MembershipTestData.createNewMembership()
         val existingMembership = MembershipTestData.createExistingMembership()
         val savedEntity = MembershipTestData.createMembershipEntity()
-        val newEntity = savedEntity.copy(id = null)
 
         `when`(membershipRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
-        `when`(membershipEntityMapper.toMembershipEntity(42, newMembership)).thenReturn(newEntity)
-
-        `when`(membershipRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(membershipEntityMapper.toExistingMembership(savedEntity)).thenReturn(existingMembership)
+        `when`(membershipRepository.save(savedEntity)).thenReturn(savedEntity)
 
         assertThat(membershipService.update(42, newMembership)).isEqualTo(existingMembership)
     }

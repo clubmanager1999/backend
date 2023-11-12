@@ -40,8 +40,6 @@ import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class MemberServiceTest {
-    @Mock lateinit var memberEntityMapper: MemberEntityMapper
-
     @Mock lateinit var memberRepository: MemberRepository
 
     @Mock lateinit var oidcUserMapper: OidcUserMapper
@@ -52,16 +50,14 @@ class MemberServiceTest {
 
     @Test
     fun shouldGetMemberById() {
-        val existingMember = MemberTestData.createExistingMember()
+        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
         val savedEntity = MemberTestData.createMemberEntity()
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
-
         `when`(memberRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(memberService.get(42)).isEqualTo(existingMember)
+        assertThat(memberService.get(42)).isEqualTo(existingMemberWithRoles)
     }
 
     @Test
@@ -73,16 +69,14 @@ class MemberServiceTest {
 
     @Test
     fun shouldGetMemberBySubject() {
-        val existingMember = MemberTestData.createExistingMember()
+        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
         val savedEntity = MemberTestData.createMemberEntity()
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
-
         `when`(memberRepository.findBySubject(SUBJECT)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(memberService.get(Subject(SUBJECT))).isEqualTo(existingMember)
+        assertThat(memberService.get(Subject(SUBJECT))).isEqualTo(existingMemberWithRoles)
     }
 
     @Test
@@ -94,72 +88,48 @@ class MemberServiceTest {
 
     @Test
     fun shouldGetAllMembers() {
-        val existingMember = MemberTestData.createExistingMember()
+        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
         val savedEntity = MemberTestData.createMemberEntity()
 
         `when`(memberRepository.findAll()).thenReturn(listOf(savedEntity))
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
-
-        assertThat(memberService.getAll()).containsExactly(existingMember)
+        assertThat(memberService.getAll()).containsExactly(existingMemberWithRoles)
     }
 
     @Test
     fun shouldCreateMember() {
         val newMember = MemberTestData.createNewMember()
-        val existingMember = MemberTestData.createExistingMember()
+        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
         val savedEntity = MemberTestData.createMemberEntity()
-        val newEntity = savedEntity.copy(id = null)
-
-        `when`(
-            memberEntityMapper.toMemberEntity(
-                null,
-                SUBJECT,
-                newMember,
-            ),
-        )
-            .thenReturn(newEntity)
+        val newEntity = MemberTestData.createFlatMemberEntity().copy(id = null)
 
         `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
-
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
 
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
         `when`(oidcAdminService.createUser(any())).thenReturn(Subject(SUBJECT))
 
-        assertThat(memberService.create(newMember)).isEqualTo(existingMember)
+        assertThat(memberService.create(newMember)).isEqualTo(existingMemberWithRoles)
     }
 
     @Test
     fun shouldUpdateMember() {
         val newMember = MemberTestData.createNewMember()
-        val existingMember = MemberTestData.createExistingMember()
+        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
         val savedEntity = MemberTestData.createMemberEntity()
-        val newEntity = savedEntity.copy(id = null)
+        val updatedEntity = MemberTestData.createFlatMemberEntity()
 
         `when`(memberRepository.findById(42)).thenReturn(Optional.of(savedEntity))
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
-        `when`(
-            memberEntityMapper.toMemberEntity(
-                42,
-                SUBJECT,
-                newMember,
-            ),
-        )
-            .thenReturn(newEntity)
+        `when`(memberRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
-
-        assertThat(memberService.update(42, newMember)).isEqualTo(existingMember)
+        assertThat(memberService.update(42, newMember)).isEqualTo(existingMemberWithRoles)
     }
 
     @Test
@@ -183,24 +153,12 @@ class MemberServiceTest {
     @Test
     fun shouldCreateOidcUser() {
         val newMember = MemberTestData.createNewMember()
-        val existingMember = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
-        val newEntity = savedEntity.copy(id = null)
-
-        `when`(
-            memberEntityMapper.toMemberEntity(
-                null,
-                SUBJECT,
-                newMember,
-            ),
-        )
-            .thenReturn(newEntity)
+        val newEntity = MemberTestData.createFlatMemberEntity().copy(id = null)
 
         `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
-
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
 
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
@@ -231,24 +189,12 @@ class MemberServiceTest {
     @Test
     fun shouldCreateMemberIfOidcResetFails() {
         val newMember = MemberTestData.createNewMember()
-        val existingMember = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
-        val newEntity = savedEntity.copy(id = null)
-
-        `when`(
-            memberEntityMapper.toMemberEntity(
-                null,
-                SUBJECT,
-                newMember,
-            ),
-        )
-            .thenReturn(newEntity)
+        val newEntity = MemberTestData.createFlatMemberEntity().copy(id = null)
 
         `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
-
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
 
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
@@ -265,9 +211,8 @@ class MemberServiceTest {
     @Test
     fun shouldUpdateOidcUser() {
         val newMember = MemberTestData.createNewMember()
-        val existingMember = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
-        val newEntity = savedEntity.copy(id = null)
+        val updatedEntity = MemberTestData.createFlatMemberEntity()
 
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
@@ -275,18 +220,7 @@ class MemberServiceTest {
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
-        `when`(
-            memberEntityMapper.toMemberEntity(
-                ID,
-                SUBJECT,
-                newMember,
-            ),
-        )
-            .thenReturn(newEntity)
-
-        `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(memberEntityMapper.toExistingMember(listOf(ROLE), savedEntity)).thenReturn(existingMember)
+        `when`(memberRepository.save(updatedEntity)).thenReturn(savedEntity)
 
         memberService.update(ID, newMember)
 

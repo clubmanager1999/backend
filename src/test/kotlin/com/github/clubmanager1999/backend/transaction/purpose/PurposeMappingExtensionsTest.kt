@@ -14,16 +14,25 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.transaction.purpose
 
-import com.github.clubmanager1999.backend.membership.ExistingMembership
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
-data class ExistingMember(
-    val id: Long,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val address: Address,
-    val membership: ExistingMembership,
-)
+class PurposeMappingExtensionsTest {
+    @Test
+    fun shouldMapPurposeEntityToExistingPurpose() {
+        assertThat(
+            PurposeTestData.createPurposeEntity().toExistingPurpose(),
+        )
+            .isEqualTo(PurposeTestData.createExistingPurpose())
+    }
+
+    @Test
+    fun shouldMapNewPurposeToPurposeEntityWithId() {
+        assertThat(
+            PurposeTestData.createNewPurpose().toPurposeEntity(ID),
+        )
+            .isEqualTo(PurposeTestData.createPurposeEntity())
+    }
+}

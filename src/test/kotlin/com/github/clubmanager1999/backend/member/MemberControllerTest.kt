@@ -54,7 +54,7 @@ internal class MemberControllerTest {
 
     @Test
     fun shouldReturnMember() {
-        `when`(memberService.get(42)).thenReturn(MemberTestData.createExistingMember())
+        `when`(memberService.get(42)).thenReturn(MemberTestData.createExistingMemberWithRoles())
 
         mockMvc
             .perform(get("/api/members/42").withRole(Permission.MANAGE_MEMBERS))
@@ -77,7 +77,7 @@ internal class MemberControllerTest {
 
     @Test
     fun shouldReturnMembers() {
-        `when`(memberService.getAll()).thenReturn(listOf(MemberTestData.createExistingMember()))
+        `when`(memberService.getAll()).thenReturn(listOf(MemberTestData.createExistingMemberWithRoles()))
 
         mockMvc
             .perform(get("/api/members").withRole(Permission.MANAGE_MEMBERS))
@@ -101,7 +101,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldCreateMember() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createExistingMemberWithRoles())
 
         mockMvc
             .perform(
@@ -116,7 +116,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldCreateMultipleMembers() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createExistingMemberWithRoles())
 
         mockMvc
             .perform(
@@ -140,7 +140,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(memberService.update(42, MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createExistingMemberWithRoles())
 
         mockMvc
             .perform(

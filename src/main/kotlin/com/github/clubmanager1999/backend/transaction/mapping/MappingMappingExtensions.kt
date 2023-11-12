@@ -14,16 +14,23 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.transaction.mapping
 
-import com.github.clubmanager1999.backend.membership.ExistingMembership
+import com.github.clubmanager1999.backend.transaction.reference.toExistingReference
+import com.github.clubmanager1999.backend.transaction.reference.toReferenceEntity
 
-data class ExistingMember(
-    val id: Long,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val address: Address,
-    val membership: ExistingMembership,
-)
+fun MappingEntity.toExistingMapping(): ExistingMapping {
+    return ExistingMapping(
+        id = this.id!!,
+        matcher = this.matcher,
+        reference = this.reference.toExistingReference(),
+    )
+}
+
+fun NewMapping.toMappingEntity(id: Long?): MappingEntity {
+    return MappingEntity(
+        id = id,
+        matcher = this.matcher,
+        reference = this.reference.toReferenceEntity(),
+    )
+}

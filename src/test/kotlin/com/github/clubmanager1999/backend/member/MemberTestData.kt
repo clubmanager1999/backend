@@ -18,8 +18,10 @@ package com.github.clubmanager1999.backend.member
 
 import com.github.clubmanager1999.backend.membership.MembershipEntity
 import com.github.clubmanager1999.backend.membership.MembershipId
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.membership.MembershipTestData.createExistingMembership
 import com.github.clubmanager1999.backend.membership.MembershipTestData.createMembershipEntity
+import com.github.clubmanager1999.backend.membership.toMembershipEntity
 import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 
@@ -62,12 +64,28 @@ object MemberTestData {
             EMAIL,
             createAddress(),
             createExistingMembership(),
+        )
+    }
+
+    fun createExistingMemberWithRoles(): ExistingMemberWithRoles {
+        return ExistingMemberWithRoles(
+            ID,
+            USER_NAME,
+            FIRST_NAME,
+            LAST_NAME,
+            EMAIL,
+            createAddress(),
+            createExistingMembership(),
             listOf(ROLE),
         )
     }
 
     fun createMemberEntity(): MemberEntity {
         return createMemberEntity(createMembershipEntity())
+    }
+
+    fun createFlatMemberEntity(): MemberEntity {
+        return createMemberEntity(MembershipTestData.createMembershipId().toMembershipEntity())
     }
 
     fun createMemberEntity(membershipEntity: MembershipEntity): MemberEntity {
