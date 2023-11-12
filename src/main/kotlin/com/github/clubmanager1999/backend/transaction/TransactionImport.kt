@@ -23,6 +23,6 @@ data class TransactionImport(
     val bookingDay: LocalDate,
     val valueDay: LocalDate,
     val name: String,
-    val purpose: String,
+    val description: String,
     val amount: BigDecimal,
 )

@@ -25,7 +25,7 @@ data class NewTransaction(
     val bookingDay: LocalDate,
     val valueDay: LocalDate,
     val name: String,
-    val purpose: String,
+    val description: String,
     val amount: BigDecimal,
     val reference: NewReference?,
     val receipt: ReceiptId?,

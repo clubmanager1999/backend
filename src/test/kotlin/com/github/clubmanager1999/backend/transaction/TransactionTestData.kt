@@ -35,7 +35,7 @@ object TransactionTestData {
 
     const val NAME = "Robert Paulson"
 
-    const val PURPOSE = "Soap order"
+    const val DESCRIPTION = "Soap order"
 
     val AMOUNT = BigDecimal("42.42")
 
@@ -51,7 +51,7 @@ object TransactionTestData {
             bookingDay = BOOKING_DAY,
             valueDay = VALUE_DAY,
             name = NAME,
-            purpose = PURPOSE,
+            description = DESCRIPTION,
             amount = AMOUNT,
             reference = reference,
             receipt = receipt,
@@ -68,7 +68,7 @@ object TransactionTestData {
             bookingDay = BOOKING_DAY,
             valueDay = VALUE_DAY,
             name = NAME,
-            purpose = PURPOSE,
+            description = DESCRIPTION,
             amount = AMOUNT,
             reference = reference,
             receipt = ReceiptTestData.createExistingReceipt(),
@@ -88,7 +88,7 @@ object TransactionTestData {
             bookingDay = BOOKING_DAY,
             valueDay = VALUE_DAY,
             name = NAME,
-            purpose = PURPOSE,
+            description = DESCRIPTION,
             amount = AMOUNT,
             reference = reference,
             receipt = receiptEntity,
@@ -100,7 +100,7 @@ object TransactionTestData {
             bookingDay = BOOKING_DAY,
             valueDay = VALUE_DAY,
             name = NAME,
-            purpose = PURPOSE,
+            description = DESCRIPTION,
             amount = AMOUNT,
         )
     }

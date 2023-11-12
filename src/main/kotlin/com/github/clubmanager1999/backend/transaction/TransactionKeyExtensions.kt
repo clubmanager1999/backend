@@ -17,9 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction
 
 fun TransactionImport.transactionKey(): String {
-    return "${this.bookingDay}-${this.valueDay}-${this.name}-${this.purpose}-${this.amount}"
+    return "${this.bookingDay}-${this.valueDay}-${this.name}-${this.description}-${this.amount}"
 }
 
 fun TransactionEntity.transactionKey(): String {
-    return "${this.bookingDay}-${this.valueDay}-${this.name}-${this.purpose}-${this.amount}"
+    return "${this.bookingDay}-${this.valueDay}-${this.name}-${this.description}-${this.amount}"
 }
