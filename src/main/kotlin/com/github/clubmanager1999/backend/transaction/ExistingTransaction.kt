@@ -26,7 +26,7 @@ data class ExistingTransaction(
     val bookingDay: LocalDate,
     val valueDay: LocalDate,
     val name: String,
-    val purpose: String,
+    val description: String,
     val amount: BigDecimal,
     val reference: ExistingReference?,
     val receipt: ExistingReceipt?,

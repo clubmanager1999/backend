@@ -34,7 +34,7 @@ data class TransactionEntity(
     val bookingDay: LocalDate,
     val valueDay: LocalDate,
     val name: String,
-    val purpose: String,
+    val description: String,
     val amount: BigDecimal,
     @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
     val reference: ReferenceEntity?,

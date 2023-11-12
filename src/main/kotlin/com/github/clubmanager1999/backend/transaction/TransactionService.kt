@@ -70,7 +70,7 @@ class TransactionService(
         val mappings = mappingService.getAll()
 
         fun toNewTransaction(transactionImport: TransactionImport): NewTransaction {
-            val mapping = mappings.find { transactionImport.purpose.lowercase().contains(it.matcher.lowercase()) }
+            val mapping = mappings.find { transactionImport.description.lowercase().contains(it.matcher.lowercase()) }
             val reference = mapping?.reference?.let { referenceEntityMapper.toNewReference(it) }
             val creditorReference = reference as? NewCreditorReference
             val receipt = creditorReference?.let { receiptService.findByCreditorAndDate(it.creditor, transactionImport.valueDay) }

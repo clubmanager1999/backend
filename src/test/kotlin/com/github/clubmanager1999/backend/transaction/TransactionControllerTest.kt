@@ -34,9 +34,9 @@ import com.github.clubmanager1999.backend.security.Permission.MANAGE_TRANSACTION
 import com.github.clubmanager1999.backend.security.withRole
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.AMOUNT
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.BOOKING_DAY
+import com.github.clubmanager1999.backend.transaction.TransactionTestData.DESCRIPTION
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.ID
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.NAME
-import com.github.clubmanager1999.backend.transaction.TransactionTestData.PURPOSE
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.VALUE_DAY
 import com.github.clubmanager1999.backend.transaction.reference.ExistingCreditorReference
 import com.github.clubmanager1999.backend.transaction.reference.ExistingDonorReference
@@ -85,7 +85,7 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$.bookingDay").value(BOOKING_DAY.toString()))
             .andExpect(jsonPath("$.valueDay").value(VALUE_DAY.toString()))
             .andExpect(jsonPath("$.name").value(NAME))
-            .andExpect(jsonPath("$.purpose").value(PURPOSE))
+            .andExpect(jsonPath("$.description").value(DESCRIPTION))
             .andExpect(jsonPath("$.amount").value(AMOUNT))
             .andExpect(jsonPath("$.reference.creditor.id").value(CreditorTestData.ID))
             .andExpect(jsonPath("$.reference.creditor.name").value(CreditorTestData.NAME))
@@ -110,7 +110,7 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$.bookingDay").value(BOOKING_DAY.toString()))
             .andExpect(jsonPath("$.valueDay").value(VALUE_DAY.toString()))
             .andExpect(jsonPath("$.name").value(NAME))
-            .andExpect(jsonPath("$.purpose").value(PURPOSE))
+            .andExpect(jsonPath("$.description").value(DESCRIPTION))
             .andExpect(jsonPath("$.amount").value(AMOUNT))
             .andExpect(jsonPath("$.reference.donor.id").value(com.github.clubmanager1999.backend.donor.ID))
             .andExpect(jsonPath("$.reference.donor.firstName").value(com.github.clubmanager1999.backend.donor.FIRST_NAME))
@@ -136,7 +136,7 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$.bookingDay").value(BOOKING_DAY.toString()))
             .andExpect(jsonPath("$.valueDay").value(VALUE_DAY.toString()))
             .andExpect(jsonPath("$.name").value(NAME))
-            .andExpect(jsonPath("$.purpose").value(PURPOSE))
+            .andExpect(jsonPath("$.description").value(DESCRIPTION))
             .andExpect(jsonPath("$.amount").value(AMOUNT))
             .andExpect(jsonPath("$.reference.member.id").value(com.github.clubmanager1999.backend.member.ID))
             .andExpect(jsonPath("$.reference.member.userName").value(USER_NAME))
@@ -171,7 +171,7 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$[0].bookingDay").value(BOOKING_DAY.toString()))
             .andExpect(jsonPath("$[0].valueDay").value(VALUE_DAY.toString()))
             .andExpect(jsonPath("$[0].name").value(NAME))
-            .andExpect(jsonPath("$[0].purpose").value(PURPOSE))
+            .andExpect(jsonPath("$[0].description").value(DESCRIPTION))
             .andExpect(jsonPath("$[0].amount").value(AMOUNT))
             .andExpect(jsonPath("$[0].reference.member.id").value(com.github.clubmanager1999.backend.member.ID))
             .andExpect(jsonPath("$[0].reference.member.userName").value(USER_NAME))
