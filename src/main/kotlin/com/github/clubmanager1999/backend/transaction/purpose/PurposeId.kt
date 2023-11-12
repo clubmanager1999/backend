@@ -14,21 +14,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.transaction
+package com.github.clubmanager1999.backend.transaction.purpose
 
-import com.github.clubmanager1999.backend.receipt.ReceiptId
-import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
-import com.github.clubmanager1999.backend.transaction.reference.NewReference
-import java.math.BigDecimal
-import java.time.LocalDate
-
-data class NewTransaction(
-    val bookingDay: LocalDate,
-    val valueDay: LocalDate,
-    val name: String,
-    val description: String,
-    val amount: BigDecimal,
-    val reference: NewReference?,
-    val receipt: ReceiptId?,
-    val purpose: PurposeId?,
+data class PurposeId(
+    val id: Long,
 )

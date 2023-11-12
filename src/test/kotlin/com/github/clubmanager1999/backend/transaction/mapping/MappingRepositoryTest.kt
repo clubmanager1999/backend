@@ -75,42 +75,52 @@ internal class MappingRepositoryTest {
 
     @Test
     fun shouldSaveMapping() {
-        mappingRepository.save(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity)))
+        mappingRepository.save(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null))
 
         assertThat(mappingRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity)))
+            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null))
     }
 
     @Test
     fun shouldFindMappingById() {
-        val createdMapping = mappingRepository.save(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity)))
+        val createdMapping =
+            mappingRepository.save(
+                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null),
+            )
 
         assertThat(mappingRepository.findById(createdMapping.id!!).get())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity)))
+            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null))
     }
 
     @Test
     fun shouldUpdateMapping() {
-        val createdMapping = mappingRepository.save(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity)))
+        val createdMapping =
+            mappingRepository.save(
+                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null),
+            )
         mappingRepository.save(
             MappingTestData.createMappingEntity(
                 CreditorReferenceEntity(id = null, creditorEntity),
+                null,
             ).copy(id = createdMapping.id, matcher = "new"),
         )
 
         assertThat(mappingRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity)).copy(matcher = "new"))
+            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null).copy(matcher = "new"))
     }
 
     @Test
     fun shouldDeleteMapping() {
-        val createdMapping = mappingRepository.save(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity)))
+        val createdMapping =
+            mappingRepository.save(
+                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null),
+            )
         mappingRepository.deleteById(createdMapping.id!!)
 
         assertThat(mappingRepository.findAll()).isEmpty()

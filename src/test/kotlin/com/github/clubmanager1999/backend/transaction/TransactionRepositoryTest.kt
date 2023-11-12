@@ -26,6 +26,8 @@ import com.github.clubmanager1999.backend.membership.MembershipRepository
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.receipt.ReceiptRepository
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeRepository
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
 import com.github.clubmanager1999.backend.transaction.reference.CreditorReferenceEntity
 import com.github.clubmanager1999.backend.transaction.reference.DonorReferenceEntity
 import com.github.clubmanager1999.backend.transaction.reference.MemberReferenceEntity
@@ -83,11 +85,14 @@ internal class TransactionRepositoryTest {
 
     @Autowired private lateinit var receiptRepository: ReceiptRepository
 
+    @Autowired private lateinit var purposeRepository: PurposeRepository
+
     private var memberEntity = MemberTestData.createMemberEntity()
     private var membershipEntity = MembershipTestData.createMembershipEntity()
     private var donorEntity = DonorTestData.createDonorEntity()
     private var creditorEntity = CreditorTestData.createCreditorEntity()
     private var receiptEntity = ReceiptTestData.createReceiptEntity()
+    private var purposeEntity = PurposeTestData.createPurposeEntity()
 
     @BeforeEach
     fun beforeEach() {
@@ -98,17 +103,23 @@ internal class TransactionRepositoryTest {
         donorRepository.deleteAll()
         receiptRepository.deleteAll()
         creditorRepository.deleteAll()
+        purposeRepository.deleteAll()
         membershipEntity = membershipRepository.save(MembershipTestData.createMembershipEntity())
         memberEntity = memberRepository.save(MemberTestData.createMemberEntity(membershipEntity))
         donorEntity = donorRepository.save(DonorTestData.createDonorEntity())
         creditorEntity = creditorRepository.save(CreditorTestData.createCreditorEntity())
         receiptEntity = receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
+        purposeEntity = purposeRepository.save(PurposeTestData.createPurposeEntity())
     }
 
     @Test
     fun shouldSaveTransactionWithCreditorReference() {
         transactionRepository.save(
-            TransactionTestData.createTransactionEntity(CreditorReferenceEntity(id = null, creditor = creditorEntity), receiptEntity),
+            TransactionTestData.createTransactionEntity(
+                CreditorReferenceEntity(id = null, creditor = creditorEntity),
+                receiptEntity,
+                purposeEntity,
+            ),
         )
 
         assertThat(transactionRepository.findAll().first())
@@ -118,10 +129,12 @@ internal class TransactionRepositoryTest {
             .ignoringFields("reference.creditor.id")
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
+            .ignoringFields("purpose.id")
             .isEqualTo(
                 TransactionTestData.createTransactionEntity(
                     CreditorReferenceEntity(id = null, creditor = creditorEntity),
                     receiptEntity,
+                    purposeEntity,
                 ),
             )
     }
@@ -129,7 +142,7 @@ internal class TransactionRepositoryTest {
     @Test
     fun shouldSaveTransactionWithDonorReference() {
         transactionRepository.save(
-            TransactionTestData.createTransactionEntity(DonorReferenceEntity(id = null, donor = donorEntity), receiptEntity),
+            TransactionTestData.createTransactionEntity(DonorReferenceEntity(id = null, donor = donorEntity), receiptEntity, purposeEntity),
         )
 
         assertThat(transactionRepository.findAll().first())
@@ -139,13 +152,24 @@ internal class TransactionRepositoryTest {
             .ignoringFields("reference.donor.id")
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
-            .isEqualTo(TransactionTestData.createTransactionEntity(DonorReferenceEntity(id = null, donor = donorEntity), receiptEntity))
+            .ignoringFields("purpose.id")
+            .isEqualTo(
+                TransactionTestData.createTransactionEntity(
+                    DonorReferenceEntity(id = null, donor = donorEntity),
+                    receiptEntity,
+                    purposeEntity,
+                ),
+            )
     }
 
     @Test
     fun shouldSaveTransactionWithMemberReference() {
         transactionRepository.save(
-            TransactionTestData.createTransactionEntity(MemberReferenceEntity(id = null, member = memberEntity), receiptEntity),
+            TransactionTestData.createTransactionEntity(
+                MemberReferenceEntity(id = null, member = memberEntity),
+                receiptEntity,
+                purposeEntity,
+            ),
         )
 
         assertThat(transactionRepository.findAll().first())
@@ -156,8 +180,13 @@ internal class TransactionRepositoryTest {
             .ignoringFields("reference.member.membership.id")
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
+            .ignoringFields("purpose.id")
             .isEqualTo(
-                TransactionTestData.createTransactionEntity(MemberReferenceEntity(id = null, member = memberEntity), receiptEntity),
+                TransactionTestData.createTransactionEntity(
+                    MemberReferenceEntity(id = null, member = memberEntity),
+                    receiptEntity,
+                    purposeEntity,
+                ),
             )
     }
 
@@ -165,7 +194,11 @@ internal class TransactionRepositoryTest {
     fun shouldFindTransactionById() {
         val createdTransaction =
             transactionRepository.save(
-                TransactionTestData.createTransactionEntity(ReferenceTestData.createReferenceEntity(memberEntity), receiptEntity),
+                TransactionTestData.createTransactionEntity(
+                    ReferenceTestData.createReferenceEntity(memberEntity),
+                    receiptEntity,
+                    purposeEntity,
+                ),
             )
 
         assertThat(transactionRepository.findById(createdTransaction.id!!).get())
@@ -176,6 +209,7 @@ internal class TransactionRepositoryTest {
             .ignoringFields("reference.member.membership.id")
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
+            .ignoringFields("purpose.id")
             .isEqualTo(TransactionTestData.createTransactionEntity())
     }
 
@@ -183,13 +217,18 @@ internal class TransactionRepositoryTest {
     fun shouldUpdateTransaction() {
         val createdTransaction =
             transactionRepository.save(
-                TransactionTestData.createTransactionEntity(ReferenceTestData.createReferenceEntity(memberEntity), receiptEntity),
+                TransactionTestData.createTransactionEntity(
+                    ReferenceTestData.createReferenceEntity(memberEntity),
+                    receiptEntity,
+                    purposeEntity,
+                ),
             )
 
         transactionRepository.save(
             TransactionTestData.createTransactionEntity(
                 ReferenceTestData.createReferenceEntity(memberEntity),
                 receiptEntity,
+                purposeEntity,
             ).copy(id = createdTransaction.id, name = "new"),
         )
 
@@ -201,6 +240,7 @@ internal class TransactionRepositoryTest {
             .ignoringFields("reference.member.membership.id")
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
+            .ignoringFields("purpose.id")
             .isEqualTo(TransactionTestData.createTransactionEntity().copy(name = "new"))
     }
 
@@ -208,7 +248,11 @@ internal class TransactionRepositoryTest {
     fun shouldDeleteTransaction() {
         val createdTransaction =
             transactionRepository.save(
-                TransactionTestData.createTransactionEntity(ReferenceTestData.createReferenceEntity(memberEntity), receiptEntity),
+                TransactionTestData.createTransactionEntity(
+                    ReferenceTestData.createReferenceEntity(memberEntity),
+                    receiptEntity,
+                    purposeEntity,
+                ),
             )
         transactionRepository.deleteById(createdTransaction.id!!)
 

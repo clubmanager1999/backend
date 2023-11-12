@@ -35,4 +35,12 @@ class PurposeMappingExtensionsTest {
         )
             .isEqualTo(PurposeTestData.createPurposeEntity())
     }
+
+    @Test
+    fun shouldMapPurposeIdToPurposeEntity() {
+        assertThat(
+            PurposeTestData.createPurposeId().toPurposeEntity(),
+        )
+            .isEqualTo(PurposeTestData.createPurposeEntity().copy(name = ""))
+    }
 }

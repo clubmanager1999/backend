@@ -16,12 +16,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeEntity
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 
 @Entity
@@ -30,4 +32,6 @@ data class MappingEntity(
     val matcher: String,
     @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
     val reference: ReferenceEntity,
+    @ManyToOne
+    val purpose: PurposeEntity?,
 )

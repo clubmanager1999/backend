@@ -29,3 +29,10 @@ fun NewPurpose.toPurposeEntity(id: Long?): PurposeEntity {
         name = this.name,
     )
 }
+
+fun PurposeId.toPurposeEntity(): PurposeEntity {
+    return PurposeEntity(
+        id = this.id,
+        name = "",
+    )
+}

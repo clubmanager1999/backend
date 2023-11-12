@@ -20,6 +20,10 @@ import com.github.clubmanager1999.backend.receipt.ReceiptEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptId
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.receipt.toReceiptEntity
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeEntity
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
+import com.github.clubmanager1999.backend.transaction.purpose.toPurposeEntity
 import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
 import com.github.clubmanager1999.backend.transaction.reference.NewReference
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
@@ -41,12 +45,17 @@ object TransactionTestData {
     val AMOUNT = BigDecimal("42.42")
 
     fun createNewTransaction(): NewTransaction {
-        return createNewTransaction(ReferenceTestData.createNewReference(), ReceiptId(ReceiptTestData.ID))
+        return createNewTransaction(
+            ReferenceTestData.createNewReference(),
+            ReceiptId(ReceiptTestData.ID),
+            PurposeTestData.createPurposeId(),
+        )
     }
 
     fun createNewTransaction(
         reference: NewReference?,
         receipt: ReceiptId?,
+        purposeId: PurposeId?,
     ): NewTransaction {
         return NewTransaction(
             bookingDay = BOOKING_DAY,
@@ -56,6 +65,7 @@ object TransactionTestData {
             amount = AMOUNT,
             reference = reference,
             receipt = receipt,
+            purpose = purposeId,
         )
     }
 
@@ -73,20 +83,30 @@ object TransactionTestData {
             amount = AMOUNT,
             reference = reference,
             receipt = ReceiptTestData.createExistingReceipt(),
+            purpose = PurposeTestData.createExistingPurpose(),
         )
     }
 
     fun createTransactionEntity(): TransactionEntity {
-        return createTransactionEntity(ReferenceTestData.createReferenceEntity(), ReceiptTestData.createReceiptEntity())
+        return createTransactionEntity(
+            ReferenceTestData.createReferenceEntity(),
+            ReceiptTestData.createReceiptEntity(),
+            PurposeTestData.createPurposeEntity(),
+        )
     }
 
     fun createFlatTransactionEntity(): TransactionEntity {
-        return createTransactionEntity(ReferenceTestData.createFlatReferenceEntity(), ReceiptTestData.createReceiptId().toReceiptEntity())
+        return createTransactionEntity(
+            ReferenceTestData.createFlatReferenceEntity(),
+            ReceiptTestData.createReceiptId().toReceiptEntity(),
+            PurposeTestData.createPurposeId().toPurposeEntity(),
+        )
     }
 
     fun createTransactionEntity(
         reference: ReferenceEntity?,
         receiptEntity: ReceiptEntity?,
+        purposeEntity: PurposeEntity?,
     ): TransactionEntity {
         return TransactionEntity(
             id = ID,
@@ -97,6 +117,7 @@ object TransactionTestData {
             amount = AMOUNT,
             reference = reference,
             receipt = receiptEntity,
+            purpose = purposeEntity,
         )
     }
 

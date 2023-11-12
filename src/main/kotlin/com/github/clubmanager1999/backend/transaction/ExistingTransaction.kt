@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction
 
 import com.github.clubmanager1999.backend.receipt.ExistingReceipt
+import com.github.clubmanager1999.backend.transaction.purpose.ExistingPurpose
 import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -30,4 +31,5 @@ data class ExistingTransaction(
     val amount: BigDecimal,
     val reference: ExistingReference?,
     val receipt: ExistingReceipt?,
+    val purpose: ExistingPurpose?,
 )

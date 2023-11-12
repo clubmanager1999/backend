@@ -16,6 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.purpose.ExistingPurpose
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeEntity
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
+import com.github.clubmanager1999.backend.transaction.purpose.toPurposeEntity
 import com.github.clubmanager1999.backend.transaction.reference.ExistingReference
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
@@ -29,34 +33,43 @@ object MappingTestData {
         return NewMapping(
             matcher = MATCHER,
             reference = ReferenceTestData.createNewReference(),
+            purpose = PurposeTestData.createPurposeId(),
         )
     }
 
     fun createExistingMapping(): ExistingMapping {
-        return createExistingMapping(ReferenceTestData.createExistingReference())
+        return createExistingMapping(ReferenceTestData.createExistingReference(), PurposeTestData.createExistingPurpose())
     }
 
-    fun createExistingMapping(reference: ExistingReference): ExistingMapping {
+    fun createExistingMapping(
+        reference: ExistingReference,
+        purpose: ExistingPurpose?,
+    ): ExistingMapping {
         return ExistingMapping(
             id = ID,
             matcher = MATCHER,
             reference = reference,
+            purpose = purpose,
         )
     }
 
     fun createMappingEntity(): MappingEntity {
-        return createMappingEntity(ReferenceTestData.createReferenceEntity())
+        return createMappingEntity(ReferenceTestData.createReferenceEntity(), PurposeTestData.createPurposeEntity())
     }
 
     fun createFlatMappingEntity(): MappingEntity {
-        return createMappingEntity(ReferenceTestData.createFlatReferenceEntity())
+        return createMappingEntity(ReferenceTestData.createFlatReferenceEntity(), PurposeTestData.createPurposeId().toPurposeEntity())
     }
 
-    fun createMappingEntity(referenceEntity: ReferenceEntity): MappingEntity {
+    fun createMappingEntity(
+        referenceEntity: ReferenceEntity,
+        purposeEntity: PurposeEntity?,
+    ): MappingEntity {
         return MappingEntity(
             id = ID,
             matcher = MATCHER,
             reference = referenceEntity,
+            purpose = purposeEntity,
         )
     }
 }
