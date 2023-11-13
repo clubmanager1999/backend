@@ -16,7 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -24,5 +27,11 @@ class TestController(val testService: TestService) {
     @GetMapping("/test")
     fun test() {
         testService.raise()
+    }
+
+    @PostMapping("/test")
+    fun validation(
+        @Valid @RequestBody data: Data,
+    ) {
     }
 }

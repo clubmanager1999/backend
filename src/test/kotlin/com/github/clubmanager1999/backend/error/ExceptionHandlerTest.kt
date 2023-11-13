@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.creditor.CreditorNotFoundException
 import com.github.clubmanager1999.backend.donor.DonorNotFoundException
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
@@ -29,6 +30,7 @@ import com.github.clubmanager1999.backend.transaction.TransactionNotFoundExcepti
 import com.github.clubmanager1999.backend.transaction.mapping.MappingNotFoundException
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeNotFoundException
 import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.`when`
@@ -47,6 +49,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @AutoConfigureMockMvc
 class ExceptionHandlerTest {
     @Autowired private lateinit var mockMvc: MockMvc
+
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
     @MockBean private lateinit var testService: TestService
 
@@ -131,6 +135,24 @@ class ExceptionHandlerTest {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(it.apiError.message))
             }
         }
+    }
+
+    @Test
+    fun shouldMapValidationErrors() {
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.post("/test").withoutRole().content(
+                    objectMapper.writeValueAsString(Data(42, null, NestedData("too long"))),
+                )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(MockMvcResultMatchers.status().`is`(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Validation error"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.fields.number").value("must be less than or equal to 6"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.fields.empty").value("must not be null"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.fields.['nested.name']").value("size must be between 1 and 2"))
     }
 
     data class Case(val e: Exception, val apiError: ApiError, val httpStatus: HttpStatus)
