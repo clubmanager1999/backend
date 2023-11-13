@@ -16,4 +16,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
-data class ApiError(val code: ErrorCode, val message: String)
+data class ApiError(val code: ErrorCode, val message: String, val fields: Map<String, String?>? = null)

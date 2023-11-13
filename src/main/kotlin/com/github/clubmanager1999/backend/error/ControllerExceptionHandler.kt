@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.error
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -36,6 +37,19 @@ class ControllerExceptionHandler {
         return ResponseEntity(
             ApiError(e.errorCode, e.errorMessage),
             HttpStatus.NOT_FOUND,
+        )
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handle(e: MethodArgumentNotValidException): ResponseEntity<ApiError> {
+        val fieldErrors =
+            e.fieldErrors
+                .groupBy { it.field }
+                .mapValues { pair -> pair.value.map { it.defaultMessage }.firstOrNull() }
+
+        return ResponseEntity(
+            ApiError(ErrorCode.VALIDATION_ERROR, "Validation error", fieldErrors),
+            HttpStatus.BAD_REQUEST,
         )
     }
 }

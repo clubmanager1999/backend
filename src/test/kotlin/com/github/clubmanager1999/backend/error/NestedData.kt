@@ -16,18 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
-enum class ErrorCode {
-    INTERNAL_ERROR,
-    VALIDATION_ERROR,
-    MEMBER_NOT_FOUND,
-    SUBJECT_NOT_FOUND,
-    MEMBERSHIP_NOT_FOUND,
-    CLIENT_NOT_FOUND,
-    ROLE_NOT_FOUND,
-    TRANSACTION_NOT_FOUND,
-    DONOR_NOT_FOUND,
-    CREDITOR_NOT_FOUND,
-    RECEIPT_NOT_FOUND,
-    MAPPING_NOT_FOUND,
-    PURPOSE_NOT_FOUND,
-}
+import jakarta.validation.constraints.Size
+
+data class NestedData(
+    @field:Size(min = 1, max = 2)
+    val name: String,
+)
