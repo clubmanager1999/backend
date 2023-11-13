@@ -14,21 +14,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.error
+package com.github.clubmanager1999.backend.transaction.area
 
-enum class ErrorCode {
-    INTERNAL_ERROR,
-    VALIDATION_ERROR,
-    MEMBER_NOT_FOUND,
-    SUBJECT_NOT_FOUND,
-    MEMBERSHIP_NOT_FOUND,
-    CLIENT_NOT_FOUND,
-    ROLE_NOT_FOUND,
-    TRANSACTION_NOT_FOUND,
-    DONOR_NOT_FOUND,
-    CREDITOR_NOT_FOUND,
-    RECEIPT_NOT_FOUND,
-    MAPPING_NOT_FOUND,
-    PURPOSE_NOT_FOUND,
-    AREA_NOT_FOUND,
-}
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+
+@Entity
+data class AreaEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long?,
+    val name: String,
+)

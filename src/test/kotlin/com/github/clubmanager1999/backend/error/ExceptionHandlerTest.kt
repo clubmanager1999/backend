@@ -27,6 +27,7 @@ import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
 import com.github.clubmanager1999.backend.receipt.ReceiptNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
 import com.github.clubmanager1999.backend.transaction.TransactionNotFoundException
+import com.github.clubmanager1999.backend.transaction.area.AreaNotFoundException
 import com.github.clubmanager1999.backend.transaction.mapping.MappingNotFoundException
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeNotFoundException
 import org.junit.jupiter.api.DynamicTest
@@ -116,6 +117,11 @@ class ExceptionHandlerTest {
             Case(
                 PurposeNotFoundException(42),
                 ApiError(ErrorCode.PURPOSE_NOT_FOUND, "No purpose with id 42 found"),
+                HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                AreaNotFoundException(42),
+                ApiError(ErrorCode.AREA_NOT_FOUND, "No area with id 42 found"),
                 HttpStatus.NOT_FOUND,
             ),
         )
