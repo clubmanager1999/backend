@@ -20,6 +20,10 @@ import com.github.clubmanager1999.backend.receipt.ReceiptEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptId
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.receipt.toReceiptEntity
+import com.github.clubmanager1999.backend.transaction.area.AreaEntity
+import com.github.clubmanager1999.backend.transaction.area.AreaId
+import com.github.clubmanager1999.backend.transaction.area.AreaTestData
+import com.github.clubmanager1999.backend.transaction.area.toAreaEntity
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeEntity
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
@@ -49,6 +53,7 @@ object TransactionTestData {
             ReferenceTestData.createNewReference(),
             ReceiptId(ReceiptTestData.ID),
             PurposeTestData.createPurposeId(),
+            AreaTestData.createAreaId(),
         )
     }
 
@@ -56,6 +61,7 @@ object TransactionTestData {
         reference: NewReference?,
         receipt: ReceiptId?,
         purposeId: PurposeId?,
+        areaId: AreaId?,
     ): NewTransaction {
         return NewTransaction(
             bookingDay = BOOKING_DAY,
@@ -66,6 +72,7 @@ object TransactionTestData {
             reference = reference,
             receipt = receipt,
             purpose = purposeId,
+            area = areaId,
         )
     }
 
@@ -84,6 +91,7 @@ object TransactionTestData {
             reference = reference,
             receipt = ReceiptTestData.createExistingReceipt(),
             purpose = PurposeTestData.createExistingPurpose(),
+            area = AreaTestData.createExistingArea(),
         )
     }
 
@@ -92,6 +100,7 @@ object TransactionTestData {
             ReferenceTestData.createReferenceEntity(),
             ReceiptTestData.createReceiptEntity(),
             PurposeTestData.createPurposeEntity(),
+            AreaTestData.createAreaEntity(),
         )
     }
 
@@ -100,6 +109,7 @@ object TransactionTestData {
             ReferenceTestData.createFlatReferenceEntity(),
             ReceiptTestData.createReceiptId().toReceiptEntity(),
             PurposeTestData.createPurposeId().toPurposeEntity(),
+            AreaTestData.createAreaId().toAreaEntity(),
         )
     }
 
@@ -107,6 +117,7 @@ object TransactionTestData {
         reference: ReferenceEntity?,
         receiptEntity: ReceiptEntity?,
         purposeEntity: PurposeEntity?,
+        areaEntity: AreaEntity?,
     ): TransactionEntity {
         return TransactionEntity(
             id = ID,
@@ -118,6 +129,7 @@ object TransactionTestData {
             reference = reference,
             receipt = receiptEntity,
             purpose = purposeEntity,
+            area = areaEntity,
         )
     }
 

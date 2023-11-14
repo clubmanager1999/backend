@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction
 
 import com.github.clubmanager1999.backend.receipt.ReceiptEntity
+import com.github.clubmanager1999.backend.transaction.area.AreaEntity
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeEntity
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
 import jakarta.persistence.CascadeType
@@ -43,4 +44,6 @@ data class TransactionEntity(
     val receipt: ReceiptEntity?,
     @ManyToOne
     val purpose: PurposeEntity?,
+    @ManyToOne
+    val area: AreaEntity?,
 )

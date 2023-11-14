@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.transaction
 
 import com.github.clubmanager1999.backend.receipt.ReceiptId
 import com.github.clubmanager1999.backend.receipt.ReceiptService
+import com.github.clubmanager1999.backend.transaction.area.AreaId
 import com.github.clubmanager1999.backend.transaction.mapping.MappingService
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
 import com.github.clubmanager1999.backend.transaction.reference.NewCreditorReference
@@ -75,8 +76,9 @@ class TransactionService(
             val receipt = creditorReference?.let { receiptService.findByCreditorAndDate(it.creditor, transactionImport.valueDay) }
             val receiptId = receipt?.let { ReceiptId(it.id) }
             val purposeId = mapping?.purpose?.let { PurposeId(it.id) }
+            val areaId = mapping?.area?.let { AreaId(it.id) }
 
-            return transactionImport.toNewTransaction(reference, receiptId, purposeId)
+            return transactionImport.toNewTransaction(reference, receiptId, purposeId, areaId)
         }
 
         transactionImports

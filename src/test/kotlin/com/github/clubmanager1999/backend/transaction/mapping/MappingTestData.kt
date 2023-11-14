@@ -16,6 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.area.AreaEntity
+import com.github.clubmanager1999.backend.transaction.area.AreaTestData
+import com.github.clubmanager1999.backend.transaction.area.ExistingArea
+import com.github.clubmanager1999.backend.transaction.area.toAreaEntity
 import com.github.clubmanager1999.backend.transaction.purpose.ExistingPurpose
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeEntity
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
@@ -34,42 +38,59 @@ object MappingTestData {
             matcher = MATCHER,
             reference = ReferenceTestData.createNewReference(),
             purpose = PurposeTestData.createPurposeId(),
+            area = AreaTestData.createAreaId(),
         )
     }
 
     fun createExistingMapping(): ExistingMapping {
-        return createExistingMapping(ReferenceTestData.createExistingReference(), PurposeTestData.createExistingPurpose())
+        return createExistingMapping(
+            ReferenceTestData.createExistingReference(),
+            PurposeTestData.createExistingPurpose(),
+            AreaTestData.createExistingArea(),
+        )
     }
 
     fun createExistingMapping(
         reference: ExistingReference,
         purpose: ExistingPurpose?,
+        area: ExistingArea?,
     ): ExistingMapping {
         return ExistingMapping(
             id = ID,
             matcher = MATCHER,
             reference = reference,
             purpose = purpose,
+            area = area,
         )
     }
 
     fun createMappingEntity(): MappingEntity {
-        return createMappingEntity(ReferenceTestData.createReferenceEntity(), PurposeTestData.createPurposeEntity())
+        return createMappingEntity(
+            ReferenceTestData.createReferenceEntity(),
+            PurposeTestData.createPurposeEntity(),
+            AreaTestData.createAreaEntity(),
+        )
     }
 
     fun createFlatMappingEntity(): MappingEntity {
-        return createMappingEntity(ReferenceTestData.createFlatReferenceEntity(), PurposeTestData.createPurposeId().toPurposeEntity())
+        return createMappingEntity(
+            ReferenceTestData.createFlatReferenceEntity(),
+            PurposeTestData.createPurposeId().toPurposeEntity(),
+            AreaTestData.createAreaId().toAreaEntity(),
+        )
     }
 
     fun createMappingEntity(
         referenceEntity: ReferenceEntity,
         purposeEntity: PurposeEntity?,
+        areaEntity: AreaEntity?,
     ): MappingEntity {
         return MappingEntity(
             id = ID,
             matcher = MATCHER,
             reference = referenceEntity,
             purpose = purposeEntity,
+            area = areaEntity,
         )
     }
 }

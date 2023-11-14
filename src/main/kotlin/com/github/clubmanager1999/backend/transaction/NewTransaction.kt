@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction
 
 import com.github.clubmanager1999.backend.receipt.ReceiptId
+import com.github.clubmanager1999.backend.transaction.area.AreaId
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
 import com.github.clubmanager1999.backend.transaction.reference.NewReference
 import java.math.BigDecimal
@@ -31,4 +32,5 @@ data class NewTransaction(
     val reference: NewReference?,
     val receipt: ReceiptId?,
     val purpose: PurposeId?,
+    val area: AreaId?,
 )

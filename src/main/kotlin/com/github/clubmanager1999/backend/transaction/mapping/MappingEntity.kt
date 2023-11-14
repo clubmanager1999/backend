@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.area.AreaEntity
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeEntity
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
 import jakarta.persistence.CascadeType
@@ -34,4 +35,6 @@ data class MappingEntity(
     val reference: ReferenceEntity,
     @ManyToOne
     val purpose: PurposeEntity?,
+    @ManyToOne
+    val area: AreaEntity?,
 )

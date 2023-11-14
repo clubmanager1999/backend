@@ -26,6 +26,8 @@ import com.github.clubmanager1999.backend.membership.MembershipRepository
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.receipt.ReceiptRepository
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
+import com.github.clubmanager1999.backend.transaction.area.AreaRepository
+import com.github.clubmanager1999.backend.transaction.area.AreaTestData
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeRepository
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
 import com.github.clubmanager1999.backend.transaction.reference.CreditorReferenceEntity
@@ -87,12 +89,15 @@ internal class TransactionRepositoryTest {
 
     @Autowired private lateinit var purposeRepository: PurposeRepository
 
+    @Autowired private lateinit var areaRepository: AreaRepository
+
     private var memberEntity = MemberTestData.createMemberEntity()
     private var membershipEntity = MembershipTestData.createMembershipEntity()
     private var donorEntity = DonorTestData.createDonorEntity()
     private var creditorEntity = CreditorTestData.createCreditorEntity()
     private var receiptEntity = ReceiptTestData.createReceiptEntity()
     private var purposeEntity = PurposeTestData.createPurposeEntity()
+    private var areaEntity = AreaTestData.createAreaEntity()
 
     @BeforeEach
     fun beforeEach() {
@@ -104,12 +109,14 @@ internal class TransactionRepositoryTest {
         receiptRepository.deleteAll()
         creditorRepository.deleteAll()
         purposeRepository.deleteAll()
+        areaRepository.deleteAll()
         membershipEntity = membershipRepository.save(MembershipTestData.createMembershipEntity())
         memberEntity = memberRepository.save(MemberTestData.createMemberEntity(membershipEntity))
         donorEntity = donorRepository.save(DonorTestData.createDonorEntity())
         creditorEntity = creditorRepository.save(CreditorTestData.createCreditorEntity())
         receiptEntity = receiptRepository.save(ReceiptTestData.createReceiptEntity(creditorEntity))
         purposeEntity = purposeRepository.save(PurposeTestData.createPurposeEntity())
+        areaEntity = areaRepository.save(AreaTestData.createAreaEntity())
     }
 
     @Test
@@ -119,6 +126,7 @@ internal class TransactionRepositoryTest {
                 CreditorReferenceEntity(id = null, creditor = creditorEntity),
                 receiptEntity,
                 purposeEntity,
+                areaEntity,
             ),
         )
 
@@ -130,11 +138,13 @@ internal class TransactionRepositoryTest {
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
             .ignoringFields("purpose.id")
+            .ignoringFields("area.id")
             .isEqualTo(
                 TransactionTestData.createTransactionEntity(
                     CreditorReferenceEntity(id = null, creditor = creditorEntity),
                     receiptEntity,
                     purposeEntity,
+                    areaEntity,
                 ),
             )
     }
@@ -142,7 +152,12 @@ internal class TransactionRepositoryTest {
     @Test
     fun shouldSaveTransactionWithDonorReference() {
         transactionRepository.save(
-            TransactionTestData.createTransactionEntity(DonorReferenceEntity(id = null, donor = donorEntity), receiptEntity, purposeEntity),
+            TransactionTestData.createTransactionEntity(
+                DonorReferenceEntity(id = null, donor = donorEntity),
+                receiptEntity,
+                purposeEntity,
+                areaEntity,
+            ),
         )
 
         assertThat(transactionRepository.findAll().first())
@@ -153,11 +168,13 @@ internal class TransactionRepositoryTest {
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
             .ignoringFields("purpose.id")
+            .ignoringFields("area.id")
             .isEqualTo(
                 TransactionTestData.createTransactionEntity(
                     DonorReferenceEntity(id = null, donor = donorEntity),
                     receiptEntity,
                     purposeEntity,
+                    areaEntity,
                 ),
             )
     }
@@ -169,6 +186,7 @@ internal class TransactionRepositoryTest {
                 MemberReferenceEntity(id = null, member = memberEntity),
                 receiptEntity,
                 purposeEntity,
+                areaEntity,
             ),
         )
 
@@ -181,11 +199,13 @@ internal class TransactionRepositoryTest {
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
             .ignoringFields("purpose.id")
+            .ignoringFields("area.id")
             .isEqualTo(
                 TransactionTestData.createTransactionEntity(
                     MemberReferenceEntity(id = null, member = memberEntity),
                     receiptEntity,
                     purposeEntity,
+                    areaEntity,
                 ),
             )
     }
@@ -198,6 +218,7 @@ internal class TransactionRepositoryTest {
                     ReferenceTestData.createReferenceEntity(memberEntity),
                     receiptEntity,
                     purposeEntity,
+                    areaEntity,
                 ),
             )
 
@@ -210,6 +231,7 @@ internal class TransactionRepositoryTest {
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
             .ignoringFields("purpose.id")
+            .ignoringFields("area.id")
             .isEqualTo(TransactionTestData.createTransactionEntity())
     }
 
@@ -221,6 +243,7 @@ internal class TransactionRepositoryTest {
                     ReferenceTestData.createReferenceEntity(memberEntity),
                     receiptEntity,
                     purposeEntity,
+                    areaEntity,
                 ),
             )
 
@@ -229,6 +252,7 @@ internal class TransactionRepositoryTest {
                 ReferenceTestData.createReferenceEntity(memberEntity),
                 receiptEntity,
                 purposeEntity,
+                areaEntity,
             ).copy(id = createdTransaction.id, name = "new"),
         )
 
@@ -241,6 +265,7 @@ internal class TransactionRepositoryTest {
             .ignoringFields("receipt.id")
             .ignoringFields("receipt.creditor.id")
             .ignoringFields("purpose.id")
+            .ignoringFields("area.id")
             .isEqualTo(TransactionTestData.createTransactionEntity().copy(name = "new"))
     }
 
@@ -252,6 +277,7 @@ internal class TransactionRepositoryTest {
                     ReferenceTestData.createReferenceEntity(memberEntity),
                     receiptEntity,
                     purposeEntity,
+                    areaEntity,
                 ),
             )
         transactionRepository.deleteById(createdTransaction.id!!)

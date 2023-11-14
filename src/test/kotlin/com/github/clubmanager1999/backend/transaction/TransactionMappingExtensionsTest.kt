@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.transaction
 
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.ID
+import com.github.clubmanager1999.backend.transaction.area.AreaTestData
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 import org.assertj.core.api.Assertions.assertThat
@@ -35,10 +36,15 @@ class TransactionMappingExtensionsTest {
     @Test
     fun shouldMapTransactionEntityToExistingTransactionWithoutOtherEntities() {
         assertThat(
-            TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null, purpose = null).toExistingTransaction(),
+            TransactionTestData.createTransactionEntity().copy(
+                reference = null,
+                receipt = null,
+                purpose = null,
+                area = null,
+            ).toExistingTransaction(),
         )
             .isEqualTo(
-                TransactionTestData.createExistingTransaction().copy(reference = null, receipt = null, purpose = null),
+                TransactionTestData.createExistingTransaction().copy(reference = null, receipt = null, purpose = null, area = null),
             )
     }
 
@@ -53,11 +59,16 @@ class TransactionMappingExtensionsTest {
     @Test
     fun shouldMapNewTransactionToTransactionEntityWithIdWithoutOtherEntities() {
         assertThat(
-            TransactionTestData.createNewTransaction().copy(reference = null, receipt = null, purpose = null).toTransactionEntity(
+            TransactionTestData.createNewTransaction().copy(
+                reference = null,
+                receipt = null,
+                purpose = null,
+                area = null,
+            ).toTransactionEntity(
                 ID,
             ),
         )
-            .isEqualTo(TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null, purpose = null))
+            .isEqualTo(TransactionTestData.createTransactionEntity().copy(reference = null, receipt = null, purpose = null, area = null))
     }
 
     @Test
@@ -67,6 +78,7 @@ class TransactionMappingExtensionsTest {
                 ReferenceTestData.createNewReference(),
                 ReceiptTestData.createReceiptId(),
                 PurposeTestData.createPurposeId(),
+                AreaTestData.createAreaId(),
             ),
         )
             .isEqualTo(TransactionTestData.createNewTransaction())
