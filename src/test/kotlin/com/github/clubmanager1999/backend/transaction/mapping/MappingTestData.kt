@@ -28,11 +28,11 @@ import com.github.clubmanager1999.backend.transaction.reference.ExistingReferenc
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceEntity
 import com.github.clubmanager1999.backend.transaction.reference.ReferenceTestData
 
-const val ID = 49L
-
-const val MATCHER = "Soap"
-
 object MappingTestData {
+    const val ID = 49L
+
+    const val MATCHER = "Soap"
+
     fun createNewMapping(): NewMapping {
         return NewMapping(
             matcher = MATCHER,

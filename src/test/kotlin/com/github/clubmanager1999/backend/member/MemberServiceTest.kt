@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
+import com.github.clubmanager1999.backend.member.MemberTestData.ID
 import com.github.clubmanager1999.backend.oidc.OidcAdminService
 import com.github.clubmanager1999.backend.oidc.OidcRole
 import com.github.clubmanager1999.backend.oidc.OidcTestData

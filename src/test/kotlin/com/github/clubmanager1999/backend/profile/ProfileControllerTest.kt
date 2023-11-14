@@ -17,14 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.profile
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.clubmanager1999.backend.member.CITY
-import com.github.clubmanager1999.backend.member.EMAIL
-import com.github.clubmanager1999.backend.member.FIRST_NAME
-import com.github.clubmanager1999.backend.member.LAST_NAME
-import com.github.clubmanager1999.backend.member.STREET
-import com.github.clubmanager1999.backend.member.STREET_NUMBER
-import com.github.clubmanager1999.backend.member.USER_NAME
-import com.github.clubmanager1999.backend.member.ZIP
+import com.github.clubmanager1999.backend.member.MemberTestData.CITY
+import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
+import com.github.clubmanager1999.backend.member.MemberTestData.FIRST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.LAST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.STREET
+import com.github.clubmanager1999.backend.member.MemberTestData.STREET_NUMBER
+import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.ZIP
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.oidc.Subject
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import com.github.clubmanager1999.backend.security.withoutRole
@@ -71,9 +72,9 @@ internal class ProfileControllerTest {
             .andExpect(jsonPath("$.address.streetNumber").value(STREET_NUMBER))
             .andExpect(jsonPath("$.address.city").value(CITY))
             .andExpect(jsonPath("$.address.zip").value(ZIP))
-            .andExpect(jsonPath("$.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
-            .andExpect(jsonPath("$.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
-            .andExpect(jsonPath("$.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$.membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$.membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$.membership.fee").value(MembershipTestData.FEE))
     }
 
     @Test

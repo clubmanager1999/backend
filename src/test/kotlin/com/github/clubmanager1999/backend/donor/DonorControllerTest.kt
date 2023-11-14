@@ -17,10 +17,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.donor
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.clubmanager1999.backend.member.CITY
-import com.github.clubmanager1999.backend.member.STREET
-import com.github.clubmanager1999.backend.member.STREET_NUMBER
-import com.github.clubmanager1999.backend.member.ZIP
+import com.github.clubmanager1999.backend.donor.DonorTestData.FIRST_NAME
+import com.github.clubmanager1999.backend.donor.DonorTestData.ID
+import com.github.clubmanager1999.backend.donor.DonorTestData.LAST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.CITY
+import com.github.clubmanager1999.backend.member.MemberTestData.STREET
+import com.github.clubmanager1999.backend.member.MemberTestData.STREET_NUMBER
+import com.github.clubmanager1999.backend.member.MemberTestData.ZIP
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_DONORS
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test

@@ -19,15 +19,8 @@ package com.github.clubmanager1999.backend.transaction
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
 import com.github.clubmanager1999.backend.donor.DonorTestData
-import com.github.clubmanager1999.backend.member.CITY
-import com.github.clubmanager1999.backend.member.EMAIL
-import com.github.clubmanager1999.backend.member.FIRST_NAME
-import com.github.clubmanager1999.backend.member.LAST_NAME
 import com.github.clubmanager1999.backend.member.MemberTestData
-import com.github.clubmanager1999.backend.member.STREET
-import com.github.clubmanager1999.backend.member.STREET_NUMBER
-import com.github.clubmanager1999.backend.member.USER_NAME
-import com.github.clubmanager1999.backend.member.ZIP
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_TRANSACTIONS
 import com.github.clubmanager1999.backend.security.withRole
@@ -37,6 +30,7 @@ import com.github.clubmanager1999.backend.transaction.TransactionTestData.DESCRI
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.ID
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.NAME
 import com.github.clubmanager1999.backend.transaction.TransactionTestData.VALUE_DAY
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
 import com.github.clubmanager1999.backend.transaction.reference.ExistingCreditorReference
 import com.github.clubmanager1999.backend.transaction.reference.ExistingDonorReference
 import com.github.clubmanager1999.backend.transaction.reference.ExistingMemberReference
@@ -111,9 +105,9 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$.name").value(NAME))
             .andExpect(jsonPath("$.description").value(DESCRIPTION))
             .andExpect(jsonPath("$.amount").value(AMOUNT))
-            .andExpect(jsonPath("$.reference.donor.id").value(com.github.clubmanager1999.backend.donor.ID))
-            .andExpect(jsonPath("$.reference.donor.firstName").value(com.github.clubmanager1999.backend.donor.FIRST_NAME))
-            .andExpect(jsonPath("$.reference.donor.lastName").value(com.github.clubmanager1999.backend.donor.LAST_NAME))
+            .andExpect(jsonPath("$.reference.donor.id").value(DonorTestData.ID))
+            .andExpect(jsonPath("$.reference.donor.firstName").value(DonorTestData.FIRST_NAME))
+            .andExpect(jsonPath("$.reference.donor.lastName").value(DonorTestData.LAST_NAME))
             .andExpect(jsonPath("$.receipt.id").value(ReceiptTestData.ID))
             .andExpect(jsonPath("$.receipt.name").value(ReceiptTestData.NAME))
             .andExpect(jsonPath("$.receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))
@@ -137,25 +131,25 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$.name").value(NAME))
             .andExpect(jsonPath("$.description").value(DESCRIPTION))
             .andExpect(jsonPath("$.amount").value(AMOUNT))
-            .andExpect(jsonPath("$.reference.member.id").value(com.github.clubmanager1999.backend.member.ID))
-            .andExpect(jsonPath("$.reference.member.userName").value(USER_NAME))
-            .andExpect(jsonPath("$.reference.member.firstName").value(FIRST_NAME))
-            .andExpect(jsonPath("$.reference.member.lastName").value(LAST_NAME))
-            .andExpect(jsonPath("$.reference.member.email").value(EMAIL))
-            .andExpect(jsonPath("$.reference.member.address.street").value(STREET))
-            .andExpect(jsonPath("$.reference.member.address.streetNumber").value(STREET_NUMBER))
-            .andExpect(jsonPath("$.reference.member.address.city").value(CITY))
-            .andExpect(jsonPath("$.reference.member.address.zip").value(ZIP))
-            .andExpect(jsonPath("$.reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
-            .andExpect(jsonPath("$.reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
-            .andExpect(jsonPath("$.reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$.reference.member.id").value(MemberTestData.ID))
+            .andExpect(jsonPath("$.reference.member.userName").value(MemberTestData.USER_NAME))
+            .andExpect(jsonPath("$.reference.member.firstName").value(MemberTestData.FIRST_NAME))
+            .andExpect(jsonPath("$.reference.member.lastName").value(MemberTestData.LAST_NAME))
+            .andExpect(jsonPath("$.reference.member.email").value(MemberTestData.EMAIL))
+            .andExpect(jsonPath("$.reference.member.address.street").value(MemberTestData.STREET))
+            .andExpect(jsonPath("$.reference.member.address.streetNumber").value(MemberTestData.STREET_NUMBER))
+            .andExpect(jsonPath("$.reference.member.address.city").value(MemberTestData.CITY))
+            .andExpect(jsonPath("$.reference.member.address.zip").value(MemberTestData.ZIP))
+            .andExpect(jsonPath("$.reference.member.membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$.reference.member.membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$.reference.member.membership.fee").value(MembershipTestData.FEE))
             .andExpect(jsonPath("$.receipt.id").value(ReceiptTestData.ID))
             .andExpect(jsonPath("$.receipt.name").value(ReceiptTestData.NAME))
             .andExpect(jsonPath("$.receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))
             .andExpect(jsonPath("$.receipt.validTo").value(ReceiptTestData.VALID_TO.toString()))
             .andExpect(jsonPath("$.receipt.creditor.id").value(CreditorTestData.ID))
-            .andExpect(jsonPath("$.purpose.id").value(com.github.clubmanager1999.backend.transaction.purpose.ID))
-            .andExpect(jsonPath("$.purpose.name").value(com.github.clubmanager1999.backend.transaction.purpose.NAME))
+            .andExpect(jsonPath("$.purpose.id").value(PurposeTestData.ID))
+            .andExpect(jsonPath("$.purpose.name").value(PurposeTestData.NAME))
     }
 
     @Test
@@ -173,25 +167,25 @@ internal class TransactionControllerTest {
             .andExpect(jsonPath("$[0].name").value(NAME))
             .andExpect(jsonPath("$[0].description").value(DESCRIPTION))
             .andExpect(jsonPath("$[0].amount").value(AMOUNT))
-            .andExpect(jsonPath("$[0].reference.member.id").value(com.github.clubmanager1999.backend.member.ID))
-            .andExpect(jsonPath("$[0].reference.member.userName").value(USER_NAME))
-            .andExpect(jsonPath("$[0].reference.member.firstName").value(FIRST_NAME))
-            .andExpect(jsonPath("$[0].reference.member.lastName").value(LAST_NAME))
-            .andExpect(jsonPath("$[0].reference.member.email").value(EMAIL))
-            .andExpect(jsonPath("$[0].reference.member.address.street").value(STREET))
-            .andExpect(jsonPath("$[0].reference.member.address.streetNumber").value(STREET_NUMBER))
-            .andExpect(jsonPath("$[0].reference.member.address.city").value(CITY))
-            .andExpect(jsonPath("$[0].reference.member.address.zip").value(ZIP))
-            .andExpect(jsonPath("$[0].reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
-            .andExpect(jsonPath("$[0].reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
-            .andExpect(jsonPath("$[0].reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$[0].reference.member.id").value(MemberTestData.ID))
+            .andExpect(jsonPath("$[0].reference.member.userName").value(MemberTestData.USER_NAME))
+            .andExpect(jsonPath("$[0].reference.member.firstName").value(MemberTestData.FIRST_NAME))
+            .andExpect(jsonPath("$[0].reference.member.lastName").value(MemberTestData.LAST_NAME))
+            .andExpect(jsonPath("$[0].reference.member.email").value(MemberTestData.EMAIL))
+            .andExpect(jsonPath("$[0].reference.member.address.street").value(MemberTestData.STREET))
+            .andExpect(jsonPath("$[0].reference.member.address.streetNumber").value(MemberTestData.STREET_NUMBER))
+            .andExpect(jsonPath("$[0].reference.member.address.city").value(MemberTestData.CITY))
+            .andExpect(jsonPath("$[0].reference.member.address.zip").value(MemberTestData.ZIP))
+            .andExpect(jsonPath("$[0].reference.member.membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$[0].reference.member.membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$[0].reference.member.membership.fee").value(MembershipTestData.FEE))
             .andExpect(jsonPath("$[0].receipt.id").value(ReceiptTestData.ID))
             .andExpect(jsonPath("$[0].receipt.name").value(ReceiptTestData.NAME))
             .andExpect(jsonPath("$[0].receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))
             .andExpect(jsonPath("$[0].receipt.validTo").value(ReceiptTestData.VALID_TO.toString()))
             .andExpect(jsonPath("$[0].receipt.creditor.id").value(CreditorTestData.ID))
-            .andExpect(jsonPath("$[0].purpose.id").value(com.github.clubmanager1999.backend.transaction.purpose.ID))
-            .andExpect(jsonPath("$[0].purpose.name").value(com.github.clubmanager1999.backend.transaction.purpose.NAME))
+            .andExpect(jsonPath("$[0].purpose.id").value(PurposeTestData.ID))
+            .andExpect(jsonPath("$[0].purpose.name").value(PurposeTestData.NAME))
     }
 
     @Test
