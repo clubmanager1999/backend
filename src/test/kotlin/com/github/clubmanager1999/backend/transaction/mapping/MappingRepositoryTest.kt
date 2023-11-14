@@ -18,6 +18,10 @@ package com.github.clubmanager1999.backend.transaction.mapping
 
 import com.github.clubmanager1999.backend.creditor.CreditorRepository
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.transaction.area.AreaRepository
+import com.github.clubmanager1999.backend.transaction.area.AreaTestData
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeRepository
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
 import com.github.clubmanager1999.backend.transaction.reference.CreditorReferenceEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -64,62 +68,81 @@ internal class MappingRepositoryTest {
 
     @Autowired private lateinit var creditorRepository: CreditorRepository
 
+    @Autowired private lateinit var purposeRepository: PurposeRepository
+
+    @Autowired private lateinit var areaRepository: AreaRepository
+
     private var creditorEntity = CreditorTestData.createCreditorEntity()
+    private var purposeEntity = PurposeTestData.createPurposeEntity()
+    private var areaEntity = AreaTestData.createAreaEntity()
 
     @BeforeEach
     fun beforeEach() {
         mappingRepository.deleteAll()
         creditorRepository.deleteAll()
+        purposeRepository.deleteAll()
+        areaRepository.deleteAll()
         creditorEntity = creditorRepository.save(CreditorTestData.createCreditorEntity())
+        purposeEntity = purposeRepository.save(PurposeTestData.createPurposeEntity())
+        areaEntity = areaRepository.save(AreaTestData.createAreaEntity())
     }
 
     @Test
     fun shouldSaveMapping() {
-        mappingRepository.save(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null))
+        mappingRepository.save(
+            MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), purposeEntity, areaEntity),
+        )
 
         assertThat(mappingRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null))
+            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), purposeEntity, areaEntity))
     }
 
     @Test
     fun shouldFindMappingById() {
         val createdMapping =
             mappingRepository.save(
-                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null),
+                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), purposeEntity, areaEntity),
             )
 
         assertThat(mappingRepository.findById(createdMapping.id!!).get())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null))
+            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), purposeEntity, areaEntity))
     }
 
     @Test
     fun shouldUpdateMapping() {
         val createdMapping =
             mappingRepository.save(
-                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null),
+                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), purposeEntity, areaEntity),
             )
         mappingRepository.save(
             MappingTestData.createMappingEntity(
                 CreditorReferenceEntity(id = null, creditorEntity),
-                null,
+                purposeEntity,
+                areaEntity,
             ).copy(id = createdMapping.id, matcher = "new"),
         )
 
         assertThat(mappingRepository.findAll().first())
             .usingRecursiveComparison()
             .ignoringFields("id")
-            .isEqualTo(MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null).copy(matcher = "new"))
+            .isEqualTo(
+                MappingTestData.createMappingEntity(
+                    CreditorReferenceEntity(id = null, creditorEntity),
+                    purposeEntity,
+                    areaEntity,
+                ).copy(matcher = "new"),
+            )
     }
 
     @Test
     fun shouldDeleteMapping() {
         val createdMapping =
             mappingRepository.save(
-                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), null),
+                MappingTestData.createMappingEntity(CreditorReferenceEntity(id = null, creditorEntity), purposeEntity, areaEntity),
             )
         mappingRepository.deleteById(createdMapping.id!!)
 

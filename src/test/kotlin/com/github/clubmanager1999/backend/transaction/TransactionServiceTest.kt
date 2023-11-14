@@ -21,6 +21,8 @@ import com.github.clubmanager1999.backend.creditor.toCreditorEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptService
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.receipt.toReceiptEntity
+import com.github.clubmanager1999.backend.transaction.area.AreaTestData
+import com.github.clubmanager1999.backend.transaction.area.toAreaEntity
 import com.github.clubmanager1999.backend.transaction.mapping.MappingService
 import com.github.clubmanager1999.backend.transaction.mapping.MappingTestData
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData
@@ -126,7 +128,7 @@ class TransactionServiceTest {
     @Test
     fun shouldImportTransactions() {
         val import = TransactionTestData.createTransactionImport()
-        val transactionEntity = TransactionTestData.createTransactionEntity(null, null, null).copy(id = null)
+        val transactionEntity = TransactionTestData.createTransactionEntity(null, null, null, null).copy(id = null)
 
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
 
@@ -148,7 +150,7 @@ class TransactionServiceTest {
     fun shouldImportTransactionsWithoutMatch() {
         val mapping = MappingTestData.createExistingMapping().copy(matcher = "not match")
         val import = TransactionTestData.createTransactionImport()
-        val transactionEntity = TransactionTestData.createTransactionEntity(null, null, null).copy(id = null)
+        val transactionEntity = TransactionTestData.createTransactionEntity(null, null, null, null).copy(id = null)
 
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
 
@@ -160,11 +162,11 @@ class TransactionServiceTest {
     }
 
     @Test
-    fun shouldImportTransactionsWithCreditor() {
-        val mapping = MappingTestData.createExistingMapping().copy(purpose = null)
+    fun shouldImportTransactionsWithMinimalMapping() {
+        val mapping = MappingTestData.createExistingMapping(ReferenceTestData.createExistingReference(), null, null).copy()
         val referenceEntity = ReferenceTestData.createFlatReferenceEntity()
         val import = TransactionTestData.createTransactionImport()
-        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, null, null).copy(id = null)
+        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, null, null, null).copy(id = null)
 
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
 
@@ -176,19 +178,48 @@ class TransactionServiceTest {
     }
 
     @Test
-    fun shouldImportTransactionsWithCreditorAndReceipt() {
-        val mapping =
-            MappingTestData.createExistingMapping(
-                ExistingCreditorReference(creditor = CreditorTestData.createExistingCreditor()),
-                null,
-            )
-        val referenceEntity = CreditorReferenceEntity(id = null, creditor = CreditorTestData.createCreditorId().toCreditorEntity())
+    fun shouldImportTransactionsWithFullMapping() {
+        val mapping = MappingTestData.createExistingMapping()
+        val referenceEntity = ReferenceTestData.createFlatReferenceEntity()
+        val purposeEntity = PurposeTestData.createPurposeId().toPurposeEntity()
+        val areaEntity = AreaTestData.createAreaId().toAreaEntity()
         val import = TransactionTestData.createTransactionImport()
         val transactionEntity =
             TransactionTestData.createTransactionEntity(
                 referenceEntity,
-                ReceiptTestData.createReceiptId().toReceiptEntity(),
                 null,
+                purposeEntity,
+                areaEntity,
+            ).copy(id = null)
+
+        `when`(transactionRepository.findAll()).thenReturn(emptyList())
+
+        `when`(mappingService.getAll()).thenReturn(listOf(mapping))
+
+        transactionService.import(listOf(import))
+
+        verify(transactionRepository).save(transactionEntity)
+    }
+
+    @Test
+    fun shouldImportTransactionsWithFullMappingAndReceipt() {
+        val mapping =
+            MappingTestData.createExistingMapping(
+                reference = ExistingCreditorReference(creditor = CreditorTestData.createExistingCreditor()),
+                purpose = PurposeTestData.createExistingPurpose(),
+                area = AreaTestData.createExistingArea(),
+            )
+        val referenceEntity = CreditorReferenceEntity(id = null, creditor = CreditorTestData.createCreditorId().toCreditorEntity())
+        val receiptEntity = ReceiptTestData.createReceiptId().toReceiptEntity()
+        val purposeEntity = PurposeTestData.createPurposeId().toPurposeEntity()
+        val areaEntity = AreaTestData.createAreaId().toAreaEntity()
+        val import = TransactionTestData.createTransactionImport()
+        val transactionEntity =
+            TransactionTestData.createTransactionEntity(
+                referenceEntity,
+                receiptEntity,
+                purposeEntity,
+                areaEntity,
             ).copy(id = null)
 
         `when`(transactionRepository.findAll()).thenReturn(emptyList())
@@ -198,23 +229,6 @@ class TransactionServiceTest {
         `when`(
             receiptService.findByCreditorAndDate(CreditorTestData.createCreditorId(), TransactionTestData.VALUE_DAY),
         ).thenReturn(ReceiptTestData.createExistingReceipt())
-
-        transactionService.import(listOf(import))
-
-        verify(transactionRepository).save(transactionEntity)
-    }
-
-    @Test
-    fun shouldImportTransactionsWithPurpose() {
-        val mapping = MappingTestData.createExistingMapping()
-        val referenceEntity = ReferenceTestData.createFlatReferenceEntity()
-        val purposeEntity = PurposeTestData.createPurposeId().toPurposeEntity()
-        val import = TransactionTestData.createTransactionImport()
-        val transactionEntity = TransactionTestData.createTransactionEntity(referenceEntity, null, purposeEntity).copy(id = null)
-
-        `when`(transactionRepository.findAll()).thenReturn(emptyList())
-
-        `when`(mappingService.getAll()).thenReturn(listOf(mapping))
 
         transactionService.import(listOf(import))
 

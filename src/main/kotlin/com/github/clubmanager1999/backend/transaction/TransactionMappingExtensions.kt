@@ -19,6 +19,9 @@ package com.github.clubmanager1999.backend.transaction
 import com.github.clubmanager1999.backend.receipt.ReceiptId
 import com.github.clubmanager1999.backend.receipt.toExistingReceipt
 import com.github.clubmanager1999.backend.receipt.toReceiptEntity
+import com.github.clubmanager1999.backend.transaction.area.AreaId
+import com.github.clubmanager1999.backend.transaction.area.toAreaEntity
+import com.github.clubmanager1999.backend.transaction.area.toExistingArea
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
 import com.github.clubmanager1999.backend.transaction.purpose.toExistingPurpose
 import com.github.clubmanager1999.backend.transaction.purpose.toPurposeEntity
@@ -37,6 +40,7 @@ fun TransactionEntity.toExistingTransaction(): ExistingTransaction {
         reference = this.reference?.toExistingReference(),
         receipt = this.receipt?.toExistingReceipt(),
         purpose = this.purpose?.toExistingPurpose(),
+        area = this.area?.toExistingArea(),
     )
 }
 
@@ -51,6 +55,7 @@ fun NewTransaction.toTransactionEntity(id: Long?): TransactionEntity {
         reference = this.reference?.toReferenceEntity(),
         receipt = this.receipt?.toReceiptEntity(),
         purpose = this.purpose?.toPurposeEntity(),
+        area = this.area?.toAreaEntity(),
     )
 }
 
@@ -58,6 +63,7 @@ fun TransactionImport.toNewTransaction(
     newReference: NewReference?,
     receiptId: ReceiptId?,
     purposeId: PurposeId?,
+    areaId: AreaId?,
 ): NewTransaction {
     return NewTransaction(
         bookingDay = this.bookingDay,
@@ -68,5 +74,6 @@ fun TransactionImport.toNewTransaction(
         reference = newReference,
         receipt = receiptId,
         purpose = purposeId,
+        area = areaId,
     )
 }

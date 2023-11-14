@@ -31,9 +31,9 @@ class MappingMappingExtensionsTest {
     @Test
     fun shouldMapMappingEntityToExistingMappingWithoutOptionalProperties() {
         assertThat(
-            MappingTestData.createMappingEntity().copy(purpose = null).toExistingMapping(),
+            MappingTestData.createMappingEntity().copy(purpose = null, area = null).toExistingMapping(),
         )
-            .isEqualTo(MappingTestData.createExistingMapping().copy(purpose = null))
+            .isEqualTo(MappingTestData.createExistingMapping().copy(purpose = null, area = null))
     }
 
     @Test
@@ -47,8 +47,8 @@ class MappingMappingExtensionsTest {
     @Test
     fun shouldMapNewMappingToMappingEntityWithIdWithoutOptionalProperties() {
         assertThat(
-            MappingTestData.createNewMapping().copy(purpose = null).toMappingEntity(ID),
+            MappingTestData.createNewMapping().copy(purpose = null, area = null).toMappingEntity(ID),
         )
-            .isEqualTo(MappingTestData.createFlatMappingEntity().copy(purpose = null))
+            .isEqualTo(MappingTestData.createFlatMappingEntity().copy(purpose = null, area = null))
     }
 }

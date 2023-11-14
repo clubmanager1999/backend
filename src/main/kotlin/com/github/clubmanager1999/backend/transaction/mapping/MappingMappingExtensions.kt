@@ -16,6 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.area.toAreaEntity
+import com.github.clubmanager1999.backend.transaction.area.toExistingArea
 import com.github.clubmanager1999.backend.transaction.purpose.toExistingPurpose
 import com.github.clubmanager1999.backend.transaction.purpose.toPurposeEntity
 import com.github.clubmanager1999.backend.transaction.reference.toExistingReference
@@ -27,6 +29,7 @@ fun MappingEntity.toExistingMapping(): ExistingMapping {
         matcher = this.matcher,
         reference = this.reference.toExistingReference(),
         purpose = this.purpose?.toExistingPurpose(),
+        area = this.area?.toExistingArea(),
     )
 }
 
@@ -36,5 +39,6 @@ fun NewMapping.toMappingEntity(id: Long?): MappingEntity {
         matcher = this.matcher,
         reference = this.reference.toReferenceEntity(),
         purpose = this.purpose?.toPurposeEntity(),
+        area = this.area?.toAreaEntity(),
     )
 }
