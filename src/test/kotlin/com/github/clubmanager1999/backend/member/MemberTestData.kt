@@ -25,25 +25,25 @@ import com.github.clubmanager1999.backend.membership.toMembershipEntity
 import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 
-const val ID = 42L
-
-const val USER_NAME = "tyler.durden"
-
-const val FIRST_NAME = "Tyler"
-
-const val LAST_NAME = "Durden"
-
-const val EMAIL = "info@paper-street-soap.co"
-
-const val STREET = "Paper Street"
-
-const val STREET_NUMBER = "537"
-
-const val ZIP = "19806"
-
-const val CITY = "Bradford"
-
 object MemberTestData {
+    const val ID = 42L
+
+    const val USER_NAME = "tyler.durden"
+
+    const val FIRST_NAME = "Tyler"
+
+    const val LAST_NAME = "Durden"
+
+    const val EMAIL = "info@paper-street-soap.co"
+
+    const val STREET = "Paper Street"
+
+    const val STREET_NUMBER = "537"
+
+    const val ZIP = "19806"
+
+    const val CITY = "Bradford"
+
     fun createNewMember(): NewMember {
         return NewMember(
             USER_NAME,
@@ -51,7 +51,7 @@ object MemberTestData {
             LAST_NAME,
             EMAIL,
             createAddress(),
-            MembershipId(com.github.clubmanager1999.backend.membership.ID),
+            MembershipId(MembershipTestData.ID),
         )
     }
 

@@ -17,16 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction.mapping
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.clubmanager1999.backend.member.CITY
-import com.github.clubmanager1999.backend.member.EMAIL
-import com.github.clubmanager1999.backend.member.FIRST_NAME
-import com.github.clubmanager1999.backend.member.LAST_NAME
-import com.github.clubmanager1999.backend.member.STREET
-import com.github.clubmanager1999.backend.member.STREET_NUMBER
-import com.github.clubmanager1999.backend.member.USER_NAME
-import com.github.clubmanager1999.backend.member.ZIP
+import com.github.clubmanager1999.backend.member.MemberTestData
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_MAPPINGS
 import com.github.clubmanager1999.backend.security.withRole
+import com.github.clubmanager1999.backend.transaction.mapping.MappingTestData.ID
+import com.github.clubmanager1999.backend.transaction.mapping.MappingTestData.MATCHER
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
@@ -67,18 +63,18 @@ internal class MappingControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(ID))
             .andExpect(jsonPath("$.matcher").value(MATCHER))
-            .andExpect(jsonPath("$.reference.member.id").value(com.github.clubmanager1999.backend.member.ID))
-            .andExpect(jsonPath("$.reference.member.userName").value(USER_NAME))
-            .andExpect(jsonPath("$.reference.member.firstName").value(FIRST_NAME))
-            .andExpect(jsonPath("$.reference.member.lastName").value(LAST_NAME))
-            .andExpect(jsonPath("$.reference.member.email").value(EMAIL))
-            .andExpect(jsonPath("$.reference.member.address.street").value(STREET))
-            .andExpect(jsonPath("$.reference.member.address.streetNumber").value(STREET_NUMBER))
-            .andExpect(jsonPath("$.reference.member.address.city").value(CITY))
-            .andExpect(jsonPath("$.reference.member.address.zip").value(ZIP))
-            .andExpect(jsonPath("$.reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
-            .andExpect(jsonPath("$.reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
-            .andExpect(jsonPath("$.reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$.reference.member.id").value(MemberTestData.ID))
+            .andExpect(jsonPath("$.reference.member.userName").value(MemberTestData.USER_NAME))
+            .andExpect(jsonPath("$.reference.member.firstName").value(MemberTestData.FIRST_NAME))
+            .andExpect(jsonPath("$.reference.member.lastName").value(MemberTestData.LAST_NAME))
+            .andExpect(jsonPath("$.reference.member.email").value(MemberTestData.EMAIL))
+            .andExpect(jsonPath("$.reference.member.address.street").value(MemberTestData.STREET))
+            .andExpect(jsonPath("$.reference.member.address.streetNumber").value(MemberTestData.STREET_NUMBER))
+            .andExpect(jsonPath("$.reference.member.address.city").value(MemberTestData.CITY))
+            .andExpect(jsonPath("$.reference.member.address.zip").value(MemberTestData.ZIP))
+            .andExpect(jsonPath("$.reference.member.membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$.reference.member.membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$.reference.member.membership.fee").value(MembershipTestData.FEE))
     }
 
     @Test
@@ -92,18 +88,18 @@ internal class MappingControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id").value(ID))
             .andExpect(jsonPath("$[0].matcher").value(MATCHER))
-            .andExpect(jsonPath("$[0].reference.member.id").value(com.github.clubmanager1999.backend.member.ID))
-            .andExpect(jsonPath("$[0].reference.member.userName").value(USER_NAME))
-            .andExpect(jsonPath("$[0].reference.member.firstName").value(FIRST_NAME))
-            .andExpect(jsonPath("$[0].reference.member.lastName").value(LAST_NAME))
-            .andExpect(jsonPath("$[0].reference.member.email").value(EMAIL))
-            .andExpect(jsonPath("$[0].reference.member.address.street").value(STREET))
-            .andExpect(jsonPath("$[0].reference.member.address.streetNumber").value(STREET_NUMBER))
-            .andExpect(jsonPath("$[0].reference.member.address.city").value(CITY))
-            .andExpect(jsonPath("$[0].reference.member.address.zip").value(ZIP))
-            .andExpect(jsonPath("$[0].reference.member.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
-            .andExpect(jsonPath("$[0].reference.member.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
-            .andExpect(jsonPath("$[0].reference.member.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$[0].reference.member.id").value(MemberTestData.ID))
+            .andExpect(jsonPath("$[0].reference.member.userName").value(MemberTestData.USER_NAME))
+            .andExpect(jsonPath("$[0].reference.member.firstName").value(MemberTestData.FIRST_NAME))
+            .andExpect(jsonPath("$[0].reference.member.lastName").value(MemberTestData.LAST_NAME))
+            .andExpect(jsonPath("$[0].reference.member.email").value(MemberTestData.EMAIL))
+            .andExpect(jsonPath("$[0].reference.member.address.street").value(MemberTestData.STREET))
+            .andExpect(jsonPath("$[0].reference.member.address.streetNumber").value(MemberTestData.STREET_NUMBER))
+            .andExpect(jsonPath("$[0].reference.member.address.city").value(MemberTestData.CITY))
+            .andExpect(jsonPath("$[0].reference.member.address.zip").value(MemberTestData.ZIP))
+            .andExpect(jsonPath("$[0].reference.member.membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$[0].reference.member.membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$[0].reference.member.membership.fee").value(MembershipTestData.FEE))
     }
 
     @Test

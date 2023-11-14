@@ -16,11 +16,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.purpose
 
-const val ID = 50L
-
-const val NAME = "war chest"
-
 object PurposeTestData {
+    const val ID = 50L
+
+    const val NAME = "war chest"
+
     fun createNewPurpose(): NewPurpose {
         return NewPurpose(
             name = NAME,

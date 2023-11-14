@@ -17,6 +17,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.member
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.member.MemberTestData.CITY
+import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
+import com.github.clubmanager1999.backend.member.MemberTestData.FIRST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.ID
+import com.github.clubmanager1999.backend.member.MemberTestData.LAST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.STREET
+import com.github.clubmanager1999.backend.member.MemberTestData.STREET_NUMBER
+import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.ZIP
+import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.roles.NewRole
 import com.github.clubmanager1999.backend.security.Permission
@@ -69,9 +79,9 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$.address.streetNumber").value(STREET_NUMBER))
             .andExpect(jsonPath("$.address.city").value(CITY))
             .andExpect(jsonPath("$.address.zip").value(ZIP))
-            .andExpect(jsonPath("$.membership.id").value(com.github.clubmanager1999.backend.membership.ID))
-            .andExpect(jsonPath("$.membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
-            .andExpect(jsonPath("$.membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$.membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$.membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$.membership.fee").value(MembershipTestData.FEE))
             .andExpect(jsonPath("$.roles[0]").value(ROLE))
     }
 
@@ -92,9 +102,9 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$[0].address.streetNumber").value(STREET_NUMBER))
             .andExpect(jsonPath("$[0].address.city").value(CITY))
             .andExpect(jsonPath("$[0].address.zip").value(ZIP))
-            .andExpect(jsonPath("$[0].membership.id").value(com.github.clubmanager1999.backend.membership.ID))
-            .andExpect(jsonPath("$[0].membership.name").value(com.github.clubmanager1999.backend.membership.NAME))
-            .andExpect(jsonPath("$[0].membership.fee").value(com.github.clubmanager1999.backend.membership.FEE))
+            .andExpect(jsonPath("$[0].membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$[0].membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$[0].membership.fee").value(MembershipTestData.FEE))
             .andExpect(jsonPath("$[0].roles[0]").value(ROLE))
     }
 

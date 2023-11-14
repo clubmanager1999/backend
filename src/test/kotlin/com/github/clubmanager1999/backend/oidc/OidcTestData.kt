@@ -16,8 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.oidc
 
-import com.github.clubmanager1999.backend.member.EMAIL
-import com.github.clubmanager1999.backend.member.USER_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
+import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
 import com.github.clubmanager1999.backend.security.Permission
 
 object OidcTestData {

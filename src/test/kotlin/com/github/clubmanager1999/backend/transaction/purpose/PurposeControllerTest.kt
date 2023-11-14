@@ -19,6 +19,8 @@ package com.github.clubmanager1999.backend.transaction.purpose
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_PURPOSES
 import com.github.clubmanager1999.backend.security.withRole
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData.ID
+import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData.NAME
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`

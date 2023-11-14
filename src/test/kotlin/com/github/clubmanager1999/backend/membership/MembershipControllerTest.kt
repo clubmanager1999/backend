@@ -17,6 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.membership
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.membership.MembershipTestData.FEE
+import com.github.clubmanager1999.backend.membership.MembershipTestData.ID
+import com.github.clubmanager1999.backend.membership.MembershipTestData.NAME
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_MEMBERSHIPS
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test

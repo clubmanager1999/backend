@@ -36,7 +36,7 @@ class ReferenceMappingExtensionsTest {
 
         assertThat(
             DonorReferenceEntity(
-                id = com.github.clubmanager1999.backend.donor.ID,
+                id = DonorTestData.ID,
                 donor = DonorTestData.createDonorEntity(),
             ).toExistingReference(),
         )

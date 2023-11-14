@@ -18,13 +18,13 @@ package com.github.clubmanager1999.backend.membership
 
 import java.math.BigDecimal
 
-const val ID = 43L
-
-const val NAME = "Aspirant"
-
-val FEE = BigDecimal("13.37")
-
 object MembershipTestData {
+    const val ID = 43L
+
+    const val NAME = "Aspirant"
+
+    val FEE = BigDecimal("13.37")
+
     fun createNewMembership(): NewMembership {
         return NewMembership(NAME, FEE)
     }

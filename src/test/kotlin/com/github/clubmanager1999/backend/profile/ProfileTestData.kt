@@ -16,11 +16,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.profile
 
-import com.github.clubmanager1999.backend.member.EMAIL
-import com.github.clubmanager1999.backend.member.FIRST_NAME
-import com.github.clubmanager1999.backend.member.LAST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
+import com.github.clubmanager1999.backend.member.MemberTestData.FIRST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.LAST_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
 import com.github.clubmanager1999.backend.member.MemberTestData.createAddress
-import com.github.clubmanager1999.backend.member.USER_NAME
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 
 object ProfileTestData {

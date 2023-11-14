@@ -18,13 +18,13 @@ package com.github.clubmanager1999.backend.donor
 
 import com.github.clubmanager1999.backend.member.MemberTestData.createAddress
 
-const val ID = 45L
-
-const val FIRST_NAME = "Richard"
-
-const val LAST_NAME = "Chesler"
-
 object DonorTestData {
+    const val ID = 45L
+
+    const val FIRST_NAME = "Richard"
+
+    const val LAST_NAME = "Chesler"
+
     fun createNewDonor(): NewDonor {
         return NewDonor(
             firstName = FIRST_NAME,

@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.profile
 
 import com.github.clubmanager1999.backend.member.MemberTestData
-import com.github.clubmanager1999.backend.member.USER_NAME
+import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
