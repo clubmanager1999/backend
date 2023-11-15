@@ -46,37 +46,37 @@ object MemberTestData {
 
     fun createNewMember(): NewMember {
         return NewMember(
-            USER_NAME,
-            FIRST_NAME,
-            LAST_NAME,
-            EMAIL,
-            createAddress(),
-            MembershipId(MembershipTestData.ID),
+            userName = USER_NAME,
+            firstName = FIRST_NAME,
+            lastName = LAST_NAME,
+            email = EMAIL,
+            address = createAddress(),
+            membership = MembershipId(MembershipTestData.ID),
         )
     }
 
     fun createExistingMember(): ExistingMember {
         return ExistingMember(
-            ID,
-            USER_NAME,
-            FIRST_NAME,
-            LAST_NAME,
-            EMAIL,
-            createAddress(),
-            createExistingMembership(),
+            id = ID,
+            userName = USER_NAME,
+            firstName = FIRST_NAME,
+            lastName = LAST_NAME,
+            email = EMAIL,
+            address = createAddress(),
+            membership = createExistingMembership(),
         )
     }
 
     fun createExistingMemberWithRoles(): ExistingMemberWithRoles {
         return ExistingMemberWithRoles(
-            ID,
-            USER_NAME,
-            FIRST_NAME,
-            LAST_NAME,
-            EMAIL,
-            createAddress(),
-            createExistingMembership(),
-            listOf(ROLE),
+            id = ID,
+            userName = USER_NAME,
+            firstName = FIRST_NAME,
+            lastName = LAST_NAME,
+            email = EMAIL,
+            address = createAddress(),
+            membership = createExistingMembership(),
+            roles = listOf(ROLE),
         )
     }
 
@@ -90,19 +90,24 @@ object MemberTestData {
 
     fun createMemberEntity(membershipEntity: MembershipEntity): MemberEntity {
         return MemberEntity(
-            ID,
-            SUBJECT,
-            USER_NAME,
-            FIRST_NAME,
-            LAST_NAME,
-            EMAIL,
-            createAddress(),
-            membershipEntity,
+            id = ID,
+            subject = SUBJECT,
+            userName = USER_NAME,
+            firstName = FIRST_NAME,
+            lastName = LAST_NAME,
+            email = EMAIL,
+            address = createAddress(),
+            membership = membershipEntity,
         )
     }
 
     fun createAddress(): Address {
-        return Address(STREET, STREET_NUMBER, ZIP, CITY)
+        return Address(
+            street = STREET,
+            streetNumber = STREET_NUMBER,
+            zip = ZIP,
+            city = CITY,
+        )
     }
 
     fun createMemberId(): MemberId {
