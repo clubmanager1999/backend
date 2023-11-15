@@ -26,15 +26,15 @@ object MembershipTestData {
     val FEE = BigDecimal("13.37")
 
     fun createNewMembership(): NewMembership {
-        return NewMembership(NAME, FEE)
+        return NewMembership(name = NAME, fee = FEE)
     }
 
     fun createExistingMembership(): ExistingMembership {
-        return ExistingMembership(ID, NAME, FEE)
+        return ExistingMembership(id = ID, name = NAME, fee = FEE)
     }
 
     fun createMembershipEntity(): MembershipEntity {
-        return MembershipEntity(ID, NAME, FEE)
+        return MembershipEntity(id = ID, name = NAME, fee = FEE)
     }
 
     fun createMembershipId(): MembershipId {
