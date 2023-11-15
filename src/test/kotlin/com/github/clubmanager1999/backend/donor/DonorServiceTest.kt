@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.donor
 
+import com.github.clubmanager1999.backend.donor.DonorTestData.ID
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -40,16 +41,16 @@ class DonorServiceTest {
         val existingDonor = DonorTestData.createExistingDonor()
         val savedEntity = DonorTestData.createDonorEntity()
 
-        `when`(donorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(donorRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(donorService.get(42)).isEqualTo(existingDonor)
+        assertThat(donorService.get(ID)).isEqualTo(existingDonor)
     }
 
     @Test
     fun shouldThrowExceptionIfDonorIsNotFoundById() {
-        `when`(donorRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(donorRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { donorService.get(42) }
+        assertThatThrownBy { donorService.get(ID) }
             .isInstanceOf(DonorNotFoundException::class.java)
     }
 
@@ -81,19 +82,19 @@ class DonorServiceTest {
         val existingDonor = DonorTestData.createExistingDonor()
         val savedEntity = DonorTestData.createDonorEntity()
 
-        `when`(donorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(donorRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(donorRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(donorService.update(42, newDonor)).isEqualTo(existingDonor)
+        assertThat(donorService.update(ID, newDonor)).isEqualTo(existingDonor)
     }
 
     @Test
     fun shouldThrowExceptionIfUpdateDonorIsNotFound() {
         val newDonor = DonorTestData.createNewDonor()
-        `when`(donorRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(donorRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { donorService.update(42, newDonor) }
+        assertThatThrownBy { donorService.update(ID, newDonor) }
             .isInstanceOf(DonorNotFoundException::class.java)
 
         verify(donorRepository, never()).save(any())
@@ -101,8 +102,8 @@ class DonorServiceTest {
 
     @Test
     fun shouldDeleteDonor() {
-        donorService.delete(42)
+        donorService.delete(ID)
 
-        verify(donorRepository).deleteById(42)
+        verify(donorRepository).deleteById(ID)
     }
 }

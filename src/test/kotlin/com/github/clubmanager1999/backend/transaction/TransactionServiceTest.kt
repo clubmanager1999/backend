@@ -21,6 +21,7 @@ import com.github.clubmanager1999.backend.creditor.toCreditorEntity
 import com.github.clubmanager1999.backend.receipt.ReceiptService
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
 import com.github.clubmanager1999.backend.receipt.toReceiptEntity
+import com.github.clubmanager1999.backend.transaction.TransactionTestData.ID
 import com.github.clubmanager1999.backend.transaction.area.AreaTestData
 import com.github.clubmanager1999.backend.transaction.area.toAreaEntity
 import com.github.clubmanager1999.backend.transaction.mapping.MappingService
@@ -58,16 +59,16 @@ class TransactionServiceTest {
         val existingTransaction = TransactionTestData.createExistingTransaction()
         val savedEntity = TransactionTestData.createTransactionEntity()
 
-        `when`(transactionRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(transactionRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(transactionService.get(42)).isEqualTo(existingTransaction)
+        assertThat(transactionService.get(ID)).isEqualTo(existingTransaction)
     }
 
     @Test
     fun shouldThrowExceptionIfTransactionIsNotFoundById() {
-        `when`(transactionRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(transactionRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { transactionService.get(42) }
+        assertThatThrownBy { transactionService.get(ID) }
             .isInstanceOf(TransactionNotFoundException::class.java)
     }
 
@@ -100,19 +101,19 @@ class TransactionServiceTest {
         val savedEntity = TransactionTestData.createTransactionEntity()
         val updatedEntity = TransactionTestData.createFlatTransactionEntity()
 
-        `when`(transactionRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(transactionRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(transactionRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        assertThat(transactionService.update(42, newTransaction)).isEqualTo(existingTransaction)
+        assertThat(transactionService.update(ID, newTransaction)).isEqualTo(existingTransaction)
     }
 
     @Test
     fun shouldThrowExceptionIfUpdateTransactionIsNotFound() {
         val newTransaction = TransactionTestData.createNewTransaction()
-        `when`(transactionRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(transactionRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { transactionService.update(42, newTransaction) }
+        assertThatThrownBy { transactionService.update(ID, newTransaction) }
             .isInstanceOf(TransactionNotFoundException::class.java)
 
         verify(transactionRepository, never()).save(any())
@@ -120,9 +121,9 @@ class TransactionServiceTest {
 
     @Test
     fun shouldDeleteTransaction() {
-        transactionService.delete(42)
+        transactionService.delete(ID)
 
-        verify(transactionRepository).deleteById(42)
+        verify(transactionRepository).deleteById(ID)
     }
 
     @Test

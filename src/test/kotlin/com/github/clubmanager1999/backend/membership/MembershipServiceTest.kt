@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.membership
 
+import com.github.clubmanager1999.backend.membership.MembershipTestData.ID
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -40,16 +41,16 @@ class MembershipServiceTest {
         val existingMembership = MembershipTestData.createExistingMembership()
         val savedEntity = MembershipTestData.createMembershipEntity()
 
-        `when`(membershipRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(membershipRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(membershipService.get(42)).isEqualTo(existingMembership)
+        assertThat(membershipService.get(ID)).isEqualTo(existingMembership)
     }
 
     @Test
     fun shouldThrowExceptionIfMembershipIsNotFoundById() {
-        `when`(membershipRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(membershipRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { membershipService.get(42) }
+        assertThatThrownBy { membershipService.get(ID) }
             .isInstanceOf(MembershipNotFoundException::class.java)
     }
 
@@ -81,19 +82,19 @@ class MembershipServiceTest {
         val existingMembership = MembershipTestData.createExistingMembership()
         val savedEntity = MembershipTestData.createMembershipEntity()
 
-        `when`(membershipRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(membershipRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(membershipRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(membershipService.update(42, newMembership)).isEqualTo(existingMembership)
+        assertThat(membershipService.update(ID, newMembership)).isEqualTo(existingMembership)
     }
 
     @Test
     fun shouldThrowExceptionIfUpdateMembershipIsNotFound() {
         val newMembership = MembershipTestData.createNewMembership()
-        `when`(membershipRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(membershipRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { membershipService.update(42, newMembership) }
+        assertThatThrownBy { membershipService.update(ID, newMembership) }
             .isInstanceOf(MembershipNotFoundException::class.java)
 
         verify(membershipRepository, never()).save(any())
@@ -101,8 +102,8 @@ class MembershipServiceTest {
 
     @Test
     fun shouldDeleteMembership() {
-        membershipService.delete(42)
+        membershipService.delete(ID)
 
-        verify(membershipRepository).deleteById(42)
+        verify(membershipRepository).deleteById(ID)
     }
 }

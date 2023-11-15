@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.creditor
 
+import com.github.clubmanager1999.backend.creditor.CreditorTestData.ID
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -40,16 +41,16 @@ class CreditorServiceTest {
         val existingCreditor = CreditorTestData.createExistingCreditor()
         val savedEntity = CreditorTestData.createCreditorEntity()
 
-        `when`(creditorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(creditorRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(creditorService.get(42)).isEqualTo(existingCreditor)
+        assertThat(creditorService.get(ID)).isEqualTo(existingCreditor)
     }
 
     @Test
     fun shouldThrowExceptionIfCreditorIsNotFoundById() {
-        `when`(creditorRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(creditorRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { creditorService.get(42) }
+        assertThatThrownBy { creditorService.get(ID) }
             .isInstanceOf(CreditorNotFoundException::class.java)
     }
 
@@ -81,19 +82,19 @@ class CreditorServiceTest {
         val existingCreditor = CreditorTestData.createExistingCreditor()
         val savedEntity = CreditorTestData.createCreditorEntity()
 
-        `when`(creditorRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(creditorRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(creditorRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(creditorService.update(42, newCreditor)).isEqualTo(existingCreditor)
+        assertThat(creditorService.update(ID, newCreditor)).isEqualTo(existingCreditor)
     }
 
     @Test
     fun shouldThrowExceptionIfUpdateCreditorIsNotFound() {
         val newCreditor = CreditorTestData.createNewCreditor()
-        `when`(creditorRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(creditorRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { creditorService.update(42, newCreditor) }
+        assertThatThrownBy { creditorService.update(ID, newCreditor) }
             .isInstanceOf(CreditorNotFoundException::class.java)
 
         verify(creditorRepository, never()).save(any())
@@ -101,8 +102,8 @@ class CreditorServiceTest {
 
     @Test
     fun shouldDeleteCreditor() {
-        creditorService.delete(42)
+        creditorService.delete(ID)
 
-        verify(creditorRepository).deleteById(42)
+        verify(creditorRepository).deleteById(ID)
     }
 }
