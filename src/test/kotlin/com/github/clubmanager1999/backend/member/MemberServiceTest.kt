@@ -56,16 +56,16 @@ class MemberServiceTest {
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
-        `when`(memberRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(memberService.get(42)).isEqualTo(existingMemberWithRoles)
+        assertThat(memberService.get(ID)).isEqualTo(existingMemberWithRoles)
     }
 
     @Test
     fun shouldThrowExceptionIfMemberIsNotFoundById() {
-        `when`(memberRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { memberService.get(42) }.isInstanceOf(MemberNotFoundException::class.java)
+        assertThatThrownBy { memberService.get(ID) }.isInstanceOf(MemberNotFoundException::class.java)
     }
 
     @Test
@@ -124,21 +124,21 @@ class MemberServiceTest {
         val savedEntity = MemberTestData.createMemberEntity()
         val updatedEntity = MemberTestData.createFlatMemberEntity()
 
-        `when`(memberRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         `when`(memberRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        assertThat(memberService.update(42, newMember)).isEqualTo(existingMemberWithRoles)
+        assertThat(memberService.update(ID, newMember)).isEqualTo(existingMemberWithRoles)
     }
 
     @Test
     fun shouldThrowExceptionIfUpdateMemberIsNotFound() {
         val newMember = MemberTestData.createNewMember()
-        `when`(memberRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(memberRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { memberService.update(42, newMember) }
+        assertThatThrownBy { memberService.update(ID, newMember) }
             .isInstanceOf(MemberNotFoundException::class.java)
 
         verify(memberRepository, never()).save(any())
@@ -146,9 +146,9 @@ class MemberServiceTest {
 
     @Test
     fun shouldDeleteMember() {
-        memberService.delete(42)
+        memberService.delete(ID)
 
-        verify(memberRepository).deleteById(42)
+        verify(memberRepository).deleteById(ID)
     }
 
     @Test

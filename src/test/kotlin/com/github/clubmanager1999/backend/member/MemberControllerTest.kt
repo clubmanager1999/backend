@@ -64,10 +64,10 @@ internal class MemberControllerTest {
 
     @Test
     fun shouldReturnMember() {
-        `when`(memberService.get(42)).thenReturn(MemberTestData.createExistingMemberWithRoles())
+        `when`(memberService.get(ID)).thenReturn(MemberTestData.createExistingMemberWithRoles())
 
         mockMvc
-            .perform(get("/api/members/42").withRole(Permission.MANAGE_MEMBERS))
+            .perform(get("/api/members/$ID").withRole(Permission.MANAGE_MEMBERS))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(ID))
@@ -149,12 +149,12 @@ internal class MemberControllerTest {
 
     @Test
     fun shouldUpdateUser() {
-        `when`(memberService.update(42, MemberTestData.createNewMember()))
+        `when`(memberService.update(ID, MemberTestData.createNewMember()))
             .thenReturn(MemberTestData.createExistingMemberWithRoles())
 
         mockMvc
             .perform(
-                put("/api/members/42").withRole(Permission.MANAGE_MEMBERS)
+                put("/api/members/$ID").withRole(Permission.MANAGE_MEMBERS)
                     .content(objectMapper.writeValueAsString(MemberTestData.createNewMember()))
                     .contentType(MediaType.APPLICATION_JSON),
             )
@@ -164,10 +164,10 @@ internal class MemberControllerTest {
     @Test
     fun shouldDeleteUser() {
         mockMvc
-            .perform(delete("/api/members/42").withRole(Permission.MANAGE_MEMBERS))
+            .perform(delete("/api/members/$ID").withRole(Permission.MANAGE_MEMBERS))
             .andExpect(status().isNoContent)
 
-        verify(memberService).delete(42)
+        verify(memberService).delete(ID)
     }
 
     @Test

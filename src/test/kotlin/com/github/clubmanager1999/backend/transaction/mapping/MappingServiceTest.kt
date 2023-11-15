@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import com.github.clubmanager1999.backend.transaction.mapping.MappingTestData.ID
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -39,16 +40,16 @@ class MappingServiceTest {
     fun shouldGetMappingById() {
         val existingMapping = MappingTestData.createExistingMapping()
         val savedEntity = MappingTestData.createMappingEntity()
-        `when`(mappingRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(mappingRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
-        assertThat(mappingService.get(42)).isEqualTo(existingMapping)
+        assertThat(mappingService.get(ID)).isEqualTo(existingMapping)
     }
 
     @Test
     fun shouldThrowExceptionIfMappingIsNotFoundById() {
-        `when`(mappingRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(mappingRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { mappingService.get(42) }
+        assertThatThrownBy { mappingService.get(ID) }
             .isInstanceOf(MappingNotFoundException::class.java)
     }
 
@@ -81,19 +82,19 @@ class MappingServiceTest {
         val savedEntity = MappingTestData.createMappingEntity()
         val updatedEntity = MappingTestData.createFlatMappingEntity()
 
-        `when`(mappingRepository.findById(42)).thenReturn(Optional.of(savedEntity))
+        `when`(mappingRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(mappingRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        assertThat(mappingService.update(42, newMapping)).isEqualTo(existingMapping)
+        assertThat(mappingService.update(ID, newMapping)).isEqualTo(existingMapping)
     }
 
     @Test
     fun shouldThrowExceptionIfUpdateMappingIsNotFound() {
         val newMapping = MappingTestData.createNewMapping()
-        `when`(mappingRepository.findById(42)).thenReturn(Optional.empty())
+        `when`(mappingRepository.findById(ID)).thenReturn(Optional.empty())
 
-        assertThatThrownBy { mappingService.update(42, newMapping) }
+        assertThatThrownBy { mappingService.update(ID, newMapping) }
             .isInstanceOf(MappingNotFoundException::class.java)
 
         verify(mappingRepository, never()).save(any())
@@ -101,8 +102,8 @@ class MappingServiceTest {
 
     @Test
     fun shouldDeleteMapping() {
-        mappingService.delete(42)
+        mappingService.delete(ID)
 
-        verify(mappingRepository).deleteById(42)
+        verify(mappingRepository).deleteById(ID)
     }
 }
