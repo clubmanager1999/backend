@@ -79,6 +79,28 @@ class ReceiptServiceTest {
     }
 
     @Test
+    fun shouldFailOnCreatingOverlappingValidFrom() {
+        val newReceipt = ReceiptTestData.createNewReceipt()
+        val savedEntity = ReceiptTestData.createReceiptEntity()
+
+        `when`(receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, savedEntity.validFrom)).thenReturn(listOf(savedEntity))
+
+        assertThatThrownBy { receiptService.create(newReceipt) }
+            .isInstanceOf(OverlappingReceiptException::class.java)
+    }
+
+    @Test
+    fun shouldFailOnCreatingOverlappingValidTo() {
+        val newReceipt = ReceiptTestData.createNewReceipt()
+        val savedEntity = ReceiptTestData.createReceiptEntity()
+        `when`(receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, savedEntity.validFrom)).thenReturn(emptyList())
+        `when`(receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, savedEntity.validTo)).thenReturn(listOf(savedEntity))
+
+        assertThatThrownBy { receiptService.create(newReceipt) }
+            .isInstanceOf(OverlappingReceiptException::class.java)
+    }
+
+    @Test
     fun shouldUpdateReceipt() {
         val newReceipt = ReceiptTestData.createNewReceipt()
         val existingReceipt = ReceiptTestData.createExistingReceipt()
@@ -90,6 +112,29 @@ class ReceiptServiceTest {
         `when`(receiptRepository.save(updatedEntity)).thenReturn(savedEntity)
 
         assertThat(receiptService.update(ID, newReceipt)).isEqualTo(existingReceipt)
+    }
+
+    @Test
+    fun shouldFailOnUpdatingOverlappingValidFrom() {
+        val newReceipt = ReceiptTestData.createNewReceipt()
+        val savedEntity = ReceiptTestData.createReceiptEntity()
+
+        `when`(receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, savedEntity.validFrom)).thenReturn(listOf(savedEntity))
+
+        assertThatThrownBy { receiptService.update(CreditorTestData.ID, newReceipt) }
+            .isInstanceOf(OverlappingReceiptException::class.java)
+    }
+
+    @Test
+    fun shouldFailOnUpdatingOverlappingValidTo() {
+        val newReceipt = ReceiptTestData.createNewReceipt()
+        val savedEntity = ReceiptTestData.createReceiptEntity()
+
+        `when`(receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, savedEntity.validFrom)).thenReturn(emptyList())
+        `when`(receiptRepository.findAllByCreditorAndDate(CreditorTestData.ID, savedEntity.validTo)).thenReturn(listOf(savedEntity))
+
+        assertThatThrownBy { receiptService.update(CreditorTestData.ID, newReceipt) }
+            .isInstanceOf(OverlappingReceiptException::class.java)
     }
 
     @Test

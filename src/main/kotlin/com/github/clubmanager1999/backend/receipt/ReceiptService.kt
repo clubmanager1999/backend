@@ -46,6 +46,13 @@ class ReceiptService(
     }
 
     fun create(newReceipt: NewReceipt): ExistingReceipt {
+        if (
+            receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validFrom).isNotEmpty() ||
+            receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validTo).isNotEmpty()
+        ) {
+            throw OverlappingReceiptException()
+        }
+
         return newReceipt
             .toReceiptEntity(null)
             .let { receiptRepository.save(it) }
@@ -56,6 +63,13 @@ class ReceiptService(
         id: Long,
         newReceipt: NewReceipt,
     ): ExistingReceipt {
+        if (
+            receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validFrom).isNotEmpty() ||
+            receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validTo).isNotEmpty()
+        ) {
+            throw OverlappingReceiptException()
+        }
+
         return receiptRepository
             .findById(id)
             .orElseThrow { ReceiptNotFoundException(id) }

@@ -24,6 +24,7 @@ import com.github.clubmanager1999.backend.member.SubjectNotFoundException
 import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
 import com.github.clubmanager1999.backend.oidc.ClientNotFoundException
 import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
+import com.github.clubmanager1999.backend.receipt.OverlappingReceiptException
 import com.github.clubmanager1999.backend.receipt.ReceiptNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
 import com.github.clubmanager1999.backend.transaction.TransactionNotFoundException
@@ -123,6 +124,11 @@ class ExceptionHandlerTest {
                 AreaNotFoundException(42),
                 ApiError(ErrorCode.AREA_NOT_FOUND, "No area with id 42 found"),
                 HttpStatus.NOT_FOUND,
+            ),
+            Case(
+                OverlappingReceiptException(),
+                ApiError(ErrorCode.OVERLAPPING_RECEIPT, "There is already an receipt with a similar range"),
+                HttpStatus.CONFLICT,
             ),
         )
 
