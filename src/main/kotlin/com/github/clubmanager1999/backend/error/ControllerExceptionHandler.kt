@@ -36,7 +36,7 @@ class ControllerExceptionHandler {
     fun handle(e: BusinessException): ResponseEntity<ApiError> {
         return ResponseEntity(
             ApiError(e.errorCode, e.errorMessage),
-            HttpStatus.NOT_FOUND,
+            e.status,
         )
     }
 

@@ -16,4 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
-open class BusinessException(val errorCode: ErrorCode, val errorMessage: String) : Exception(errorMessage)
+import org.springframework.http.HttpStatus
+
+open class BusinessException(val status: HttpStatus, val errorCode: ErrorCode, val errorMessage: String) : Exception(errorMessage)

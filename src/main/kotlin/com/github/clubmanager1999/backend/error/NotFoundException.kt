@@ -16,7 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
+import org.springframework.http.HttpStatus
+
 open class NotFoundException(errorCode: ErrorCode, typeName: String, idName: String, id: Any) : BusinessException(
+    HttpStatus.NOT_FOUND,
     errorCode,
     "No $typeName with $idName $id found",
 )
