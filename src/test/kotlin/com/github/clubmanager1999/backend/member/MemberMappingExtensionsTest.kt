@@ -19,7 +19,6 @@ package com.github.clubmanager1999.backend.member
 import com.github.clubmanager1999.backend.member.MemberTestData.ID
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.membership.toMembershipEntity
-import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -29,12 +28,6 @@ class MemberMappingExtensionsTest {
     fun shouldMapMemberEntityToExistingMember() {
         assertThat(MemberTestData.createMemberEntity().toExistingMember())
             .isEqualTo(MemberTestData.createExistingMember())
-    }
-
-    @Test
-    fun shouldMapExistingMemberToExistingMemberWithRoles() {
-        assertThat(MemberTestData.createExistingMember().withRoles(listOf(ROLE)))
-            .isEqualTo(MemberTestData.createExistingMemberWithRoles())
     }
 
     @Test

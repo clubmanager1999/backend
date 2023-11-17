@@ -16,7 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.member
 
-import com.github.clubmanager1999.backend.roles.NewRole
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -35,12 +34,12 @@ class MemberController(val memberService: MemberService) {
     @GetMapping("/api/members/{id}")
     fun getMember(
         @PathVariable id: Long,
-    ): ExistingMemberWithRoles {
+    ): ExistingMember {
         return memberService.get(id)
     }
 
     @GetMapping("/api/members")
-    fun getAllMembers(): List<ExistingMemberWithRoles> {
+    fun getAllMembers(): List<ExistingMember> {
         return memberService.getAll()
     }
 
@@ -70,26 +69,6 @@ class MemberController(val memberService: MemberService) {
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
         memberService.delete(id)
-
-        return ResponseEntity.noContent().build()
-    }
-
-    @PostMapping("/api/members/{id}/roles")
-    fun createMember(
-        @PathVariable id: Long,
-        @RequestBody newRole: NewRole,
-    ): ResponseEntity<Void> {
-        memberService.addRoleToMember(id, newRole.name)
-
-        return ResponseEntity.noContent().build()
-    }
-
-    @DeleteMapping("/api/members/{id}/roles/{role}")
-    fun deleteMember(
-        @PathVariable id: Long,
-        @PathVariable role: String,
-    ): ResponseEntity<Void> {
-        memberService.removeRoleFromMember(id, role)
 
         return ResponseEntity.noContent().build()
     }

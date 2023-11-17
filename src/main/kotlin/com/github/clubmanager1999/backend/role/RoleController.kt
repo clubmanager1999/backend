@@ -14,73 +14,102 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.roles
+package com.github.clubmanager1999.backend.role
 
-import com.github.clubmanager1999.backend.oidc.OidcAdminService
-import com.github.clubmanager1999.backend.oidc.OidcRole
+import com.github.clubmanager1999.backend.member.MemberId
 import com.github.clubmanager1999.backend.security.Permission
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
-class RoleController(val oidcAdminService: OidcAdminService) {
+class RoleController(val roleService: RoleService) {
     val uriComponentsBuilder = UriComponentsBuilder.newInstance().path("/api/roles/{id}").build()
 
-    @GetMapping("/api/roles/{name}")
+    @GetMapping("/api/roles/{id}")
     fun getRole(
-        @PathVariable name: String,
-    ): OidcRole {
-        return oidcAdminService.getRole(name)
+        @PathVariable id: Long,
+    ): ExistingRole {
+        return roleService.get(id)
     }
 
     @GetMapping("/api/roles")
-    fun getAllRoles(): List<OidcRole> {
-        return oidcAdminService.getRoles()
+    fun getAllRoles(): List<ExistingRole> {
+        return roleService.getAll()
     }
 
     @PostMapping("/api/roles")
     fun createRole(
         @RequestBody newRole: NewRole,
     ): ResponseEntity<Void> {
-        oidcAdminService.createRole(newRole.name)
+        val existingRole = roleService.create(newRole)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(newRole.name)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingRole.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }
 
-    @PostMapping("/api/roles/{name}/permissions")
-    fun addPermission(
-        @PathVariable name: String,
-        @RequestBody newPermission: NewPermission,
+    @PutMapping("/api/roles/{id}")
+    fun updateRole(
+        @PathVariable id: Long,
+        @RequestBody newRole: NewRole,
     ): ResponseEntity<Void> {
-        oidcAdminService.addPermission(name, newPermission.permission)
+        roleService.update(id, newRole)
 
         return ResponseEntity.noContent().build()
     }
 
-    @DeleteMapping("/api/roles/{name}/permissions/{permission}")
+    @DeleteMapping("/api/roles/{id}")
+    fun deleteRole(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
+        roleService.delete(id)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @PutMapping("/api/roles/{id}/permissions")
+    fun addPermission(
+        @PathVariable id: Long,
+        @RequestBody permission: NewPermission,
+    ): ResponseEntity<Void> {
+        roleService.addPermission(id, permission.permission)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping("/api/roles/{id}/permissions/{permission}")
     fun removePermission(
-        @PathVariable name: String,
+        @PathVariable id: Long,
         @PathVariable permission: Permission,
     ): ResponseEntity<Void> {
-        oidcAdminService.removePermission(name, permission)
+        roleService.removePermission(id, permission)
 
         return ResponseEntity.noContent().build()
     }
 
-    @DeleteMapping("/api/roles/{name}")
-    fun deleteRole(
-        @PathVariable name: String,
+    @PutMapping("/api/roles/{id}/holder")
+    fun setMember(
+        @PathVariable id: Long,
+        @RequestBody holder: MemberId,
     ): ResponseEntity<Void> {
-        oidcAdminService.deleteRole(name)
+        roleService.setHolder(id, holder)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping("/api/roles/{id}/holder")
+    fun removeMember(
+        @PathVariable id: Long,
+    ): ResponseEntity<Void> {
+        roleService.removeHolder(id)
 
         return ResponseEntity.noContent().build()
     }

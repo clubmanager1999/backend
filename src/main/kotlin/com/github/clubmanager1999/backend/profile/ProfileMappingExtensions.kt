@@ -16,11 +16,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.profile
 
-import com.github.clubmanager1999.backend.member.ExistingMemberWithRoles
+import com.github.clubmanager1999.backend.member.ExistingMember
 import com.github.clubmanager1999.backend.member.NewMember
 import com.github.clubmanager1999.backend.membership.MembershipId
 
-fun ExistingMemberWithRoles.toProfile(): Profile {
+fun ExistingMember.toProfile(): Profile {
     return Profile(
         userName = this.userName,
         firstName = this.firstName,

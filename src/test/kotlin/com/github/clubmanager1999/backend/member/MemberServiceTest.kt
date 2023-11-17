@@ -18,12 +18,9 @@ package com.github.clubmanager1999.backend.member
 
 import com.github.clubmanager1999.backend.member.MemberTestData.ID
 import com.github.clubmanager1999.backend.oidc.OidcAdminService
-import com.github.clubmanager1999.backend.oidc.OidcRole
 import com.github.clubmanager1999.backend.oidc.OidcTestData
-import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.oidc.OidcUserMapper
 import com.github.clubmanager1999.backend.oidc.Subject
-import com.github.clubmanager1999.backend.security.Permission
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -51,10 +48,8 @@ class MemberServiceTest {
 
     @Test
     fun shouldGetMemberById() {
-        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
+        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
-
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
@@ -70,10 +65,8 @@ class MemberServiceTest {
 
     @Test
     fun shouldGetMemberBySubject() {
-        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
+        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
-
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         `when`(memberRepository.findBySubject(SUBJECT)).thenReturn(Optional.of(savedEntity))
 
@@ -89,12 +82,10 @@ class MemberServiceTest {
 
     @Test
     fun shouldGetAllMembers() {
-        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
+        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
 
         `when`(memberRepository.findAll()).thenReturn(listOf(savedEntity))
-
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         assertThat(memberService.getAll()).containsExactly(existingMemberWithRoles)
     }
@@ -102,13 +93,11 @@ class MemberServiceTest {
     @Test
     fun shouldCreateMember() {
         val newMember = MemberTestData.createNewMember()
-        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
+        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
         val newEntity = MemberTestData.createFlatMemberEntity().copy(id = null)
 
         `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
@@ -120,13 +109,11 @@ class MemberServiceTest {
     @Test
     fun shouldUpdateMember() {
         val newMember = MemberTestData.createNewMember()
-        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
+        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
         val updatedEntity = MemberTestData.createFlatMemberEntity()
 
         `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
-
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         `when`(memberRepository.save(updatedEntity)).thenReturn(savedEntity)
 
@@ -158,8 +145,6 @@ class MemberServiceTest {
         val newEntity = MemberTestData.createFlatMemberEntity().copy(id = null)
 
         `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
-
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
@@ -195,8 +180,6 @@ class MemberServiceTest {
 
         `when`(memberRepository.save(newEntity)).thenReturn(savedEntity)
 
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
-
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
         `when`(oidcAdminService.createUser(any())).thenReturn(Subject(SUBJECT))
@@ -218,8 +201,6 @@ class MemberServiceTest {
         `when`(oidcUserMapper.toOidcUser(newMember)).thenReturn(OidcTestData.createOidcUser())
 
         `when`(memberRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
-
-        `when`(oidcAdminService.getUserRoles(Subject(SUBJECT))).thenReturn(listOf(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS))))
 
         `when`(memberRepository.save(updatedEntity)).thenReturn(savedEntity)
 
@@ -272,43 +253,5 @@ class MemberServiceTest {
 
         verify(oidcAdminService).deleteUser(Subject(SUBJECT))
         verify(memberRepository, never()).save(any())
-    }
-
-    @Test
-    fun shouldAddRoleToMember() {
-        val entity = MemberTestData.createMemberEntity()
-        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(entity))
-
-        memberService.addRoleToMember(ID, ROLE)
-
-        verify(oidcAdminService).addRoleToUser(Subject(SUBJECT), ROLE)
-    }
-
-    @Test
-    fun shouldThrowExceptionIfMemberIsNotFoundInAddRoleToMember() {
-        assertThatThrownBy {
-            memberService.addRoleToMember(ID, SUBJECT)
-        }
-            .isInstanceOf(MemberNotFoundException::class.java)
-
-        verifyNoInteractions(oidcAdminService)
-    }
-
-    @Test
-    fun shouldRemoveRoleFromMember() {
-        val entity = MemberTestData.createMemberEntity()
-        `when`(memberRepository.findById(ID)).thenReturn(Optional.of(entity))
-
-        memberService.removeRoleFromMember(ID, ROLE)
-
-        verify(oidcAdminService).removeRoleFromUser(Subject(SUBJECT), ROLE)
-    }
-
-    @Test
-    fun shouldThrowExceptionIfMemberIsNotFoundInRemoveRoleFromMember() {
-        assertThatThrownBy { memberService.removeRoleFromMember(ID, SUBJECT) }
-            .isInstanceOf(MemberNotFoundException::class.java)
-
-        verifyNoInteractions(oidcAdminService)
     }
 }

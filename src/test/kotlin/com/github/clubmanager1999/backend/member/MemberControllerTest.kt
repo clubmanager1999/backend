@@ -27,8 +27,6 @@ import com.github.clubmanager1999.backend.member.MemberTestData.STREET_NUMBER
 import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
 import com.github.clubmanager1999.backend.member.MemberTestData.ZIP
 import com.github.clubmanager1999.backend.membership.MembershipTestData
-import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
-import com.github.clubmanager1999.backend.roles.NewRole
 import com.github.clubmanager1999.backend.security.Permission
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test
@@ -64,7 +62,7 @@ internal class MemberControllerTest {
 
     @Test
     fun shouldReturnMember() {
-        `when`(memberService.get(ID)).thenReturn(MemberTestData.createExistingMemberWithRoles())
+        `when`(memberService.get(ID)).thenReturn(MemberTestData.createExistingMember())
 
         mockMvc
             .perform(get("/api/members/$ID").withRole(Permission.MANAGE_MEMBERS))
@@ -82,12 +80,11 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$.membership.id").value(MembershipTestData.ID))
             .andExpect(jsonPath("$.membership.name").value(MembershipTestData.NAME))
             .andExpect(jsonPath("$.membership.fee").value(MembershipTestData.FEE))
-            .andExpect(jsonPath("$.roles[0]").value(ROLE))
     }
 
     @Test
     fun shouldReturnMembers() {
-        `when`(memberService.getAll()).thenReturn(listOf(MemberTestData.createExistingMemberWithRoles()))
+        `when`(memberService.getAll()).thenReturn(listOf(MemberTestData.createExistingMember()))
 
         mockMvc
             .perform(get("/api/members").withRole(Permission.MANAGE_MEMBERS))
@@ -105,13 +102,12 @@ internal class MemberControllerTest {
             .andExpect(jsonPath("$[0].membership.id").value(MembershipTestData.ID))
             .andExpect(jsonPath("$[0].membership.name").value(MembershipTestData.NAME))
             .andExpect(jsonPath("$[0].membership.fee").value(MembershipTestData.FEE))
-            .andExpect(jsonPath("$[0].roles[0]").value(ROLE))
     }
 
     @Test
     fun shouldCreateMember() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMemberWithRoles())
+            .thenReturn(MemberTestData.createExistingMember())
 
         mockMvc
             .perform(
@@ -126,7 +122,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldCreateMultipleMembers() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMemberWithRoles())
+            .thenReturn(MemberTestData.createExistingMember())
 
         mockMvc
             .perform(
@@ -150,7 +146,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(memberService.update(ID, MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMemberWithRoles())
+            .thenReturn(MemberTestData.createExistingMember())
 
         mockMvc
             .perform(
@@ -168,27 +164,5 @@ internal class MemberControllerTest {
             .andExpect(status().isNoContent)
 
         verify(memberService).delete(ID)
-    }
-
-    @Test
-    fun shouldAddRoleToMember() {
-        mockMvc
-            .perform(
-                post("/api/members/$ID/roles").withRole(Permission.MANAGE_ROLES)
-                    .content(objectMapper.writeValueAsString(NewRole(ROLE)))
-                    .contentType(MediaType.APPLICATION_JSON),
-            )
-            .andExpect(status().isNoContent)
-
-        verify(memberService).addRoleToMember(ID, ROLE)
-    }
-
-    @Test
-    fun shouldRemoveRoleFromMember() {
-        mockMvc
-            .perform(delete("/api/members/$ID/roles/$ROLE").withRole(Permission.MANAGE_ROLES))
-            .andExpect(status().isNoContent)
-
-        verify(memberService).removeRoleFromMember(ID, ROLE)
     }
 }

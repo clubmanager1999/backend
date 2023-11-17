@@ -14,25 +14,34 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.profile
+package com.github.clubmanager1999.backend.role
 
-import com.github.clubmanager1999.backend.member.MemberTestData
-import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
-import com.github.clubmanager1999.backend.membership.MembershipTestData
+import com.github.clubmanager1999.backend.role.RoleTestData.ID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ProfileMappingExtensionsTest {
+class RoleMappingExtensionsTest {
     @Test
-    fun shouldMapToProfile() {
-        assertThat(MemberTestData.createExistingMember().toProfile())
-            .isEqualTo(ProfileTestData.createProfile())
+    fun shouldMapRoleEntityToExistingRole() {
+        assertThat(
+            RoleTestData.createRoleEntity().toExistingRole(),
+        )
+            .isEqualTo(RoleTestData.createExistingRole())
     }
 
     @Test
-    fun shouldMapToNewMember() {
+    fun shouldMapNewRoleToRoleEntityWithId() {
         assertThat(
-            ProfileTestData.createProfileUpdate().toNewMember(USER_NAME, MembershipTestData.createMembershipId()),
-        ).isEqualTo(MemberTestData.createNewMember())
+            RoleTestData.createNewRole().toRoleEntity(ID),
+        )
+            .isEqualTo(RoleTestData.createRoleEntity().copy(holder = null))
+    }
+
+    @Test
+    fun shouldMapRoleIdToRoleEntity() {
+        assertThat(
+            RoleTestData.createRoleId().toRoleEntity(),
+        )
+            .isEqualTo(RoleTestData.createRoleEntity().copy(name = "", permissions = emptySet(), holder = null))
     }
 }

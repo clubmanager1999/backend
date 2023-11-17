@@ -14,8 +14,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.oidc
+package com.github.clubmanager1999.backend.role
 
-import com.github.clubmanager1999.backend.security.Permission
+import org.springframework.data.repository.CrudRepository
 
-data class OidcRole(val name: String, val permissions: List<Permission>)
+interface RoleRepository : CrudRepository<RoleEntity, Long>
