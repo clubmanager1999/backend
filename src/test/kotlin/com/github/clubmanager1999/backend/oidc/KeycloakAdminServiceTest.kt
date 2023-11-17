@@ -27,8 +27,8 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import jakarta.ws.rs.WebApplicationException
 import jakarta.ws.rs.core.Response
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.BeforeEach
@@ -160,7 +160,7 @@ class KeycloakAdminServiceTest {
             assertThat(e.response.status).isEqualTo(409)
         }
 
-        Assertions.assertThatThrownBy { keycloakAdminService.createUser(oidcUser) }
+        assertThatThrownBy { keycloakAdminService.createUser(oidcUser) }
             .isInstanceOf(WebApplicationException::class.java)
             .extracting { (it as WebApplicationException).response.status }
             .isEqualTo(409)
@@ -199,7 +199,7 @@ class KeycloakAdminServiceTest {
     fun shouldFailOnMissingUser() {
         val oidcUser = OidcTestData.createOidcUser()
 
-        Assertions.assertThatThrownBy { keycloakAdminService.updateUser(Subject("unknown"), oidcUser) }
+        assertThatThrownBy { keycloakAdminService.updateUser(Subject("unknown"), oidcUser) }
             .isInstanceOf(WebApplicationException::class.java)
             .extracting { (it as WebApplicationException).response.status }
             .isEqualTo(404)
@@ -218,7 +218,7 @@ class KeycloakAdminServiceTest {
 
         keycloakAdminService.deleteUser(subject)
 
-        Assertions.assertThatThrownBy { usersResource.get(subject.id).toRepresentation() }
+        assertThatThrownBy { usersResource.get(subject.id).toRepresentation() }
             .isInstanceOf(WebApplicationException::class.java)
             .extracting { (it as WebApplicationException).response.status }
             .isEqualTo(HttpStatus.NOT_FOUND.value())
@@ -369,7 +369,7 @@ class KeycloakAdminServiceTest {
 
         keycloakAdminService.deleteRole(ROLE)
 
-        Assertions.assertThatThrownBy { rolesResource.get(ROLE).toRepresentation() }
+        assertThatThrownBy { rolesResource.get(ROLE).toRepresentation() }
             .isInstanceOf(WebApplicationException::class.java)
             .extracting { (it as WebApplicationException).response.status }
             .isEqualTo(404)
