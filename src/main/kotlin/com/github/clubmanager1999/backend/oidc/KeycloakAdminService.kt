@@ -117,17 +117,31 @@ class KeycloakAdminService(
             )
     }
 
-    override fun getRole(name: String): OidcRole {
-        return getRoleRepresentation(name)
-            .let { OidcRole(it.name, getPermissions(it.name)) }
+    override fun assignRoleExclusivelyToUser(
+        subject: Subject,
+        role: String,
+    ) {
+        val membersToRemove =
+            getUsersInRole(role)
+                .filter { it.id != subject.id }
+
+        addUserToRole(subject, role)
+
+        membersToRemove
+            .forEach { removeRoleFromUser(Subject(it.id), role) }
     }
 
-    override fun getRoles(): List<OidcRole> {
-        return realmResource
-            .roles()
-            .list(false)
-            .filter { it.attributes?.get(ATTRIBUTE_MANAGED_BY)?.contains(keycloakAdminConfig.clientId) ?: false }
-            .map { OidcRole(it.name, getPermissions(it.name)) }
+    override fun unassignExclusiveRole(role: String) {
+        val membersToRemove = getUsersInRole(role)
+
+        membersToRemove
+            .forEach { removeRoleFromUser(Subject(it.id), role) }
+    }
+
+    private fun getUsersInRole(role: String): MutableList<UserRepresentation> {
+        return rolesResource
+            .get(role)
+            .userMembers
     }
 
     override fun createRole(name: String) {
@@ -164,16 +178,7 @@ class KeycloakAdminService(
             .deleteRole(name)
     }
 
-    override fun getUserRoles(subject: Subject): List<OidcRole> {
-        return usersResource.get(subject.id)
-            .roles()
-            .realmLevel()
-            .listEffective(false)
-            .filter { it.attributes?.get(ATTRIBUTE_MANAGED_BY)?.contains(keycloakAdminConfig.clientId) ?: false }
-            .map { OidcRole(it.name, getPermissions(it.name)) }
-    }
-
-    override fun addRoleToUser(
+    fun addUserToRole(
         subject: Subject,
         role: String,
     ) {
@@ -185,7 +190,7 @@ class KeycloakAdminService(
             .add(listOf(roleRepresentation))
     }
 
-    override fun removeRoleFromUser(
+    fun removeRoleFromUser(
         subject: Subject,
         role: String,
     ) {
@@ -227,22 +232,6 @@ class KeycloakAdminService(
             .findByClientId(clientId)
             .firstOrNull()
             ?: throw ClientNotFoundException(clientId)
-    }
-
-    fun getPermissions(name: String): List<Permission> {
-        return getClientRoles(rolesResource, name)
-            .mapNotNull { Permission.byRoleName[it.name] }
-    }
-
-    fun getClientRoles(
-        resource: RolesResource,
-        name: String,
-    ): Set<RoleRepresentation> {
-        val client = getClientRepresentation()
-
-        return withRole(rolesResource, name) {
-            it.getClientRoleComposites(client.id)
-        }
     }
 
     fun <T> withRole(

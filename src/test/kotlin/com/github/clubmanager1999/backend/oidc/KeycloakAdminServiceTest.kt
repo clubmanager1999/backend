@@ -29,7 +29,6 @@ import jakarta.ws.rs.WebApplicationException
 import jakarta.ws.rs.core.Response
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.BeforeEach
@@ -262,40 +261,72 @@ class KeycloakAdminServiceTest {
     }
 
     @Test
-    fun shouldGetRoleByName() {
-        createRole(ROLE)
-        addPermission(ROLE, Permission.MANAGE_MEMBERS)
+    fun shouldAddUserExclusivelyToRole() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
 
-        assertThat(keycloakAdminService.getRole(ROLE)).isEqualTo(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS)))
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val subject1 = keycloakAdminService.createUser(OidcTestData.createOidcUser())
+
+        createRole(ROLE)
+
+        keycloakAdminService.assignRoleExclusivelyToUser(subject1, ROLE)
+
+        assertThat(
+            usersResource.get(subject1.id).roles().realmLevel().listAll().map {
+                it.name
+            }.filter { !it.contains("default") },
+        ).containsExactly(ROLE)
+
+        assertThat(rolesResource.get(ROLE).userMembers.map { it.id }).containsExactly(subject1.id)
+
+        val subject2 =
+            keycloakAdminService.createUser(
+                OidcTestData.createOidcUser().copy(username = "robert.paulson", email = "robert.paulson@paper-street-soap.co"),
+            )
+
+        keycloakAdminService.assignRoleExclusivelyToUser(subject2, ROLE)
+
+        assertThat(
+            usersResource.get(subject1.id).roles().realmLevel().listAll().map {
+                it.name
+            }.filter { !it.contains("default") },
+        ).isEmpty()
+
+        assertThat(
+            usersResource.get(subject2.id).roles().realmLevel().listAll().map {
+                it.name
+            }.filter { !it.contains("default") },
+        ).containsExactly(ROLE)
+
+        assertThat(rolesResource.get(ROLE).userMembers.map { it.id }).containsExactly(subject2.id)
     }
 
     @Test
-    fun shouldThrowExceptionOnUnknownRole() {
-        assertThatThrownBy { keycloakAdminService.getRole(ROLE) }
-            .isInstanceOf(RoleNotFoundException::class.java)
-            .extracting { (it as RoleNotFoundException).name }
-            .isEqualTo(ROLE)
-    }
+    fun shouldRemoveAllUsersFromRole() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
 
-    @Test
-    fun shouldThrowExceptionOnUnknownClient() {
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val oidcUser = OidcTestData.createOidcUser()
+        val subject = keycloakAdminService.createUser(oidcUser)
+
         createRole(ROLE)
 
-        `when`(keycloakJwtConfig.clientName).thenReturn("unknown")
+        val role = rolesResource.get(ROLE).toRepresentation()
 
-        assertThatThrownBy { keycloakAdminService.getRole(ROLE) }
-            .isInstanceOf(ClientNotFoundException::class.java)
-            .extracting { (it as ClientNotFoundException).clientId }
-            .isEqualTo("unknown")
-    }
+        usersResource.get(subject.id)
+            .roles()
+            .realmLevel()
+            .add(listOf(role))
 
-    @Test
-    fun shouldGetRoles() {
-        createRole(ROLE)
-        addPermission(ROLE, Permission.MANAGE_MEMBERS)
-        createRole("hidden", "someone else")
+        keycloakAdminService.unassignExclusiveRole(ROLE)
 
-        assertThat(keycloakAdminService.getRoles()).containsExactly(OidcRole(ROLE, listOf(Permission.MANAGE_MEMBERS)))
+        assertThat(rolesResource.get(ROLE).userMembers.map { it.id }).isEmpty()
     }
 
     @Test
@@ -342,46 +373,6 @@ class KeycloakAdminServiceTest {
             .isInstanceOf(WebApplicationException::class.java)
             .extracting { (it as WebApplicationException).response.status }
             .isEqualTo(404)
-    }
-
-    @Test
-    fun shouldGetUserRoles() {
-        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
-
-        usersResource.list().forEach {
-            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
-        }
-
-        val oidcUser = OidcTestData.createOidcUser()
-        val subject = keycloakAdminService.createUser(oidcUser)
-
-        createRole(ROLE)
-        val role = rolesResource.get(ROLE).toRepresentation()
-        usersResource.get(subject.id).roles().realmLevel().add(listOf(role))
-
-        assertThat(keycloakAdminService.getUserRoles(subject)).containsExactly(OidcRole(ROLE, emptyList()))
-    }
-
-    @Test
-    fun shouldAddRoleToUser() {
-        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
-
-        usersResource.list().forEach {
-            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
-        }
-
-        val oidcUser = OidcTestData.createOidcUser()
-        val subject = keycloakAdminService.createUser(oidcUser)
-
-        createRole(ROLE)
-
-        keycloakAdminService.addRoleToUser(subject, ROLE)
-
-        assertThat(
-            usersResource.get(subject.id).roles().realmLevel().listAll().map {
-                it.name
-            }.filter { !it.contains("default") },
-        ).containsExactly(ROLE)
     }
 
     @Test

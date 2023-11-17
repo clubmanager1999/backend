@@ -29,8 +29,6 @@ class WebSecurityConfig(private val keycloakJwtConverter: KeycloakJwtConverter) 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests {
-            it.requestMatchers("/api/members/*/roles/**").hasRole(Permission.MANAGE_ROLES.toString())
-
             it.requestMatchers("/api/members/**").hasRole(Permission.MANAGE_MEMBERS.toString())
 
             it.requestMatchers("/api/memberships/**").hasRole(Permission.MANAGE_MEMBERSHIPS.toString())

@@ -22,7 +22,6 @@ import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.membership.MembershipTestData.createExistingMembership
 import com.github.clubmanager1999.backend.membership.MembershipTestData.createMembershipEntity
 import com.github.clubmanager1999.backend.membership.toMembershipEntity
-import com.github.clubmanager1999.backend.oidc.OidcTestData.ROLE
 import com.github.clubmanager1999.backend.security.SecurityTestData.SUBJECT
 
 object MemberTestData {
@@ -64,19 +63,6 @@ object MemberTestData {
             email = EMAIL,
             address = createAddress(),
             membership = createExistingMembership(),
-        )
-    }
-
-    fun createExistingMemberWithRoles(): ExistingMemberWithRoles {
-        return ExistingMemberWithRoles(
-            id = ID,
-            userName = USER_NAME,
-            firstName = FIRST_NAME,
-            lastName = LAST_NAME,
-            email = EMAIL,
-            address = createAddress(),
-            membership = createExistingMembership(),
-            roles = listOf(ROLE),
         )
     }
 

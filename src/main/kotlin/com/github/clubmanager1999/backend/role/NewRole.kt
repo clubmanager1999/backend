@@ -14,17 +14,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.member
+package com.github.clubmanager1999.backend.role
 
-import com.github.clubmanager1999.backend.membership.ExistingMembership
+import com.github.clubmanager1999.backend.security.Permission
 
-data class ExistingMemberWithRoles(
-    val id: Long,
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val address: Address,
-    val membership: ExistingMembership,
-    val roles: List<String>,
+data class NewRole(
+    val name: String,
+    val permissions: Set<Permission>,
 )

@@ -14,42 +14,24 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.oidc
+package com.github.clubmanager1999.backend.role
 
+import com.github.clubmanager1999.backend.member.MemberEntity
 import com.github.clubmanager1999.backend.security.Permission
-import org.springframework.stereotype.Service
+import jakarta.persistence.ElementCollection
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 
-@Service
-interface OidcAdminService {
-    fun createUser(oidcUser: OidcUser): Subject
-
-    fun updateUser(
-        subject: Subject,
-        oidcUser: OidcUser,
-    )
-
-    fun deleteUser(subject: Subject)
-
-    fun resetPassword(subject: Subject)
-
-    fun assignRoleExclusivelyToUser(
-        subject: Subject,
-        role: String,
-    )
-
-    fun unassignExclusiveRole(role: String)
-
-    fun createRole(name: String)
-
-    fun addPermission(
-        name: String,
-        permission: Permission,
-    )
-
-    fun removePermission(
-        name: String,
-        permission: Permission,
-    )
-
-    fun deleteRole(name: String)
-}
+@Entity
+data class RoleEntity(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long?,
+    val name: String,
+    @ElementCollection(fetch = FetchType.EAGER)
+    val permissions: Set<Permission>,
+    @ManyToOne
+    val holder: MemberEntity?,
+)

@@ -33,19 +33,6 @@ fun MemberEntity.toExistingMember(): ExistingMember {
     )
 }
 
-fun ExistingMember.withRoles(roles: List<String>): ExistingMemberWithRoles {
-    return ExistingMemberWithRoles(
-        id = this.id,
-        userName = this.userName,
-        firstName = this.firstName,
-        lastName = this.lastName,
-        email = this.email,
-        address = this.address,
-        membership = this.membership,
-        roles = roles,
-    )
-}
-
 fun NewMember.toMemberEntity(
     id: Long?,
     subject: String,

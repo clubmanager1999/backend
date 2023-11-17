@@ -30,25 +30,25 @@ class MemberService(
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun get(id: Long): ExistingMemberWithRoles {
+    fun get(id: Long): ExistingMember {
         return memberRepository
             .findById(id)
-            .map { it.toExistingMember().withRoles(getRoles(it)) }
+            .map { it.toExistingMember() }
             .orElseThrow { MemberNotFoundException(id) }
     }
 
-    fun get(subject: Subject): ExistingMemberWithRoles {
+    fun get(subject: Subject): ExistingMember {
         return memberRepository
             .findBySubject(subject.id)
-            .map { it.toExistingMember().withRoles(getRoles(it)) }
+            .map { it.toExistingMember() }
             .orElseThrow { SubjectNotFoundException(subject.id) }
     }
 
-    fun getAll(): List<ExistingMemberWithRoles> {
-        return memberRepository.findAll().map { it.toExistingMember().withRoles(getRoles(it)) }
+    fun getAll(): List<ExistingMember> {
+        return memberRepository.findAll().map { it.toExistingMember() }
     }
 
-    fun create(newMember: NewMember): ExistingMemberWithRoles {
+    fun create(newMember: NewMember): ExistingMember {
         val oidcUser = oidcUserMapper.toOidcUser(newMember)
         val subject = oidcAdminService.createUser(oidcUser)
 
@@ -61,13 +61,13 @@ class MemberService(
         return newMember
             .toMemberEntity(null, subject.id)
             .let { memberRepository.save(it) }
-            .let { it.toExistingMember().withRoles(getRoles(it)) }
+            .toExistingMember()
     }
 
     fun update(
         id: Long,
         newMember: NewMember,
-    ): ExistingMemberWithRoles {
+    ): ExistingMember {
         val oidcUser = oidcUserMapper.toOidcUser(newMember)
 
         return memberRepository
@@ -81,7 +81,7 @@ class MemberService(
                 newMember.toMemberEntity(it.id, it.subject)
             }
             .let { memberRepository.save(it) }
-            .let { it.toExistingMember().withRoles(getRoles(it)) }
+            .toExistingMember()
     }
 
     fun delete(id: Long) {
@@ -90,29 +90,5 @@ class MemberService(
             .ifPresent { oidcAdminService.deleteUser(Subject(it.subject)) }
 
         memberRepository.deleteById(id)
-    }
-
-    fun getRoles(memberEntity: MemberEntity): List<String> {
-        return oidcAdminService.getUserRoles(Subject(memberEntity.subject)).map { it.name }
-    }
-
-    fun addRoleToMember(
-        id: Long,
-        role: String,
-    ) {
-        memberRepository
-            .findById(id)
-            .orElseThrow { MemberNotFoundException(id) }
-            .let { oidcAdminService.addRoleToUser(Subject(it.subject), role) }
-    }
-
-    fun removeRoleFromMember(
-        id: Long,
-        role: String,
-    ) {
-        memberRepository
-            .findById(id)
-            .orElseThrow { MemberNotFoundException(id) }
-            .let { oidcAdminService.removeRoleFromUser(Subject(it.subject), role) }
     }
 }

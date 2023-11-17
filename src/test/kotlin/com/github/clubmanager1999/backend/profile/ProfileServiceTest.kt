@@ -38,7 +38,7 @@ class ProfileServiceTest {
 
     @Test
     fun shouldGetProfile() {
-        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
+        val existingMemberWithRoles = MemberTestData.createExistingMember()
 
         `when`(memberService.get(Subject(SUBJECT))).thenReturn(existingMemberWithRoles)
 
@@ -47,7 +47,7 @@ class ProfileServiceTest {
 
     @Test
     fun shouldUpdateProfile() {
-        val existingMemberWithRoles = MemberTestData.createExistingMemberWithRoles()
+        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val newMember = MemberTestData.createNewMember()
         val profileUpdate = ProfileTestData.createProfileUpdate()
 
