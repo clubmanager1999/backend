@@ -22,8 +22,8 @@ import com.github.clubmanager1999.backend.donor.DonorTestData
 import com.github.clubmanager1999.backend.donor.toDonorEntity
 import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.member.toMemberEntity
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 class ReferenceMappingExtensionsTest {
@@ -47,7 +47,7 @@ class ReferenceMappingExtensionsTest {
         )
             .isEqualTo(ExistingMemberReference(member = MemberTestData.createExistingMember()))
 
-        Assertions.assertThatThrownBy { UnknownEntity().toExistingReference() }
+        assertThatThrownBy { UnknownEntity().toExistingReference() }
             .isInstanceOf(RuntimeException::class.java)
             .extracting { it.message }
             .isEqualTo("Mapping for UnknownEntity is not implemented")
