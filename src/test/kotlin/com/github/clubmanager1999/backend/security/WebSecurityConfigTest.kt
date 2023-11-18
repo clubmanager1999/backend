@@ -142,9 +142,15 @@ class WebSecurityConfigTest {
             Endpoint("Delete area", HttpMethod.DELETE, "/api/areas/45"),
         )
 
+    private final val electionEndpoints =
+        listOf(
+            Endpoint("Get all elections", HttpMethod.GET, "/api/elections"),
+        )
+
     private final val adminEndpoints =
         memberEndpoints + membershipEndpoints + roleEndpoints + transactionEndpoints + donorEndpoints +
-            creditorEndpoints + receiptEndpoints + mappingEndpoints + purposeEndpoints + areaEndpoints
+            creditorEndpoints + receiptEndpoints + mappingEndpoints + purposeEndpoints + areaEndpoints +
+            electionEndpoints
 
     private final val allEndpoints = invalidEndpoints + userEndpoints + adminEndpoints
 

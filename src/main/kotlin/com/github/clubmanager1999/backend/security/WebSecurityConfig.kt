@@ -49,6 +49,8 @@ class WebSecurityConfig(private val keycloakJwtConverter: KeycloakJwtConverter) 
 
             it.requestMatchers("/api/areas/**").hasRole(Permission.MANAGE_AREAS.toString())
 
+            it.requestMatchers("/api/elections/**").hasRole(Permission.MANAGE_ROLES.toString())
+
             it.anyRequest().authenticated()
         }
 

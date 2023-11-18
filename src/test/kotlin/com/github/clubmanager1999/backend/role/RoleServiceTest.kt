@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.role
 
+import com.github.clubmanager1999.backend.election.ElectionService
 import com.github.clubmanager1999.backend.member.MemberRepository
 import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.member.toMemberEntity
@@ -45,6 +46,8 @@ class RoleServiceTest {
     @Mock lateinit var memberRepository: MemberRepository
 
     @Mock lateinit var oidcAdminService: OidcAdminService
+
+    @Mock lateinit var electionService: ElectionService
 
     @InjectMocks lateinit var roleService: RoleService
 
@@ -167,6 +170,7 @@ class RoleServiceTest {
 
         verify(oidcAdminService).assignRoleExclusivelyToUser(Subject(SUBJECT), NAME)
         verify(roleRepository).save(savedEntity)
+        verify(electionService).elect(RoleTestData.createRoleId(), holder)
     }
 
     @Test
@@ -180,5 +184,6 @@ class RoleServiceTest {
 
         verify(oidcAdminService).unassignExclusiveRole(NAME)
         verify(roleRepository).save(savedEntity)
+        verify(electionService).finish(RoleTestData.createRoleId())
     }
 }
