@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.role
 
+import com.github.clubmanager1999.backend.election.ElectionService
 import com.github.clubmanager1999.backend.member.MemberId
 import com.github.clubmanager1999.backend.member.MemberNotFoundException
 import com.github.clubmanager1999.backend.member.MemberRepository
@@ -30,6 +31,7 @@ class RoleService(
     val roleRepository: RoleRepository,
     val memberRepository: MemberRepository,
     val oidcAdminService: OidcAdminService,
+    val electionService: ElectionService,
 ) {
     fun get(id: Long): ExistingRole {
         return roleRepository
@@ -119,6 +121,7 @@ class RoleService(
 
         oidcAdminService.assignRoleExclusivelyToUser(Subject(member.subject), role.name)
         roleRepository.save(role.copy(holder = holder.toMemberEntity()))
+        electionService.elect(RoleId(id), holder)
     }
 
     fun removeHolder(id: Long) {
@@ -129,5 +132,6 @@ class RoleService(
 
         oidcAdminService.unassignExclusiveRole(role.name)
         roleRepository.save(role.copy(holder = null))
+        electionService.finish(RoleId(id))
     }
 }
