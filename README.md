@@ -1,4 +1,4 @@
-# backend
+# backend [![Build](https://github.com/clubmanager1999/backend/actions/workflows/build.yml/badge.svg)](https://github.com/clubmanager1999/backend/actions/workflows/build.yml)
 
 ## Build docker image locally (optional)
 
