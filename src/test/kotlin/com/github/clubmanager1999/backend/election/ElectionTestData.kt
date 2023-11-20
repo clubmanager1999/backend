@@ -23,7 +23,7 @@ import com.github.clubmanager1999.backend.role.RoleTestData
 import java.time.LocalDate
 
 object ElectionTestData {
-    const val ID = 52L
+    const val ID = 53L
 
     val VALID_FROM: LocalDate = LocalDate.of(1999, 10, 15)
 

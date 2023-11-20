@@ -23,7 +23,7 @@ import com.github.clubmanager1999.backend.creditor.toCreditorEntity
 import java.time.LocalDate
 
 object ReceiptTestData {
-    const val ID = 46L
+    const val ID = 47L
 
     const val NAME = "Ikea"
 

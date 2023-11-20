@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.creditor
 
 object CreditorTestData {
-    const val ID = 45L
+    const val ID = 46L
 
     const val NAME = "Ikea"
 
