@@ -139,9 +139,9 @@ class KeycloakAdminService(
     }
 
     private fun getUsersInRole(role: String): MutableList<UserRepresentation> {
-        return rolesResource
-            .get(role)
-            .userMembers
+        return withRole(rolesResource, role) {
+            it.userMembers
+        }
     }
 
     override fun createRole(name: String) {

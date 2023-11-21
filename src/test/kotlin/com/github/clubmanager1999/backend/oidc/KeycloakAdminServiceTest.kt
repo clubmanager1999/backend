@@ -305,6 +305,51 @@ class KeycloakAdminServiceTest {
     }
 
     @Test
+    fun shouldNotFailOnDuplicatingAddUserExclusivelyToRole() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val subject1 = keycloakAdminService.createUser(OidcTestData.createOidcUser())
+
+        createRole(ROLE)
+
+        keycloakAdminService.assignRoleExclusivelyToUser(subject1, ROLE)
+
+        keycloakAdminService.assignRoleExclusivelyToUser(subject1, ROLE)
+
+        assertThat(
+            usersResource.get(subject1.id).roles().realmLevel().listAll().map {
+                it.name
+            }.filter { !it.contains("default") },
+        ).containsExactly(ROLE)
+
+        assertThat(rolesResource.get(ROLE).userMembers.map { it.id }).containsExactly(subject1.id)
+    }
+
+    @Test
+    fun shouldThrowExceptionOnUnknownRoleInAddUserExclusivelyToRole() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        val subject1 = keycloakAdminService.createUser(OidcTestData.createOidcUser())
+
+        assertThatThrownBy { keycloakAdminService.assignRoleExclusivelyToUser(subject1, ROLE) }
+            .isInstanceOf(RoleNotFoundException::class.java)
+
+        assertThat(
+            usersResource.get(subject1.id).roles().realmLevel().listAll().map {
+                it.name
+            }.filter { !it.contains("default") },
+        ).isEmpty()
+    }
+
+    @Test
     fun shouldRemoveAllUsersFromRole() {
         val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
 
@@ -327,6 +372,18 @@ class KeycloakAdminServiceTest {
         keycloakAdminService.unassignExclusiveRole(ROLE)
 
         assertThat(rolesResource.get(ROLE).userMembers.map { it.id }).isEmpty()
+    }
+
+    @Test
+    fun shouldThrowExceptionOnUnknownRoleInRemoveAllUsersFromRole() {
+        val usersResource = keycloak.keycloakAdminClient.realm(REALM).users()
+
+        usersResource.list().forEach {
+            assertThat(usersResource.delete(it.id).status).isEqualTo(HttpStatus.NO_CONTENT.value())
+        }
+
+        assertThatThrownBy { keycloakAdminService.unassignExclusiveRole(ROLE) }
+            .isInstanceOf(RoleNotFoundException::class.java)
     }
 
     @Test

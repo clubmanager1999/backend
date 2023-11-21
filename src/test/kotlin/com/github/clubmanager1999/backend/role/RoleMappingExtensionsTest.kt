@@ -30,6 +30,14 @@ class RoleMappingExtensionsTest {
     }
 
     @Test
+    fun shouldMapRoleEntityToExistingRoleWithMissingFields() {
+        assertThat(
+            RoleTestData.createRoleEntity().toExistingRole().copy(holder = null),
+        )
+            .isEqualTo(RoleTestData.createExistingRole().copy(holder = null))
+    }
+
+    @Test
     fun shouldMapNewRoleToRoleEntityWithId() {
         assertThat(
             RoleTestData.createNewRole().toRoleEntity(ID),
