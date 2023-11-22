@@ -83,6 +83,16 @@ class TransactionServiceTest {
     }
 
     @Test
+    fun shouldGetAllTransactionsByYear() {
+        val existingTransaction = TransactionTestData.createExistingTransaction()
+        val savedEntity = TransactionTestData.createTransactionEntity()
+
+        `when`(transactionRepository.findAllByYear(TransactionTestData.VALUE_DAY.year)).thenReturn(listOf(savedEntity))
+
+        assertThat(transactionService.getAllByYear(TransactionTestData.VALUE_DAY.year)).containsExactly(existingTransaction)
+    }
+
+    @Test
     fun shouldCreateTransaction() {
         val newTransaction = TransactionTestData.createNewTransaction()
         val existingTransaction = TransactionTestData.createExistingTransaction()

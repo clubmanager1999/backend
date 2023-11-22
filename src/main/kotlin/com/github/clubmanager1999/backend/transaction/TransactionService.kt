@@ -42,6 +42,10 @@ class TransactionService(
         return transactionRepository.findAll().map { it.toExistingTransaction() }
     }
 
+    fun getAllByYear(year: Int): List<ExistingTransaction> {
+        return transactionRepository.findAllByYear(year).map { it.toExistingTransaction() }
+    }
+
     fun create(newTransaction: NewTransaction): ExistingTransaction {
         return newTransaction
             .toTransactionEntity(null)

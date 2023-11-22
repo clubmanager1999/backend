@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
@@ -39,8 +40,14 @@ class TransactionController(val transactionService: TransactionService) {
     }
 
     @GetMapping("/api/transactions")
-    fun getAllTransactions(): List<ExistingTransaction> {
-        return transactionService.getAll()
+    fun getAllTransactions(
+        @RequestParam year: Int?,
+    ): List<ExistingTransaction> {
+        return if (year == null) {
+            transactionService.getAll()
+        } else {
+            transactionService.getAllByYear(year)
+        }
     }
 
     @PostMapping("/api/transactions")

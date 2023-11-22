@@ -16,6 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
-interface TransactionRepository : CrudRepository<TransactionEntity, Long>
+interface TransactionRepository : CrudRepository<TransactionEntity, Long> {
+    @Query("select t from TransactionEntity t where YEAR(t.valueDay) = :year")
+    fun findAllByYear(year: Int): List<TransactionEntity>
+}

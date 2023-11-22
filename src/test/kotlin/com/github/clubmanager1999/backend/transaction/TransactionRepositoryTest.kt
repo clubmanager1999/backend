@@ -284,4 +284,41 @@ internal class TransactionRepositoryTest {
 
         assertThat(transactionRepository.findAll()).isEmpty()
     }
+
+    @Test
+    fun shouldFindTransactionsByYear() {
+        transactionRepository.save(
+            TransactionTestData.createTransactionEntity(
+                ReferenceTestData.createReferenceEntity(memberEntity),
+                receiptEntity,
+                purposeEntity,
+                areaEntity,
+            ),
+        )
+
+        transactionRepository.save(
+            TransactionTestData.createTransactionEntity(
+                ReferenceTestData.createReferenceEntity(memberEntity),
+                receiptEntity,
+                purposeEntity,
+                areaEntity,
+            ).copy(valueDay = TransactionTestData.VALUE_DAY.plusYears(1)),
+        )
+
+        val results = transactionRepository.findAllByYear(TransactionTestData.VALUE_DAY.year)
+
+        assertThat(results.size).isEqualTo(1)
+
+        assertThat(results[0])
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .ignoringFields("reference.id")
+            .ignoringFields("reference.member.id")
+            .ignoringFields("reference.member.membership.id")
+            .ignoringFields("receipt.id")
+            .ignoringFields("receipt.creditor.id")
+            .ignoringFields("purpose.id")
+            .ignoringFields("area.id")
+            .isEqualTo(TransactionTestData.createTransactionEntity())
+    }
 }

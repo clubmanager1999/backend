@@ -189,6 +189,42 @@ internal class TransactionControllerTest {
     }
 
     @Test
+    fun shouldReturnTransactionsByYear() {
+        `when`(transactionService.getAllByYear(VALUE_DAY.year))
+            .thenReturn(listOf(TransactionTestData.createExistingTransaction()))
+
+        mockMvc
+            .perform(get("/api/transactions?year=${VALUE_DAY.year}").withRole(MANAGE_TRANSACTIONS))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$[0].id").value(ID))
+            .andExpect(jsonPath("$[0].bookingDay").value(BOOKING_DAY.toString()))
+            .andExpect(jsonPath("$[0].valueDay").value(VALUE_DAY.toString()))
+            .andExpect(jsonPath("$[0].name").value(NAME))
+            .andExpect(jsonPath("$[0].description").value(DESCRIPTION))
+            .andExpect(jsonPath("$[0].amount").value(AMOUNT))
+            .andExpect(jsonPath("$[0].reference.member.id").value(MemberTestData.ID))
+            .andExpect(jsonPath("$[0].reference.member.userName").value(MemberTestData.USER_NAME))
+            .andExpect(jsonPath("$[0].reference.member.firstName").value(MemberTestData.FIRST_NAME))
+            .andExpect(jsonPath("$[0].reference.member.lastName").value(MemberTestData.LAST_NAME))
+            .andExpect(jsonPath("$[0].reference.member.email").value(MemberTestData.EMAIL))
+            .andExpect(jsonPath("$[0].reference.member.address.street").value(MemberTestData.STREET))
+            .andExpect(jsonPath("$[0].reference.member.address.streetNumber").value(MemberTestData.STREET_NUMBER))
+            .andExpect(jsonPath("$[0].reference.member.address.city").value(MemberTestData.CITY))
+            .andExpect(jsonPath("$[0].reference.member.address.zip").value(MemberTestData.ZIP))
+            .andExpect(jsonPath("$[0].reference.member.membership.id").value(MembershipTestData.ID))
+            .andExpect(jsonPath("$[0].reference.member.membership.name").value(MembershipTestData.NAME))
+            .andExpect(jsonPath("$[0].reference.member.membership.fee").value(MembershipTestData.FEE))
+            .andExpect(jsonPath("$[0].receipt.id").value(ReceiptTestData.ID))
+            .andExpect(jsonPath("$[0].receipt.name").value(ReceiptTestData.NAME))
+            .andExpect(jsonPath("$[0].receipt.validFrom").value(ReceiptTestData.VALID_FROM.toString()))
+            .andExpect(jsonPath("$[0].receipt.validTo").value(ReceiptTestData.VALID_TO.toString()))
+            .andExpect(jsonPath("$[0].receipt.creditor.id").value(CreditorTestData.ID))
+            .andExpect(jsonPath("$[0].purpose.id").value(PurposeTestData.ID))
+            .andExpect(jsonPath("$[0].purpose.name").value(PurposeTestData.NAME))
+    }
+
+    @Test
     fun shouldCreateTransaction() {
         `when`(transactionService.create(TransactionTestData.createNewTransaction()))
             .thenReturn(TransactionTestData.createExistingTransaction())
