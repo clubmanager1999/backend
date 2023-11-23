@@ -130,6 +130,11 @@ class ExceptionHandlerTest {
                 ApiError(ErrorCode.OVERLAPPING_RECEIPT, "There is already an receipt with a similar range"),
                 HttpStatus.CONFLICT,
             ),
+            Case(
+                com.github.clubmanager1999.backend.role.RoleNotFoundException(42),
+                ApiError(ErrorCode.ROLE_NOT_FOUND, "No role with id 42 found"),
+                HttpStatus.NOT_FOUND,
+            ),
         )
 
     @TestFactory
