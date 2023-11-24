@@ -43,8 +43,8 @@
         "name": "Club 1999 Frontend",
         "clientAuthenticatorType": "client-secret",
         "secret": "z4Zx8Z6nDWlNSU8mQpl0GWo9LTnFrMwO",
-        "redirectUris": ["/*"],
-        "webOrigins": ["/*"],
+        "redirectUris": ["*"],
+        "webOrigins": ["*"],
         "standardFlowEnabled": true,
         "directAccessGrantsEnabled": true,
         "protocol": "openid-connect"
