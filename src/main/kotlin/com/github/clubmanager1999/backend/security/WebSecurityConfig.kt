@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -29,6 +30,8 @@ class WebSecurityConfig(private val keycloakJwtConverter: KeycloakJwtConverter) 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests {
+            it.requestMatchers(HttpMethod.OPTIONS).permitAll()
+
             it.requestMatchers("/api/members/**").hasRole(Permission.MANAGE_MEMBERS.toString())
 
             it.requestMatchers("/api/memberships/**").hasRole(Permission.MANAGE_MEMBERSHIPS.toString())

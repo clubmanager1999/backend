@@ -14,3 +14,6 @@ oidc:
       realm: clubmanager1999
       client-id: clubmanager1999-backend
       client-secret: ct9rMuQiyTa3F7pgw64NPgi4EWoLtctX
+cors:
+  allowed-origins:
+    - http://foo.bar
