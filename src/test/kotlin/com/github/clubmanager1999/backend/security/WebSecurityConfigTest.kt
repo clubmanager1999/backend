@@ -267,6 +267,18 @@ class WebSecurityConfigTest {
         }
     }
 
+    @TestFactory
+    fun shouldAllowCorsPreflightRequests(): List<DynamicTest> {
+        return (adminEndpoints.flatMap { it.endpoints } + userEndpoints)
+            .map { endpoint ->
+                DynamicTest.dynamicTest(endpoint.name) {
+                    mockMvc
+                        .perform(MockMvcRequestBuilders.request(HttpMethod.OPTIONS, endpoint.url))
+                        .andExpect(MockMvcResultMatchers.status().isOk)
+                }
+            }
+    }
+
     data class Group(val permission: Permission, val endpoints: List<Endpoint>)
 
     data class Endpoint(val name: String, val method: HttpMethod, val url: String)
