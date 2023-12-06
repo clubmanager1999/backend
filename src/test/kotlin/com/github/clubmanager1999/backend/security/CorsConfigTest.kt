@@ -18,7 +18,9 @@ package com.github.clubmanager1999.backend.security
 
 import com.github.clubmanager1999.backend.member.MemberService
 import com.github.clubmanager1999.backend.member.MemberTestData
+import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -42,21 +44,24 @@ class CorsConfigTest {
     @MockBean
     private lateinit var memberService: MemberService
 
-    @Test
-    fun shouldReturnCorsHeaders() {
+    @TestFactory
+    fun shouldReturnCorsHeaders(): List<DynamicTest> {
         val origin = "http://foo.bar"
 
-        `when`(memberService.get(42)).thenReturn(MemberTestData.createExistingMember())
-
-        mockMvc
-            .perform(
-                MockMvcRequestBuilders.request(HttpMethod.GET, "/api/members/42")
-                    .withRole(Permission.MANAGE_MEMBERS)
-                    .header("Access-Control-Request-Method", "GET")
-                    .header("Origin", origin),
-            )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.header().string("Access-Control-Allow-Origin", origin))
+        return listOf(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)
+            .map { method ->
+                DynamicTest.dynamicTest("Should return cors header for $method requests") {
+                    mockMvc
+                        .perform(
+                            MockMvcRequestBuilders.request(method, "/cors")
+                                .withRole(Permission.MANAGE_MEMBERS)
+                                .header("Access-Control-Request-Method", method.name())
+                                .header("Origin", origin),
+                        )
+                        .andExpect(MockMvcResultMatchers.status().isOk)
+                        .andExpect(MockMvcResultMatchers.header().string("Access-Control-Allow-Origin", origin))
+                }
+            }
     }
 
     @Test
