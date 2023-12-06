@@ -29,6 +29,10 @@ object MembershipTestData {
         return NewMembership(name = NAME, fee = FEE)
     }
 
+    fun createEmptyNewMembership(): NewMembership {
+        return NewMembership(name = "", fee = FEE)
+    }
+
     fun createExistingMembership(): ExistingMembership {
         return ExistingMembership(id = ID, name = NAME, fee = FEE)
     }

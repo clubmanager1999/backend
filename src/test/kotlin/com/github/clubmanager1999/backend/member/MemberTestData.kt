@@ -54,6 +54,17 @@ object MemberTestData {
         )
     }
 
+    fun createEmptyNewMember(): NewMember {
+        return NewMember(
+            userName = "",
+            firstName = "",
+            lastName = "",
+            email = "",
+            address = createEmptyAddress(),
+            membership = MembershipId(MembershipTestData.ID),
+        )
+    }
+
     fun createExistingMember(): ExistingMember {
         return ExistingMember(
             id = ID,
@@ -93,6 +104,15 @@ object MemberTestData {
             streetNumber = STREET_NUMBER,
             zip = ZIP,
             city = CITY,
+        )
+    }
+
+    fun createEmptyAddress(): Address {
+        return Address(
+            street = "",
+            streetNumber = "",
+            zip = "",
+            city = "",
         )
     }
 

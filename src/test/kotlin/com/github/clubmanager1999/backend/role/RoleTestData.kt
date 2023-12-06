@@ -32,6 +32,13 @@ object RoleTestData {
         )
     }
 
+    fun createEmptyNewRole(): NewRole {
+        return NewRole(
+            name = "",
+            permissions = setOf(Permission.MANAGE_MEMBERS),
+        )
+    }
+
     fun createExistingRole(): ExistingRole {
         return ExistingRole(
             id = ID,

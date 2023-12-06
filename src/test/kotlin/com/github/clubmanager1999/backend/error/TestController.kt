@@ -31,7 +31,7 @@ class TestController(val testService: TestService) {
 
     @PostMapping("/test")
     fun validation(
-        @Valid @RequestBody data: Data,
+        @RequestBody @Valid data: Data,
     ) {
     }
 }

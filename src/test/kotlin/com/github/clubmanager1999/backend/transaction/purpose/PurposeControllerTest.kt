@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction.purpose
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_PURPOSES
 import com.github.clubmanager1999.backend.security.withRole
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeTestData.ID
@@ -146,5 +147,89 @@ internal class PurposeControllerTest {
             .andExpect(status().isNoContent)
 
         verify(purposeService).delete(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(purposeService.create(PurposeTestData.createNewPurpose()))
+            .thenReturn(PurposeTestData.createExistingPurpose())
+
+        mockMvc
+            .perform(
+                post("/api/purposes")
+                    .withRole(MANAGE_PURPOSES)
+                    .content(
+                        objectMapper.writeValueAsString(PurposeTestData.createEmptyNewPurpose()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(purposeService.update(ID, PurposeTestData.createNewPurpose()))
+            .thenReturn(PurposeTestData.createExistingPurpose())
+
+        mockMvc
+            .perform(
+                put("/api/purposes/$ID")
+                    .withRole(MANAGE_PURPOSES)
+                    .content(
+                        objectMapper.writeValueAsString(PurposeTestData.createEmptyNewPurpose()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(purposeService.create(PurposeTestData.createNewPurpose()))
+            .thenReturn(PurposeTestData.createExistingPurpose())
+
+        mockMvc
+            .perform(
+                post("/api/purposes")
+                    .withRole(MANAGE_PURPOSES)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(purposeService.update(ID, PurposeTestData.createNewPurpose()))
+            .thenReturn(PurposeTestData.createExistingPurpose())
+
+        mockMvc
+            .perform(
+                put("/api/purposes/$ID")
+                    .withRole(MANAGE_PURPOSES)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
     }
 }

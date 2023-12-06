@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.donor
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,7 @@ class DonorController(val donorService: DonorService) {
 
     @PostMapping("/api/donors")
     fun createDonor(
-        @RequestBody newDonor: NewDonor,
+        @RequestBody @Valid newDonor: NewDonor,
     ): ResponseEntity<Void> {
         val existingDonor = donorService.create(newDonor)
 
@@ -57,7 +58,7 @@ class DonorController(val donorService: DonorService) {
     @PutMapping("/api/donors/{id}")
     fun updateDonor(
         @PathVariable id: Long,
-        @RequestBody newDonor: NewDonor,
+        @RequestBody @Valid newDonor: NewDonor,
     ): ResponseEntity<Void> {
         donorService.update(id, newDonor)
 

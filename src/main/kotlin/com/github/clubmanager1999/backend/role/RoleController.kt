@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.role
 
 import com.github.clubmanager1999.backend.member.MemberId
 import com.github.clubmanager1999.backend.security.Permission
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -47,7 +48,7 @@ class RoleController(val roleService: RoleService) {
 
     @PostMapping("/api/roles")
     fun createRole(
-        @RequestBody newRole: NewRole,
+        @RequestBody @Valid newRole: NewRole,
     ): ResponseEntity<Void> {
         val existingRole = roleService.create(newRole)
 
@@ -59,7 +60,7 @@ class RoleController(val roleService: RoleService) {
     @PutMapping("/api/roles/{id}")
     fun updateRole(
         @PathVariable id: Long,
-        @RequestBody newRole: NewRole,
+        @RequestBody @Valid newRole: NewRole,
     ): ResponseEntity<Void> {
         roleService.update(id, newRole)
 
@@ -78,7 +79,7 @@ class RoleController(val roleService: RoleService) {
     @PutMapping("/api/roles/{id}/permissions")
     fun addPermission(
         @PathVariable id: Long,
-        @RequestBody permission: NewPermission,
+        @RequestBody @Valid permission: NewPermission,
     ): ResponseEntity<Void> {
         roleService.addPermission(id, permission.permission)
 
@@ -98,7 +99,7 @@ class RoleController(val roleService: RoleService) {
     @PutMapping("/api/roles/{id}/holder")
     fun setMember(
         @PathVariable id: Long,
-        @RequestBody holder: MemberId,
+        @RequestBody @Valid holder: MemberId,
     ): ResponseEntity<Void> {
         roleService.setHolder(id, holder)
 

@@ -19,9 +19,15 @@ package com.github.clubmanager1999.backend.transaction.mapping
 import com.github.clubmanager1999.backend.transaction.area.AreaId
 import com.github.clubmanager1999.backend.transaction.purpose.PurposeId
 import com.github.clubmanager1999.backend.transaction.reference.NewReference
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 data class NewMapping(
+    @field:NotBlank
     val matcher: String,
+    @field:Valid
+    @field:NotNull
     val reference: NewReference,
     val purpose: PurposeId?,
     val area: AreaId?,

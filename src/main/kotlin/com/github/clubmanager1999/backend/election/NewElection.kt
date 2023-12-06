@@ -18,11 +18,19 @@ package com.github.clubmanager1999.backend.election
 
 import com.github.clubmanager1999.backend.member.MemberId
 import com.github.clubmanager1999.backend.role.RoleId
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
 data class NewElection(
+    @field:Valid
+    @field:NotNull
     val role: RoleId,
+    @field:Valid
+    @field:NotNull
     val member: MemberId,
+    @field:NotNull
     val validFrom: LocalDate,
+    @field:NotNull
     val validTo: LocalDate?,
 )

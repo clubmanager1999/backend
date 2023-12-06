@@ -16,4 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.membership
 
-data class MembershipId(val id: Long)
+import jakarta.validation.constraints.NotNull
+
+data class MembershipId(
+    @field:NotNull
+    val id: Long,
+)

@@ -21,6 +21,7 @@ import com.github.clubmanager1999.backend.member.MemberTestData.FIRST_NAME
 import com.github.clubmanager1999.backend.member.MemberTestData.LAST_NAME
 import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
 import com.github.clubmanager1999.backend.member.MemberTestData.createAddress
+import com.github.clubmanager1999.backend.member.MemberTestData.createEmptyAddress
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 
 object ProfileTestData {
@@ -41,6 +42,15 @@ object ProfileTestData {
             lastName = LAST_NAME,
             email = EMAIL,
             address = createAddress(),
+        )
+    }
+
+    fun createEmptyProfileUpdate(): ProfileUpdate {
+        return ProfileUpdate(
+            firstName = "",
+            lastName = "",
+            email = "",
+            address = createEmptyAddress(),
         )
     }
 }

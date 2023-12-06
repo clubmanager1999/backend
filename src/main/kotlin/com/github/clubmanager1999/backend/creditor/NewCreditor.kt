@@ -16,6 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.creditor
 
+import jakarta.validation.constraints.NotBlank
+
 data class NewCreditor(
+    @field:NotBlank
     val name: String,
 )

@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.profile
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.member.MemberTestData.CITY
 import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
 import com.github.clubmanager1999.backend.member.MemberTestData.FIRST_NAME
@@ -89,5 +90,53 @@ internal class ProfileControllerTest {
                     .contentType(MediaType.APPLICATION_JSON),
             )
             .andExpect(status().isNoContent)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(profileService.update(Subject(SUBJECT), ProfileTestData.createEmptyProfileUpdate()))
+            .thenReturn(ProfileTestData.createProfile())
+
+        mockMvc
+            .perform(
+                put("/api/profile")
+                    .withoutRole()
+                    .content(
+                        objectMapper.writeValueAsString(ProfileTestData.createEmptyProfileUpdate()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.lastName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.email").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.street']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.streetNumber']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.zip']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.city']").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(profileService.update(Subject(SUBJECT), ProfileTestData.createEmptyProfileUpdate()))
+            .thenReturn(ProfileTestData.createProfile())
+
+        mockMvc
+            .perform(
+                put("/api/profile")
+                    .withoutRole()
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be null"))
     }
 }

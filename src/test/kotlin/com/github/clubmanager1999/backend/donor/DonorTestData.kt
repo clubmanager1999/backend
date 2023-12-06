@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.donor
 
 import com.github.clubmanager1999.backend.member.MemberTestData.createAddress
+import com.github.clubmanager1999.backend.member.MemberTestData.createEmptyAddress
 
 object DonorTestData {
     const val ID = 45L
@@ -30,6 +31,14 @@ object DonorTestData {
             firstName = FIRST_NAME,
             lastName = LAST_NAME,
             address = createAddress(),
+        )
+    }
+
+    fun createEmptyNewDonor(): NewDonor {
+        return NewDonor(
+            firstName = "",
+            lastName = "",
+            address = createEmptyAddress(),
         )
     }
 

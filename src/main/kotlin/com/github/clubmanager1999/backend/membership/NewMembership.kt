@@ -16,9 +16,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.membership
 
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 
 data class NewMembership(
+    @field:NotBlank
     val name: String,
+    @field:NotNull
     val fee: BigDecimal,
 )

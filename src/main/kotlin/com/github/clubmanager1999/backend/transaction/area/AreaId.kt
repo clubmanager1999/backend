@@ -16,6 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.area
 
+import jakarta.validation.constraints.NotNull
+
 data class AreaId(
+    @field:NotNull
     val id: Long,
 )

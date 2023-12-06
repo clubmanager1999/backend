@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.purpose
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,7 @@ class PurposeController(val purposeService: PurposeService) {
 
     @PostMapping("/api/purposes")
     fun createPurpose(
-        @RequestBody newPurpose: NewPurpose,
+        @RequestBody @Valid newPurpose: NewPurpose,
     ): ResponseEntity<Void> {
         val existingPurpose = purposeService.create(newPurpose)
 
@@ -57,7 +58,7 @@ class PurposeController(val purposeService: PurposeService) {
     @PutMapping("/api/purposes/{id}")
     fun updatePurpose(
         @PathVariable id: Long,
-        @RequestBody newPurpose: NewPurpose,
+        @RequestBody @Valid newPurpose: NewPurpose,
     ): ResponseEntity<Void> {
         purposeService.update(id, newPurpose)
 
