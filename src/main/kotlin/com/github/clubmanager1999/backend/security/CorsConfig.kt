@@ -19,6 +19,7 @@ package com.github.clubmanager1999.backend.security
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
@@ -29,10 +30,13 @@ class CorsConfig {
 
     @Bean
     fun corsConfigurer(): WebMvcConfigurer {
+        val methods = listOf(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE).map { it.name() }
+
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry.addMapping("/**")
                     .allowedOrigins(*allowedOrigins.toTypedArray())
+                    .allowedMethods(*methods.toTypedArray())
             }
         }
     }
