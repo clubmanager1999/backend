@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction.area
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_AREAS
 import com.github.clubmanager1999.backend.security.withRole
 import com.github.clubmanager1999.backend.transaction.area.AreaTestData.ID
@@ -146,5 +147,89 @@ internal class AreaControllerTest {
             .andExpect(status().isNoContent)
 
         verify(areaService).delete(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(areaService.create(AreaTestData.createNewArea()))
+            .thenReturn(AreaTestData.createExistingArea())
+
+        mockMvc
+            .perform(
+                post("/api/areas")
+                    .withRole(MANAGE_AREAS)
+                    .content(
+                        objectMapper.writeValueAsString(AreaTestData.createEmptyNewArea()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(areaService.update(ID, AreaTestData.createNewArea()))
+            .thenReturn(AreaTestData.createExistingArea())
+
+        mockMvc
+            .perform(
+                put("/api/areas/$ID")
+                    .withRole(MANAGE_AREAS)
+                    .content(
+                        objectMapper.writeValueAsString(AreaTestData.createEmptyNewArea()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(areaService.create(AreaTestData.createNewArea()))
+            .thenReturn(AreaTestData.createExistingArea())
+
+        mockMvc
+            .perform(
+                post("/api/areas")
+                    .withRole(MANAGE_AREAS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(areaService.update(ID, AreaTestData.createNewArea()))
+            .thenReturn(AreaTestData.createExistingArea())
+
+        mockMvc
+            .perform(
+                put("/api/areas/$ID")
+                    .withRole(MANAGE_AREAS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
     }
 }

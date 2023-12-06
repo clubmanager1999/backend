@@ -27,6 +27,12 @@ object AreaTestData {
         )
     }
 
+    fun createEmptyNewArea(): NewArea {
+        return NewArea(
+            name = "",
+        )
+    }
+
     fun createExistingArea(): ExistingArea {
         return ExistingArea(
             id = ID,

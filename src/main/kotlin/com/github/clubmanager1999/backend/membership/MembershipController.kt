@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.membership
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,7 @@ class MembershipController(val membershipService: MembershipService) {
 
     @PostMapping("/api/memberships")
     fun createMembership(
-        @RequestBody newMembership: NewMembership,
+        @RequestBody @Valid newMembership: NewMembership,
     ): ResponseEntity<Void> {
         val existingMembership = membershipService.create(newMembership)
 
@@ -57,7 +58,7 @@ class MembershipController(val membershipService: MembershipService) {
     @PutMapping("/api/memberships/{id}")
     fun updateMembership(
         @PathVariable id: Long,
-        @RequestBody newMembership: NewMembership,
+        @RequestBody @Valid newMembership: NewMembership,
     ): ResponseEntity<Void> {
         membershipService.update(id, newMembership)
 

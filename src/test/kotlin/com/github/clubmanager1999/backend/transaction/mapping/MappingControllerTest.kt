@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.transaction.mapping
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_MAPPINGS
@@ -172,5 +173,89 @@ internal class MappingControllerTest {
             .andExpect(status().isNoContent)
 
         verify(mappingService).delete(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(mappingService.create(MappingTestData.createNewMapping()))
+            .thenReturn(MappingTestData.createExistingMapping())
+
+        mockMvc
+            .perform(
+                post("/api/mappings")
+                    .withRole(MANAGE_MAPPINGS)
+                    .content(
+                        objectMapper.writeValueAsString(MappingTestData.createEmptyNewMapping()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.matcher").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(mappingService.update(ID, MappingTestData.createNewMapping()))
+            .thenReturn(MappingTestData.createExistingMapping())
+
+        mockMvc
+            .perform(
+                put("/api/mappings/$ID")
+                    .withRole(MANAGE_MAPPINGS)
+                    .content(
+                        objectMapper.writeValueAsString(MappingTestData.createEmptyNewMapping()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.matcher").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(mappingService.create(MappingTestData.createNewMapping()))
+            .thenReturn(MappingTestData.createExistingMapping())
+
+        mockMvc
+            .perform(
+                post("/api/mappings")
+                    .withRole(MANAGE_MAPPINGS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.matcher").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(mappingService.update(ID, MappingTestData.createNewMapping()))
+            .thenReturn(MappingTestData.createExistingMapping())
+
+        mockMvc
+            .perform(
+                put("/api/mappings/$ID")
+                    .withRole(MANAGE_MAPPINGS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.matcher").value("must not be null"))
     }
 }

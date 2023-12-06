@@ -19,6 +19,7 @@ package com.github.clubmanager1999.backend.creditor
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.creditor.CreditorTestData.ID
 import com.github.clubmanager1999.backend.creditor.CreditorTestData.NAME
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_CREDITORS
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test
@@ -146,5 +147,89 @@ internal class CreditorControllerTest {
             .andExpect(status().isNoContent)
 
         verify(creditorService).delete(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(creditorService.create(CreditorTestData.createNewCreditor()))
+            .thenReturn(CreditorTestData.createExistingCreditor())
+
+        mockMvc
+            .perform(
+                post("/api/creditors")
+                    .withRole(MANAGE_CREDITORS)
+                    .content(
+                        objectMapper.writeValueAsString(CreditorTestData.createEmptyNewCreditor()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(creditorService.update(ID, CreditorTestData.createNewCreditor()))
+            .thenReturn(CreditorTestData.createExistingCreditor())
+
+        mockMvc
+            .perform(
+                put("/api/creditors/$ID")
+                    .withRole(MANAGE_CREDITORS)
+                    .content(
+                        objectMapper.writeValueAsString(CreditorTestData.createEmptyNewCreditor()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(creditorService.create(CreditorTestData.createNewCreditor()))
+            .thenReturn(CreditorTestData.createExistingCreditor())
+
+        mockMvc
+            .perform(
+                post("/api/creditors")
+                    .withRole(MANAGE_CREDITORS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(creditorService.update(ID, CreditorTestData.createNewCreditor()))
+            .thenReturn(CreditorTestData.createExistingCreditor())
+
+        mockMvc
+            .perform(
+                put("/api/creditors/$ID")
+                    .withRole(MANAGE_CREDITORS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
     }
 }

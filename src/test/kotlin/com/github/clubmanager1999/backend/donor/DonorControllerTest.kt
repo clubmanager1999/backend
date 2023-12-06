@@ -20,10 +20,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.donor.DonorTestData.FIRST_NAME
 import com.github.clubmanager1999.backend.donor.DonorTestData.ID
 import com.github.clubmanager1999.backend.donor.DonorTestData.LAST_NAME
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.member.MemberTestData.CITY
 import com.github.clubmanager1999.backend.member.MemberTestData.STREET
 import com.github.clubmanager1999.backend.member.MemberTestData.STREET_NUMBER
 import com.github.clubmanager1999.backend.member.MemberTestData.ZIP
+import com.github.clubmanager1999.backend.security.Permission
 import com.github.clubmanager1999.backend.security.Permission.MANAGE_DONORS
 import com.github.clubmanager1999.backend.security.withRole
 import org.junit.jupiter.api.Test
@@ -161,5 +163,99 @@ internal class DonorControllerTest {
             .andExpect(status().isNoContent)
 
         verify(donorService).delete(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(donorService.create(DonorTestData.createNewDonor()))
+            .thenReturn(DonorTestData.createExistingDonor())
+
+        mockMvc
+            .perform(
+                post("/api/donors")
+                    .withRole(MANAGE_DONORS)
+                    .content(
+                        objectMapper.writeValueAsString(DonorTestData.createEmptyNewDonor()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.lastName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.street']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.streetNumber']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.zip']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.city']").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(donorService.update(ID, DonorTestData.createNewDonor()))
+            .thenReturn(DonorTestData.createExistingDonor())
+
+        mockMvc
+            .perform(
+                put("/api/donors/${DonorTestData.ID}")
+                    .withRole(Permission.MANAGE_DONORS)
+                    .content(
+                        objectMapper.writeValueAsString(DonorTestData.createEmptyNewDonor()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.lastName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.street']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.streetNumber']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.zip']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.city']").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(donorService.create(DonorTestData.createNewDonor()))
+            .thenReturn(DonorTestData.createExistingDonor())
+
+        mockMvc
+            .perform(
+                post("/api/donors")
+                    .withRole(MANAGE_DONORS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(donorService.update(ID, DonorTestData.createNewDonor()))
+            .thenReturn(DonorTestData.createExistingDonor())
+
+        mockMvc
+            .perform(
+                put("/api/donors/$ID")
+                    .withRole(Permission.MANAGE_DONORS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be null"))
     }
 }

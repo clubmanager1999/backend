@@ -17,11 +17,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.receipt
 
 import com.github.clubmanager1999.backend.creditor.CreditorId
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
 
 data class NewReceipt(
+    @field:NotBlank
     val name: String,
+    @field:NotNull
     val validFrom: LocalDate,
+    @field:NotNull
     val validTo: LocalDate,
+    @field:Valid
+    @field:NotNull
     val creditor: CreditorId,
 )

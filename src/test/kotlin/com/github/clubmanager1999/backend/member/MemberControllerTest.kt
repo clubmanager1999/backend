@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.member
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.member.MemberTestData.CITY
 import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
 import com.github.clubmanager1999.backend.member.MemberTestData.FIRST_NAME
@@ -164,5 +165,103 @@ internal class MemberControllerTest {
             .andExpect(status().isNoContent)
 
         verify(memberService).delete(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(memberService.create(MemberTestData.createNewMember()))
+            .thenReturn(MemberTestData.createExistingMember())
+
+        mockMvc
+            .perform(
+                post("/api/members")
+                    .withRole(Permission.MANAGE_MEMBERS)
+                    .content(
+                        objectMapper.writeValueAsString(MemberTestData.createEmptyNewMember()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.userName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.lastName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.email").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.street']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.streetNumber']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.zip']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.city']").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(memberService.update(ID, MemberTestData.createNewMember()))
+            .thenReturn(MemberTestData.createExistingMember())
+
+        mockMvc
+            .perform(
+                put("/api/members/$ID")
+                    .withRole(Permission.MANAGE_MEMBERS)
+                    .content(
+                        objectMapper.writeValueAsString(MemberTestData.createEmptyNewMember()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.userName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.firstName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.lastName").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.email").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.street']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.streetNumber']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.zip']").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.['address.city']").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(memberService.create(MemberTestData.createNewMember()))
+            .thenReturn(MemberTestData.createExistingMember())
+
+        mockMvc
+            .perform(
+                post("/api/members")
+                    .withRole(Permission.MANAGE_MEMBERS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.userName").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(memberService.update(ID, MemberTestData.createNewMember()))
+            .thenReturn(MemberTestData.createExistingMember())
+
+        mockMvc
+            .perform(
+                put("/api/members/$ID")
+                    .withRole(Permission.MANAGE_MEMBERS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.userName").value("must not be null"))
     }
 }

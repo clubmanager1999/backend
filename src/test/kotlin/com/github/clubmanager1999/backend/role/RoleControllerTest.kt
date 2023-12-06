@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.role
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.role.RoleTestData.ID
@@ -221,5 +222,89 @@ internal class RoleControllerTest {
             .andExpect(status().isNoContent)
 
         verify(roleService).removeHolder(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(roleService.create(RoleTestData.createNewRole()))
+            .thenReturn(RoleTestData.createExistingRole())
+
+        mockMvc
+            .perform(
+                post("/api/roles")
+                    .withRole(MANAGE_ROLES)
+                    .content(
+                        objectMapper.writeValueAsString(RoleTestData.createEmptyNewRole()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(roleService.update(RoleTestData.ID, RoleTestData.createNewRole()))
+            .thenReturn(RoleTestData.createExistingRole())
+
+        mockMvc
+            .perform(
+                put("/api/roles/$ID")
+                    .withRole(MANAGE_ROLES)
+                    .content(
+                        objectMapper.writeValueAsString(RoleTestData.createEmptyNewRole()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(roleService.create(RoleTestData.createNewRole()))
+            .thenReturn(RoleTestData.createExistingRole())
+
+        mockMvc
+            .perform(
+                post("/api/roles")
+                    .withRole(MANAGE_ROLES)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(roleService.update(ID, RoleTestData.createNewRole()))
+            .thenReturn(RoleTestData.createExistingRole())
+
+        mockMvc
+            .perform(
+                put("/api/roles/$ID")
+                    .withRole(MANAGE_ROLES)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
     }
 }

@@ -42,6 +42,15 @@ object MappingTestData {
         )
     }
 
+    fun createEmptyNewMapping(): NewMapping {
+        return NewMapping(
+            matcher = "",
+            reference = ReferenceTestData.createNewReference(),
+            purpose = PurposeTestData.createPurposeId(),
+            area = AreaTestData.createAreaId(),
+        )
+    }
+
     fun createExistingMapping(): ExistingMapping {
         return createExistingMapping(
             ReferenceTestData.createExistingReference(),

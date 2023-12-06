@@ -16,6 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.creditor
 
+import jakarta.validation.constraints.NotNull
+
 data class CreditorId(
+    @field:NotNull
     val id: Long,
 )

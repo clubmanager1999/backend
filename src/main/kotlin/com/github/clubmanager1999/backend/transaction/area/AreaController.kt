@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.area
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,7 @@ class AreaController(val areaService: AreaService) {
 
     @PostMapping("/api/areas")
     fun createArea(
-        @RequestBody newArea: NewArea,
+        @RequestBody @Valid newArea: NewArea,
     ): ResponseEntity<Void> {
         val existingArea = areaService.create(newArea)
 
@@ -57,7 +58,7 @@ class AreaController(val areaService: AreaService) {
     @PutMapping("/api/areas/{id}")
     fun updateArea(
         @PathVariable id: Long,
-        @RequestBody newArea: NewArea,
+        @RequestBody @Valid newArea: NewArea,
     ): ResponseEntity<Void> {
         areaService.update(id, newArea)
 

@@ -17,6 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.member
 
 import jakarta.persistence.Embeddable
+import jakarta.validation.constraints.NotBlank
 
 @Embeddable
-data class Address(val street: String, val streetNumber: String, val zip: String, val city: String)
+data class Address(
+    @field:NotBlank val street: String,
+    @field:NotBlank val streetNumber: String,
+    @field:NotBlank val zip: String,
+    @field:NotBlank val city: String,
+)

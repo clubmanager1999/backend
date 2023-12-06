@@ -19,6 +19,7 @@ package com.github.clubmanager1999.backend.transaction
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
 import com.github.clubmanager1999.backend.donor.DonorTestData
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.membership.MembershipTestData
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData
@@ -310,5 +311,91 @@ internal class TransactionControllerTest {
             .andExpect(status().isNoContent)
 
         verify(transactionService).import(listOf(TransactionTestData.createTransactionImport()))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(transactionService.create(TransactionTestData.createNewTransaction()))
+            .thenReturn(TransactionTestData.createExistingTransaction())
+
+        mockMvc
+            .perform(
+                post("/api/transactions")
+                    .withRole(MANAGE_TRANSACTIONS)
+                    .content(
+                        objectMapper.writeValueAsString(TransactionTestData.createEmptyNewTransaction()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.description").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(transactionService.update(ID, TransactionTestData.createNewTransaction()))
+            .thenReturn(TransactionTestData.createExistingTransaction())
+
+        mockMvc
+            .perform(
+                put("/api/transactions/$ID")
+                    .withRole(MANAGE_TRANSACTIONS)
+                    .content(
+                        objectMapper.writeValueAsString(TransactionTestData.createEmptyNewTransaction()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+            .andExpect(jsonPath("$.fields.description").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(transactionService.create(TransactionTestData.createNewTransaction()))
+            .thenReturn(TransactionTestData.createExistingTransaction())
+
+        mockMvc
+            .perform(
+                post("/api/transactions")
+                    .withRole(MANAGE_TRANSACTIONS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.bookingDay").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(transactionService.update(ID, TransactionTestData.createNewTransaction()))
+            .thenReturn(TransactionTestData.createExistingTransaction())
+
+        mockMvc
+            .perform(
+                put("/api/transactions/$ID")
+                    .withRole(MANAGE_TRANSACTIONS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.bookingDay").value("must not be null"))
     }
 }

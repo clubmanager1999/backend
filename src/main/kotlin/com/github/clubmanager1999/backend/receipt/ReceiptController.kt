@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.receipt
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,7 @@ class ReceiptController(val receiptService: ReceiptService) {
 
     @PostMapping("/api/receipts")
     fun createReceipt(
-        @RequestBody newReceipt: NewReceipt,
+        @RequestBody @Valid newReceipt: NewReceipt,
     ): ResponseEntity<Void> {
         val existingReceipt = receiptService.create(newReceipt)
 
@@ -57,7 +58,7 @@ class ReceiptController(val receiptService: ReceiptService) {
     @PutMapping("/api/receipts/{id}")
     fun updateReceipt(
         @PathVariable id: Long,
-        @RequestBody newReceipt: NewReceipt,
+        @RequestBody @Valid newReceipt: NewReceipt,
     ): ResponseEntity<Void> {
         receiptService.update(id, newReceipt)
 

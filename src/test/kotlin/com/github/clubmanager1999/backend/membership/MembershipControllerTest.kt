@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.membership
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.membership.MembershipTestData.FEE
 import com.github.clubmanager1999.backend.membership.MembershipTestData.ID
 import com.github.clubmanager1999.backend.membership.MembershipTestData.NAME
@@ -149,5 +150,89 @@ internal class MembershipControllerTest {
             .andExpect(status().isNoContent)
 
         verify(membershipService).delete(43)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(membershipService.create(MembershipTestData.createNewMembership()))
+            .thenReturn(MembershipTestData.createExistingMembership())
+
+        mockMvc
+            .perform(
+                post("/api/memberships")
+                    .withRole(MANAGE_MEMBERSHIPS)
+                    .content(
+                        objectMapper.writeValueAsString(MembershipTestData.createEmptyNewMembership()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(membershipService.update(ID, MembershipTestData.createNewMembership()))
+            .thenReturn(MembershipTestData.createExistingMembership())
+
+        mockMvc
+            .perform(
+                put("/api/memberships/$ID")
+                    .withRole(MANAGE_MEMBERSHIPS)
+                    .content(
+                        objectMapper.writeValueAsString(MembershipTestData.createEmptyNewMembership()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(membershipService.create(MembershipTestData.createNewMembership()))
+            .thenReturn(MembershipTestData.createExistingMembership())
+
+        mockMvc
+            .perform(
+                post("/api/memberships")
+                    .withRole(MANAGE_MEMBERSHIPS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(membershipService.update(MembershipTestData.ID, MembershipTestData.createNewMembership()))
+            .thenReturn(MembershipTestData.createExistingMembership())
+
+        mockMvc
+            .perform(
+                put("/api/memberships/$ID")
+                    .withRole(MANAGE_MEMBERSHIPS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
     }
 }

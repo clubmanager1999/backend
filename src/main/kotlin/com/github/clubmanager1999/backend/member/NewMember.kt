@@ -17,12 +17,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.member
 
 import com.github.clubmanager1999.backend.membership.MembershipId
+import jakarta.validation.Valid
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 data class NewMember(
+    @field:NotBlank
     val userName: String,
+    @field:NotBlank
     val firstName: String,
+    @field:NotBlank
     val lastName: String,
+    @field:Email
+    @field:NotBlank
     val email: String,
+    @field:Valid
+    @field:NotNull
     val address: Address,
+    @field:Valid
+    @field:NotNull
     val membership: MembershipId,
 )

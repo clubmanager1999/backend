@@ -16,6 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.donor
 
+import jakarta.validation.constraints.NotNull
+
 data class DonorId(
+    @field:NotNull
     val id: Long,
 )

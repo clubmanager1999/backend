@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.receipt
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.creditor.CreditorTestData
+import com.github.clubmanager1999.backend.error.ErrorCode
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData.ID
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData.NAME
 import com.github.clubmanager1999.backend.receipt.ReceiptTestData.VALID_FROM
@@ -157,5 +158,89 @@ internal class ReceiptControllerTest {
             .andExpect(status().isNoContent)
 
         verify(receiptService).delete(ID)
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPost() {
+        `when`(receiptService.create(ReceiptTestData.createNewReceipt()))
+            .thenReturn(ReceiptTestData.createExistingReceipt())
+
+        mockMvc
+            .perform(
+                post("/api/receipts")
+                    .withRole(MANAGE_RECEIPTS)
+                    .content(
+                        objectMapper.writeValueAsString(ReceiptTestData.createEmptyNewReceipt()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnInvalidBodyPut() {
+        `when`(receiptService.update(ID, ReceiptTestData.createNewReceipt()))
+            .thenReturn(ReceiptTestData.createExistingReceipt())
+
+        mockMvc
+            .perform(
+                put("/api/receipts/$ID")
+                    .withRole(MANAGE_RECEIPTS)
+                    .content(
+                        objectMapper.writeValueAsString(ReceiptTestData.createEmptyNewReceipt()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be blank"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPost() {
+        `when`(receiptService.create(ReceiptTestData.createNewReceipt()))
+            .thenReturn(ReceiptTestData.createExistingReceipt())
+
+        mockMvc
+            .perform(
+                post("/api/receipts")
+                    .withRole(MANAGE_RECEIPTS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
+    }
+
+    @Test
+    fun shouldFailOnEmptyBodyPut() {
+        `when`(receiptService.update(ID, ReceiptTestData.createNewReceipt()))
+            .thenReturn(ReceiptTestData.createExistingReceipt())
+
+        mockMvc
+            .perform(
+                put("/api/receipts/$ID")
+                    .withRole(MANAGE_RECEIPTS)
+                    .content(
+                        objectMapper.writeValueAsString(emptyMap<Void, Void>()),
+                    )
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name))
+            .andExpect(jsonPath("$.message").value("Validation error"))
+            .andExpect(jsonPath("$.fields.name").value("must not be null"))
     }
 }

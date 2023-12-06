@@ -40,6 +40,15 @@ object ReceiptTestData {
         )
     }
 
+    fun createEmptyNewReceipt(): NewReceipt {
+        return NewReceipt(
+            name = "",
+            validFrom = VALID_FROM,
+            validTo = VALID_TO,
+            creditor = CreditorId(CreditorTestData.ID),
+        )
+    }
+
     fun createExistingReceipt(): ExistingReceipt {
         return ExistingReceipt(
             id = ID,

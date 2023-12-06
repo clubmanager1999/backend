@@ -76,6 +76,34 @@ object TransactionTestData {
         )
     }
 
+    fun createEmptyNewTransaction(): NewTransaction {
+        return createEmptyNewTransaction(
+            ReferenceTestData.createNewReference(),
+            ReceiptId(ReceiptTestData.ID),
+            PurposeTestData.createPurposeId(),
+            AreaTestData.createAreaId(),
+        )
+    }
+
+    fun createEmptyNewTransaction(
+        reference: NewReference?,
+        receipt: ReceiptId?,
+        purposeId: PurposeId?,
+        areaId: AreaId?,
+    ): NewTransaction {
+        return NewTransaction(
+            bookingDay = BOOKING_DAY,
+            valueDay = VALUE_DAY,
+            name = "",
+            description = "",
+            amount = AMOUNT,
+            reference = reference,
+            receipt = receipt,
+            purpose = purposeId,
+            area = areaId,
+        )
+    }
+
     fun createExistingTransaction(): ExistingTransaction {
         return createExistingTransaction(ReferenceTestData.createExistingReference())
     }

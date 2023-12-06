@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.creditor
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,7 @@ class CreditorController(val creditorService: CreditorService) {
 
     @PostMapping("/api/creditors")
     fun createCreditor(
-        @RequestBody newCreditor: NewCreditor,
+        @RequestBody @Valid newCreditor: NewCreditor,
     ): ResponseEntity<Void> {
         val existingCreditor = creditorService.create(newCreditor)
 
@@ -57,7 +58,7 @@ class CreditorController(val creditorService: CreditorService) {
     @PutMapping("/api/creditors/{id}")
     fun updateCreditor(
         @PathVariable id: Long,
-        @RequestBody newCreditor: NewCreditor,
+        @RequestBody @Valid newCreditor: NewCreditor,
     ): ResponseEntity<Void> {
         creditorService.update(id, newCreditor)
 

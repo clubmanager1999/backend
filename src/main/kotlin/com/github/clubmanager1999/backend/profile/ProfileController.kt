@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.profile
 
 import com.github.clubmanager1999.backend.oidc.Subject
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -34,7 +35,7 @@ class ProfileController(val profileService: ProfileService) {
     @PutMapping("/api/profile")
     fun update(
         principal: Principal,
-        @RequestBody profileUpdate: ProfileUpdate,
+        @RequestBody @Valid profileUpdate: ProfileUpdate,
     ): ResponseEntity<Void> {
         profileService.update(Subject(principal.name), profileUpdate)
 

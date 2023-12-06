@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -52,7 +53,7 @@ class TransactionController(val transactionService: TransactionService) {
 
     @PostMapping("/api/transactions")
     fun createTransaction(
-        @RequestBody newTransaction: NewTransaction,
+        @RequestBody @Valid newTransaction: NewTransaction,
     ): ResponseEntity<Void> {
         val existingTransaction = transactionService.create(newTransaction)
 
@@ -64,7 +65,7 @@ class TransactionController(val transactionService: TransactionService) {
     @PutMapping("/api/transactions/{id}")
     fun updateTransaction(
         @PathVariable id: Long,
-        @RequestBody newTransaction: NewTransaction,
+        @RequestBody @Valid newTransaction: NewTransaction,
     ): ResponseEntity<Void> {
         transactionService.update(id, newTransaction)
 
@@ -82,7 +83,7 @@ class TransactionController(val transactionService: TransactionService) {
 
     @PostMapping("/api/transactions/imports")
     fun import(
-        @RequestBody transactionImports: List<TransactionImport>,
+        @RequestBody @Valid transactionImports: List<TransactionImport>,
     ): ResponseEntity<Void> {
         transactionService.import(transactionImports)
 

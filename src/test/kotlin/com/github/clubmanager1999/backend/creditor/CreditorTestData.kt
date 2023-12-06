@@ -27,6 +27,12 @@ object CreditorTestData {
         )
     }
 
+    fun createEmptyNewCreditor(): NewCreditor {
+        return NewCreditor(
+            name = "",
+        )
+    }
+
     fun createExistingCreditor(): ExistingCreditor {
         return ExistingCreditor(
             id = ID,

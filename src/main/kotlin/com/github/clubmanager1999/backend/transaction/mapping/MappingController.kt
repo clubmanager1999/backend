@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.transaction.mapping
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,7 +46,7 @@ class MappingController(val mappingService: MappingService) {
 
     @PostMapping("/api/mappings")
     fun createMapping(
-        @RequestBody newMapping: NewMapping,
+        @RequestBody @Valid newMapping: NewMapping,
     ): ResponseEntity<Void> {
         val existingMapping = mappingService.create(newMapping)
 
@@ -57,7 +58,7 @@ class MappingController(val mappingService: MappingService) {
     @PutMapping("/api/mappings/{id}")
     fun updateMapping(
         @PathVariable id: Long,
-        @RequestBody newMapping: NewMapping,
+        @RequestBody @Valid newMapping: NewMapping,
     ): ResponseEntity<Void> {
         mappingService.update(id, newMapping)
 

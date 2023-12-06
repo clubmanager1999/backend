@@ -16,8 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.error
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -29,6 +31,25 @@ class ControllerExceptionHandler {
         return ResponseEntity(
             ApiError(ErrorCode.INTERNAL_ERROR, "Internal error"),
             HttpStatus.INTERNAL_SERVER_ERROR,
+        )
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handle(e: HttpMessageNotReadableException): ResponseEntity<ApiError> {
+        val cause = e.cause
+        var fieldErrors: Map<String, String?>? = null
+
+        if (cause is MissingKotlinParameterException) {
+            val name = cause.parameter.name
+
+            if (name != null) {
+                fieldErrors = mapOf(name to "must not be null")
+            }
+        }
+
+        return ResponseEntity(
+            ApiError(ErrorCode.VALIDATION_ERROR, "Validation error", fieldErrors),
+            HttpStatus.BAD_REQUEST,
         )
     }
 

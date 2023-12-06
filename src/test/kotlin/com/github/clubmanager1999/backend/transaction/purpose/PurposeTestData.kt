@@ -27,6 +27,12 @@ object PurposeTestData {
         )
     }
 
+    fun createEmptyNewPurpose(): NewPurpose {
+        return NewPurpose(
+            name = "",
+        )
+    }
+
     fun createExistingPurpose(): ExistingPurpose {
         return ExistingPurpose(
             id = ID,
