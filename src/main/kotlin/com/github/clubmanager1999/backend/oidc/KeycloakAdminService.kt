@@ -19,7 +19,6 @@ package com.github.clubmanager1999.backend.oidc
 import com.github.clubmanager1999.backend.security.KeycloakJwtConfig
 import com.github.clubmanager1999.backend.security.Permission
 import jakarta.ws.rs.WebApplicationException
-import jakarta.ws.rs.core.Response
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
@@ -36,7 +35,6 @@ import org.keycloak.representations.idm.UserRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.io.InputStream
 import kotlin.time.Duration.Companion.days
 
 const val ATTRIBUTE_MANAGED_BY = "managedBy"
@@ -75,12 +73,6 @@ class KeycloakAdminService(
             }
 
         val response = usersResource.create(user)
-
-        if (response.statusInfo.family == Response.Status.Family.CLIENT_ERROR ||
-            response.statusInfo.family == Response.Status.Family.SERVER_ERROR
-        ) {
-            logResponseBody(response)
-        }
 
         val id = CreatedResponseUtil.getCreatedId(response)
 
@@ -247,16 +239,6 @@ class KeycloakAdminService(
             } else {
                 throw e
             }
-        }
-    }
-
-    fun logResponseBody(response: Response) {
-        try {
-            val inputStream = response.entity as InputStream
-            val body = inputStream.bufferedReader().use { it.readText() }
-            logger.error("Failed to create keycloak user: {}", body)
-        } catch (e: Exception) {
-            logger.warn("Failed to get response body", e)
         }
     }
 }
