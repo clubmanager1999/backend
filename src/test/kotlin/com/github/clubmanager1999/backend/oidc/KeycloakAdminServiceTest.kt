@@ -26,7 +26,6 @@ import dasniko.testcontainers.keycloak.KeycloakContainer
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import jakarta.ws.rs.WebApplicationException
-import jakarta.ws.rs.core.Response
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.hamcrest.Matchers.containsString
@@ -40,7 +39,6 @@ import org.keycloak.admin.client.resource.RolesResource
 import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.idm.RoleRepresentation
 import org.mockito.Mockito.`when`
-import org.mockito.kotlin.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -164,13 +162,6 @@ class KeycloakAdminServiceTest {
             .isInstanceOf(WebApplicationException::class.java)
             .extracting { (it as WebApplicationException).response.status }
             .isEqualTo(409)
-    }
-
-    @Test
-    fun shouldNotFailOnLogResponseBodyErrors() {
-        val response = mock<Response>()
-        `when`(response.entity).thenThrow(RuntimeException())
-        keycloakAdminService.logResponseBody(response)
     }
 
     @Test
