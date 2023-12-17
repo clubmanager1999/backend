@@ -25,5 +25,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
     include = JsonTypeInfo.As.PROPERTY,
     property = "type",
 )
-@JsonSubTypes(Type(value = ExistingMemberReference::class, name = "member"))
+@JsonSubTypes(
+    value = [
+        Type(value = ExistingCreditorReference::class, name = "creditor"),
+        Type(value = ExistingDonorReference::class, name = "donor"),
+        Type(value = ExistingMemberReference::class, name = "member"),
+    ],
+)
 sealed interface ExistingReference

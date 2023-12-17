@@ -1,0 +1,21 @@
+{
+  "type": "member",
+  "member": {
+    "id": 42,
+    "userName": "tyler.durden",
+    "firstName": "Tyler",
+    "lastName": "Durden",
+    "email": "info@paper-street-soap.co",
+    "address": {
+      "street": "Paper Street",
+      "streetNumber": "537",
+      "zip": "19806",
+      "city": "Bradford"
+    },
+    "membership": {
+      "id": 43,
+      "name": "Aspirant",
+      "fee": 13.37
+    }
+  }
+}

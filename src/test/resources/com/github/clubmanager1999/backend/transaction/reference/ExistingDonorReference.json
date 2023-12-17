@@ -1,0 +1,14 @@
+{
+  "type": "donor",
+  "donor": {
+    "id": 45,
+    "firstName": "Richard",
+    "lastName": "Chesler",
+    "address": {
+      "street": "Paper Street",
+      "streetNumber": "537",
+      "zip": "19806",
+      "city": "Bradford"
+    }
+  }
+}
