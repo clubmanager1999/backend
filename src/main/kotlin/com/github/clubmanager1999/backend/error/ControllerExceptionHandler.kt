@@ -62,6 +62,8 @@ class ControllerExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handle(e: HttpMessageNotReadableException): ResponseEntity<ApiError> {
+        logger.info("Handled ${e.javaClass.simpleName}", e)
+
         val cause = e.cause
         var fieldErrors: Map<String, String?>? = null
 
@@ -89,6 +91,8 @@ class ControllerExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handle(e: MethodArgumentNotValidException): ResponseEntity<ApiError> {
+        logger.info("Handled ${e.javaClass.simpleName}", e)
+
         val fieldErrors =
             e.fieldErrors
                 .groupBy { it.field }
