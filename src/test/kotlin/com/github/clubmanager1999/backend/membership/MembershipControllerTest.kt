@@ -83,7 +83,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldCreateMembership() {
         `when`(membershipService.create(MembershipTestData.createNewMembership()))
-            .thenReturn(MembershipTestData.createExistingMembership())
+            .thenReturn(MembershipTestData.createMembershipId())
 
         mockMvc
             .perform(
@@ -101,7 +101,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldCreateMultipleMemberships() {
         `when`(membershipService.create(MembershipTestData.createNewMembership()))
-            .thenReturn(MembershipTestData.createExistingMembership())
+            .thenReturn(MembershipTestData.createMembershipId())
 
         mockMvc
             .perform(
@@ -131,7 +131,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(membershipService.update(43, MembershipTestData.createNewMembership()))
-            .thenReturn(MembershipTestData.createExistingMembership())
+            .thenReturn(MembershipTestData.createMembershipId())
 
         mockMvc
             .perform(
@@ -155,7 +155,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(membershipService.create(MembershipTestData.createNewMembership()))
-            .thenReturn(MembershipTestData.createExistingMembership())
+            .thenReturn(MembershipTestData.createMembershipId())
 
         mockMvc
             .perform(
@@ -176,7 +176,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(membershipService.update(ID, MembershipTestData.createNewMembership()))
-            .thenReturn(MembershipTestData.createExistingMembership())
+            .thenReturn(MembershipTestData.createMembershipId())
 
         mockMvc
             .perform(
@@ -197,7 +197,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(membershipService.create(MembershipTestData.createNewMembership()))
-            .thenReturn(MembershipTestData.createExistingMembership())
+            .thenReturn(MembershipTestData.createMembershipId())
 
         mockMvc
             .perform(
@@ -218,7 +218,7 @@ internal class MembershipControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(membershipService.update(MembershipTestData.ID, MembershipTestData.createNewMembership()))
-            .thenReturn(MembershipTestData.createExistingMembership())
+            .thenReturn(MembershipTestData.createMembershipId())
 
         mockMvc
             .perform(

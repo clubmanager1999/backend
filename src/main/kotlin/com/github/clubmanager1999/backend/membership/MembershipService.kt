@@ -33,23 +33,23 @@ class MembershipService(
         return membershipRepository.findAll().map { it.toExistingMembership() }
     }
 
-    fun create(newMembership: NewMembership): ExistingMembership {
+    fun create(newMembership: NewMembership): MembershipId {
         return newMembership
             .toMembershipEntity(null)
             .let { membershipRepository.save(it) }
-            .toExistingMembership()
+            .toMembershipId()
     }
 
     fun update(
         id: Long,
         newMembership: NewMembership,
-    ): ExistingMembership {
+    ): MembershipId {
         return membershipRepository
             .findById(id)
             .orElseThrow { MembershipNotFoundException(id) }
             .let { newMembership.toMembershipEntity(it.id) }
             .let { membershipRepository.save(it) }
-            .toExistingMembership()
+            .toMembershipId()
     }
 
     fun delete(id: Long) {

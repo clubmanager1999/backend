@@ -33,23 +33,23 @@ class DonorService(
         return donorRepository.findAll().map { it.toExistingDonor() }
     }
 
-    fun create(newDonor: NewDonor): ExistingDonor {
+    fun create(newDonor: NewDonor): DonorId {
         return newDonor
             .toDonorEntity(null)
             .let { donorRepository.save(it) }
-            .toExistingDonor()
+            .toDonorId()
     }
 
     fun update(
         id: Long,
         newDonor: NewDonor,
-    ): ExistingDonor {
+    ): DonorId {
         return donorRepository
             .findById(id)
             .orElseThrow { DonorNotFoundException(id) }
             .let { newDonor.toDonorEntity(it.id) }
             .let { donorRepository.save(it) }
-            .toExistingDonor()
+            .toDonorId()
     }
 
     fun delete(id: Long) {

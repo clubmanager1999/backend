@@ -67,26 +67,24 @@ class MembershipServiceTest {
     @Test
     fun shouldCreateMembership() {
         val newMembership = MembershipTestData.createNewMembership()
-        val existingMembership = MembershipTestData.createExistingMembership()
         val savedEntity = MembershipTestData.createMembershipEntity()
         val newEntity = savedEntity.copy(id = null)
 
         `when`(membershipRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(membershipService.create(newMembership)).isEqualTo(existingMembership)
+        assertThat(membershipService.create(newMembership)).isEqualTo(MembershipTestData.createMembershipId())
     }
 
     @Test
     fun shouldUpdateMembership() {
         val newMembership = MembershipTestData.createNewMembership()
-        val existingMembership = MembershipTestData.createExistingMembership()
         val savedEntity = MembershipTestData.createMembershipEntity()
 
         `when`(membershipRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(membershipRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(membershipService.update(ID, newMembership)).isEqualTo(existingMembership)
+        assertThat(membershipService.update(ID, newMembership)).isEqualTo(MembershipTestData.createMembershipId())
     }
 
     @Test

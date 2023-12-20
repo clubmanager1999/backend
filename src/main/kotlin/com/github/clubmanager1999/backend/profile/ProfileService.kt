@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.profile
 
+import com.github.clubmanager1999.backend.member.MemberId
 import com.github.clubmanager1999.backend.member.MemberService
 import com.github.clubmanager1999.backend.membership.MembershipId
 import com.github.clubmanager1999.backend.oidc.Subject
@@ -34,11 +35,10 @@ class ProfileService(
     fun update(
         subject: Subject,
         profileUpdate: ProfileUpdate,
-    ): Profile {
+    ): MemberId {
         return memberService
             .get(subject)
             .let { Pair(it.id, profileUpdate.toNewMember(it.userName, MembershipId(it.membership.id))) }
             .let { memberService.update(it.first, it.second) }
-            .toProfile()
     }
 }

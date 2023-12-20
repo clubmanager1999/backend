@@ -55,9 +55,9 @@ class TransactionController(val transactionService: TransactionService) {
     fun createTransaction(
         @RequestBody @Valid newTransaction: NewTransaction,
     ): ResponseEntity<Void> {
-        val existingTransaction = transactionService.create(newTransaction)
+        val transactionId = transactionService.create(newTransaction)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingTransaction.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(transactionId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

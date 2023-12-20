@@ -46,23 +46,23 @@ class TransactionService(
         return transactionRepository.findAllByYear(year).map { it.toExistingTransaction() }
     }
 
-    fun create(newTransaction: NewTransaction): ExistingTransaction {
+    fun create(newTransaction: NewTransaction): TransactionId {
         return newTransaction
             .toTransactionEntity(null)
             .let { transactionRepository.save(it) }
-            .toExistingTransaction()
+            .toTransactionId()
     }
 
     fun update(
         id: Long,
         newTransaction: NewTransaction,
-    ): ExistingTransaction {
+    ): TransactionId {
         return transactionRepository
             .findById(id)
             .orElseThrow { TransactionNotFoundException(id) }
             .let { newTransaction.toTransactionEntity(it.id) }
             .let { transactionRepository.save(it) }
-            .toExistingTransaction()
+            .toTransactionId()
     }
 
     fun delete(id: Long) {

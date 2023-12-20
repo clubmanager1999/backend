@@ -228,7 +228,7 @@ internal class TransactionControllerTest {
     @Test
     fun shouldCreateTransaction() {
         `when`(transactionService.create(TransactionTestData.createNewTransaction()))
-            .thenReturn(TransactionTestData.createExistingTransaction())
+            .thenReturn(TransactionTestData.createTransactionId())
 
         mockMvc
             .perform(
@@ -246,7 +246,7 @@ internal class TransactionControllerTest {
     @Test
     fun shouldCreateMultipleTransactions() {
         `when`(transactionService.create(TransactionTestData.createNewTransaction()))
-            .thenReturn(TransactionTestData.createExistingTransaction())
+            .thenReturn(TransactionTestData.createTransactionId())
 
         mockMvc
             .perform(
@@ -276,7 +276,7 @@ internal class TransactionControllerTest {
     @Test
     fun shouldUpdateTransaction() {
         `when`(transactionService.update(43, TransactionTestData.createNewTransaction()))
-            .thenReturn(TransactionTestData.createExistingTransaction())
+            .thenReturn(TransactionTestData.createTransactionId())
 
         mockMvc
             .perform(
@@ -316,7 +316,7 @@ internal class TransactionControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(transactionService.create(TransactionTestData.createNewTransaction()))
-            .thenReturn(TransactionTestData.createExistingTransaction())
+            .thenReturn(TransactionTestData.createTransactionId())
 
         mockMvc
             .perform(
@@ -338,7 +338,7 @@ internal class TransactionControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(transactionService.update(ID, TransactionTestData.createNewTransaction()))
-            .thenReturn(TransactionTestData.createExistingTransaction())
+            .thenReturn(TransactionTestData.createTransactionId())
 
         mockMvc
             .perform(
@@ -360,7 +360,7 @@ internal class TransactionControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(transactionService.create(TransactionTestData.createNewTransaction()))
-            .thenReturn(TransactionTestData.createExistingTransaction())
+            .thenReturn(TransactionTestData.createTransactionId())
 
         mockMvc
             .perform(
@@ -381,7 +381,7 @@ internal class TransactionControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(transactionService.update(ID, TransactionTestData.createNewTransaction()))
-            .thenReturn(TransactionTestData.createExistingTransaction())
+            .thenReturn(TransactionTestData.createTransactionId())
 
         mockMvc
             .perform(

@@ -67,26 +67,24 @@ class PurposeServiceTest {
     @Test
     fun shouldCreatePurpose() {
         val newPurpose = PurposeTestData.createNewPurpose()
-        val existingPurpose = PurposeTestData.createExistingPurpose()
         val savedEntity = PurposeTestData.createPurposeEntity()
         val newEntity = savedEntity.copy(id = null)
 
         `when`(purposeRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(purposeService.create(newPurpose)).isEqualTo(existingPurpose)
+        assertThat(purposeService.create(newPurpose)).isEqualTo(PurposeTestData.createPurposeId())
     }
 
     @Test
     fun shouldUpdatePurpose() {
         val newPurpose = PurposeTestData.createNewPurpose()
-        val existingPurpose = PurposeTestData.createExistingPurpose()
         val savedEntity = PurposeTestData.createPurposeEntity()
 
         `when`(purposeRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(purposeRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(purposeService.update(ID, newPurpose)).isEqualTo(existingPurpose)
+        assertThat(purposeService.update(ID, newPurpose)).isEqualTo(PurposeTestData.createPurposeId())
     }
 
     @Test

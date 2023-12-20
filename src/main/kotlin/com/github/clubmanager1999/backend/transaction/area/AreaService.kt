@@ -33,23 +33,23 @@ class AreaService(
         return areaRepository.findAll().map { it.toExistingArea() }
     }
 
-    fun create(newArea: NewArea): ExistingArea {
+    fun create(newArea: NewArea): AreaId {
         return newArea
             .toAreaEntity(null)
             .let { areaRepository.save(it) }
-            .toExistingArea()
+            .toAreaId()
     }
 
     fun update(
         id: Long,
         newArea: NewArea,
-    ): ExistingArea {
+    ): AreaId {
         return areaRepository
             .findById(id)
             .orElseThrow { AreaNotFoundException(id) }
             .let { newArea.toAreaEntity(id) }
             .let { areaRepository.save(it) }
-            .toExistingArea()
+            .toAreaId()
     }
 
     fun delete(id: Long) {

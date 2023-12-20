@@ -53,9 +53,9 @@ class ProfileServiceTest {
 
         `when`(memberService.get(Subject(SUBJECT))).thenReturn(existingMemberWithRoles)
 
-        `when`(memberService.update(ID, newMember)).thenReturn(existingMemberWithRoles)
+        `when`(memberService.update(ID, newMember)).thenReturn(MemberTestData.createMemberId())
 
-        assertThat(profileService.update(Subject(SUBJECT), profileUpdate)).isEqualTo(ProfileTestData.createProfile())
+        assertThat(profileService.update(Subject(SUBJECT), profileUpdate)).isEqualTo(MemberTestData.createMemberId())
 
         verify(memberService).update(ID, newMember)
     }

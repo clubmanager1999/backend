@@ -91,7 +91,7 @@ internal class ReceiptControllerTest {
     @Test
     fun shouldCreateReceipt() {
         `when`(receiptService.create(ReceiptTestData.createNewReceipt()))
-            .thenReturn(ReceiptTestData.createExistingReceipt())
+            .thenReturn(ReceiptTestData.createReceiptId())
 
         mockMvc
             .perform(
@@ -109,7 +109,7 @@ internal class ReceiptControllerTest {
     @Test
     fun shouldCreateMultipleReceipts() {
         `when`(receiptService.create(ReceiptTestData.createNewReceipt()))
-            .thenReturn(ReceiptTestData.createExistingReceipt())
+            .thenReturn(ReceiptTestData.createReceiptId())
 
         mockMvc
             .perform(
@@ -139,7 +139,7 @@ internal class ReceiptControllerTest {
     @Test
     fun shouldUpdateReceipt() {
         `when`(receiptService.update(ID, ReceiptTestData.createNewReceipt()))
-            .thenReturn(ReceiptTestData.createExistingReceipt())
+            .thenReturn(ReceiptTestData.createReceiptId())
 
         mockMvc
             .perform(
@@ -163,7 +163,7 @@ internal class ReceiptControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(receiptService.create(ReceiptTestData.createNewReceipt()))
-            .thenReturn(ReceiptTestData.createExistingReceipt())
+            .thenReturn(ReceiptTestData.createReceiptId())
 
         mockMvc
             .perform(
@@ -184,7 +184,7 @@ internal class ReceiptControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(receiptService.update(ID, ReceiptTestData.createNewReceipt()))
-            .thenReturn(ReceiptTestData.createExistingReceipt())
+            .thenReturn(ReceiptTestData.createReceiptId())
 
         mockMvc
             .perform(
@@ -205,7 +205,7 @@ internal class ReceiptControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(receiptService.create(ReceiptTestData.createNewReceipt()))
-            .thenReturn(ReceiptTestData.createExistingReceipt())
+            .thenReturn(ReceiptTestData.createReceiptId())
 
         mockMvc
             .perform(
@@ -226,7 +226,7 @@ internal class ReceiptControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(receiptService.update(ID, ReceiptTestData.createNewReceipt()))
-            .thenReturn(ReceiptTestData.createExistingReceipt())
+            .thenReturn(ReceiptTestData.createReceiptId())
 
         mockMvc
             .perform(

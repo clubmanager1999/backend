@@ -170,4 +170,8 @@ object TransactionTestData {
             amount = AMOUNT,
         )
     }
+
+    fun createTransactionId(): TransactionId {
+        return TransactionId(ID)
+    }
 }

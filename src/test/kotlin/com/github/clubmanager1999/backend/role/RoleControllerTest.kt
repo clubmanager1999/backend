@@ -109,7 +109,7 @@ internal class RoleControllerTest {
     @Test
     fun shouldCreateRole() {
         `when`(roleService.create(RoleTestData.createNewRole()))
-            .thenReturn(RoleTestData.createExistingRole())
+            .thenReturn(RoleTestData.createRoleId())
 
         mockMvc
             .perform(
@@ -127,7 +127,7 @@ internal class RoleControllerTest {
     @Test
     fun shouldCreateMultipleRoles() {
         `when`(roleService.create(RoleTestData.createNewRole()))
-            .thenReturn(RoleTestData.createExistingRole())
+            .thenReturn(RoleTestData.createRoleId())
 
         mockMvc
             .perform(
@@ -157,7 +157,7 @@ internal class RoleControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(roleService.update(ID, RoleTestData.createNewRole()))
-            .thenReturn(RoleTestData.createExistingRole())
+            .thenReturn(RoleTestData.createRoleId())
 
         mockMvc
             .perform(
@@ -227,7 +227,7 @@ internal class RoleControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(roleService.create(RoleTestData.createNewRole()))
-            .thenReturn(RoleTestData.createExistingRole())
+            .thenReturn(RoleTestData.createRoleId())
 
         mockMvc
             .perform(
@@ -248,7 +248,7 @@ internal class RoleControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(roleService.update(RoleTestData.ID, RoleTestData.createNewRole()))
-            .thenReturn(RoleTestData.createExistingRole())
+            .thenReturn(RoleTestData.createRoleId())
 
         mockMvc
             .perform(
@@ -269,7 +269,7 @@ internal class RoleControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(roleService.create(RoleTestData.createNewRole()))
-            .thenReturn(RoleTestData.createExistingRole())
+            .thenReturn(RoleTestData.createRoleId())
 
         mockMvc
             .perform(
@@ -290,7 +290,7 @@ internal class RoleControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(roleService.update(ID, RoleTestData.createNewRole()))
-            .thenReturn(RoleTestData.createExistingRole())
+            .thenReturn(RoleTestData.createRoleId())
 
         mockMvc
             .perform(

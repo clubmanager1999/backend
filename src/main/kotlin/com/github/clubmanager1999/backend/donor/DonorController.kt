@@ -48,9 +48,9 @@ class DonorController(val donorService: DonorService) {
     fun createDonor(
         @RequestBody @Valid newDonor: NewDonor,
     ): ResponseEntity<Void> {
-        val existingDonor = donorService.create(newDonor)
+        val donorId = donorService.create(newDonor)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingDonor.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(donorId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

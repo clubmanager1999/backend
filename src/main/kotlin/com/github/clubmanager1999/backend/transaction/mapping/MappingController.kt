@@ -48,9 +48,9 @@ class MappingController(val mappingService: MappingService) {
     fun createMapping(
         @RequestBody @Valid newMapping: NewMapping,
     ): ResponseEntity<Void> {
-        val existingMapping = mappingService.create(newMapping)
+        val mappingId = mappingService.create(newMapping)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingMapping.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(mappingId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

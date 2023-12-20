@@ -27,6 +27,10 @@ fun DonorEntity.toExistingDonor(): ExistingDonor {
     )
 }
 
+fun DonorEntity.toDonorId(): DonorId {
+    return DonorId(this.id!!)
+}
+
 fun NewDonor.toDonorEntity(id: Long?): DonorEntity {
     return DonorEntity(
         id = id,

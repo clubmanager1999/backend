@@ -69,13 +69,12 @@ class ReceiptServiceTest {
     @Test
     fun shouldCreateReceipt() {
         val newReceipt = ReceiptTestData.createNewReceipt()
-        val existingReceipt = ReceiptTestData.createExistingReceipt()
         val savedEntity = ReceiptTestData.createReceiptEntity()
         val newEntity = ReceiptTestData.createFlatReceiptEntity().copy(id = null)
 
         `when`(receiptRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(receiptService.create(newReceipt)).isEqualTo(existingReceipt)
+        assertThat(receiptService.create(newReceipt)).isEqualTo(ReceiptTestData.createReceiptId())
     }
 
     @Test
@@ -103,7 +102,6 @@ class ReceiptServiceTest {
     @Test
     fun shouldUpdateReceipt() {
         val newReceipt = ReceiptTestData.createNewReceipt()
-        val existingReceipt = ReceiptTestData.createExistingReceipt()
         val savedEntity = ReceiptTestData.createReceiptEntity()
         val updatedEntity = ReceiptTestData.createFlatReceiptEntity()
 
@@ -111,7 +109,7 @@ class ReceiptServiceTest {
 
         `when`(receiptRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        assertThat(receiptService.update(ID, newReceipt)).isEqualTo(existingReceipt)
+        assertThat(receiptService.update(ID, newReceipt)).isEqualTo(ReceiptTestData.createReceiptId())
     }
 
     @Test

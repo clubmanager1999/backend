@@ -67,26 +67,24 @@ class CreditorServiceTest {
     @Test
     fun shouldCreateCreditor() {
         val newCreditor = CreditorTestData.createNewCreditor()
-        val existingCreditor = CreditorTestData.createExistingCreditor()
         val savedEntity = CreditorTestData.createCreditorEntity()
         val newEntity = savedEntity.copy(id = null)
 
         `when`(creditorRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(creditorService.create(newCreditor)).isEqualTo(existingCreditor)
+        assertThat(creditorService.create(newCreditor)).isEqualTo(CreditorTestData.createCreditorId())
     }
 
     @Test
     fun shouldUpdateCreditor() {
         val newCreditor = CreditorTestData.createNewCreditor()
-        val existingCreditor = CreditorTestData.createExistingCreditor()
         val savedEntity = CreditorTestData.createCreditorEntity()
 
         `when`(creditorRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(creditorRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(creditorService.update(ID, newCreditor)).isEqualTo(existingCreditor)
+        assertThat(creditorService.update(ID, newCreditor)).isEqualTo(CreditorTestData.createCreditorId())
     }
 
     @Test

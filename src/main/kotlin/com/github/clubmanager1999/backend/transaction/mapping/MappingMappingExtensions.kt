@@ -33,6 +33,10 @@ fun MappingEntity.toExistingMapping(): ExistingMapping {
     )
 }
 
+fun MappingEntity.toMappingId(): MappingId {
+    return MappingId(this.id!!)
+}
+
 fun NewMapping.toMappingEntity(id: Long?): MappingEntity {
     return MappingEntity(
         id = id,

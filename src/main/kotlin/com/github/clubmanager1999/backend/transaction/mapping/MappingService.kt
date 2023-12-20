@@ -33,23 +33,23 @@ class MappingService(
         return mappingRepository.findAll().map { it.toExistingMapping() }
     }
 
-    fun create(newMapping: NewMapping): ExistingMapping {
+    fun create(newMapping: NewMapping): MappingId {
         return newMapping
             .toMappingEntity(null)
             .let { mappingRepository.save(it) }
-            .toExistingMapping()
+            .toMappingId()
     }
 
     fun update(
         id: Long,
         newMapping: NewMapping,
-    ): ExistingMapping {
+    ): MappingId {
         return mappingRepository
             .findById(id)
             .orElseThrow { MappingNotFoundException(id) }
             .let { newMapping.toMappingEntity(it.id) }
             .let { mappingRepository.save(it) }
-            .toExistingMapping()
+            .toMappingId()
     }
 
     fun delete(id: Long) {

@@ -67,26 +67,24 @@ class AreaServiceTest {
     @Test
     fun shouldCreateArea() {
         val newArea = AreaTestData.createNewArea()
-        val existingArea = AreaTestData.createExistingArea()
         val savedEntity = AreaTestData.createAreaEntity()
         val newEntity = savedEntity.copy(id = null)
 
         `when`(areaRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(areaService.create(newArea)).isEqualTo(existingArea)
+        assertThat(areaService.create(newArea)).isEqualTo(AreaTestData.createAreaId())
     }
 
     @Test
     fun shouldUpdateArea() {
         val newArea = AreaTestData.createNewArea()
-        val existingArea = AreaTestData.createExistingArea()
         val savedEntity = AreaTestData.createAreaEntity()
 
         `when`(areaRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(areaRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(areaService.update(ID, newArea)).isEqualTo(existingArea)
+        assertThat(areaService.update(ID, newArea)).isEqualTo(AreaTestData.createAreaId())
     }
 
     @Test

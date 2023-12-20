@@ -44,6 +44,10 @@ fun TransactionEntity.toExistingTransaction(): ExistingTransaction {
     )
 }
 
+fun TransactionEntity.toTransactionId(): TransactionId {
+    return TransactionId(this.id!!)
+}
+
 fun NewTransaction.toTransactionEntity(id: Long?): TransactionEntity {
     return TransactionEntity(
         id = id,

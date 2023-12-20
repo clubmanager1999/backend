@@ -66,19 +66,17 @@ class MappingServiceTest {
     @Test
     fun shouldCreateMapping() {
         val newMapping = MappingTestData.createNewMapping()
-        val existingMapping = MappingTestData.createExistingMapping()
         val savedEntity = MappingTestData.createMappingEntity()
         val newEntity = MappingTestData.createFlatMappingEntity().copy(id = null)
 
         `when`(mappingRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(mappingService.create(newMapping)).isEqualTo(existingMapping)
+        assertThat(mappingService.create(newMapping)).isEqualTo(MappingTestData.createMappingId())
     }
 
     @Test
     fun shouldUpdateMapping() {
         val newMapping = MappingTestData.createNewMapping()
-        val existingMapping = MappingTestData.createExistingMapping()
         val savedEntity = MappingTestData.createMappingEntity()
         val updatedEntity = MappingTestData.createFlatMappingEntity()
 
@@ -86,7 +84,7 @@ class MappingServiceTest {
 
         `when`(mappingRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        assertThat(mappingService.update(ID, newMapping)).isEqualTo(existingMapping)
+        assertThat(mappingService.update(ID, newMapping)).isEqualTo(MappingTestData.createMappingId())
     }
 
     @Test

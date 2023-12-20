@@ -31,6 +31,10 @@ fun ReceiptEntity.toExistingReceipt(): ExistingReceipt {
     )
 }
 
+fun ReceiptEntity.toReceiptId(): ReceiptId {
+    return ReceiptId(this.id!!)
+}
+
 fun NewReceipt.toReceiptEntity(id: Long?): ReceiptEntity {
     return ReceiptEntity(
         id = id,

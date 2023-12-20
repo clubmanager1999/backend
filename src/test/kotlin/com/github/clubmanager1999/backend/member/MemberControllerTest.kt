@@ -108,7 +108,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldCreateMember() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -123,7 +123,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldCreateMultipleMembers() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -147,7 +147,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(memberService.update(ID, MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -170,7 +170,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -198,7 +198,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(memberService.update(ID, MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -226,7 +226,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(memberService.create(MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -247,7 +247,7 @@ internal class MemberControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(memberService.update(ID, MemberTestData.createNewMember()))
-            .thenReturn(MemberTestData.createExistingMember())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(

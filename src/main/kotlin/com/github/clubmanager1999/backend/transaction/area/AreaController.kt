@@ -48,9 +48,9 @@ class AreaController(val areaService: AreaService) {
     fun createArea(
         @RequestBody @Valid newArea: NewArea,
     ): ResponseEntity<Void> {
-        val existingArea = areaService.create(newArea)
+        val areaId = areaService.create(newArea)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingArea.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(areaId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

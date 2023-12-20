@@ -27,6 +27,10 @@ fun RoleEntity.toExistingRole(): ExistingRole {
     )
 }
 
+fun RoleEntity.toRoleId(): RoleId {
+    return RoleId(this.id!!)
+}
+
 fun NewRole.toRoleEntity(id: Long?): RoleEntity {
     return RoleEntity(
         id = id,

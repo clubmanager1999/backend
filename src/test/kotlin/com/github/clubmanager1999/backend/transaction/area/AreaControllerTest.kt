@@ -80,7 +80,7 @@ internal class AreaControllerTest {
     @Test
     fun shouldCreateArea() {
         `when`(areaService.create(AreaTestData.createNewArea()))
-            .thenReturn(AreaTestData.createExistingArea())
+            .thenReturn(AreaTestData.createAreaId())
 
         mockMvc
             .perform(
@@ -98,7 +98,7 @@ internal class AreaControllerTest {
     @Test
     fun shouldCreateMultipleAreas() {
         `when`(areaService.create(AreaTestData.createNewArea()))
-            .thenReturn(AreaTestData.createExistingArea())
+            .thenReturn(AreaTestData.createAreaId())
 
         mockMvc
             .perform(
@@ -128,7 +128,7 @@ internal class AreaControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(areaService.update(ID, AreaTestData.createNewArea()))
-            .thenReturn(AreaTestData.createExistingArea())
+            .thenReturn(AreaTestData.createAreaId())
 
         mockMvc
             .perform(
@@ -152,7 +152,7 @@ internal class AreaControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(areaService.create(AreaTestData.createNewArea()))
-            .thenReturn(AreaTestData.createExistingArea())
+            .thenReturn(AreaTestData.createAreaId())
 
         mockMvc
             .perform(
@@ -173,7 +173,7 @@ internal class AreaControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(areaService.update(ID, AreaTestData.createNewArea()))
-            .thenReturn(AreaTestData.createExistingArea())
+            .thenReturn(AreaTestData.createAreaId())
 
         mockMvc
             .perform(
@@ -194,7 +194,7 @@ internal class AreaControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(areaService.create(AreaTestData.createNewArea()))
-            .thenReturn(AreaTestData.createExistingArea())
+            .thenReturn(AreaTestData.createAreaId())
 
         mockMvc
             .perform(
@@ -215,7 +215,7 @@ internal class AreaControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(areaService.update(ID, AreaTestData.createNewArea()))
-            .thenReturn(AreaTestData.createExistingArea())
+            .thenReturn(AreaTestData.createAreaId())
 
         mockMvc
             .perform(
