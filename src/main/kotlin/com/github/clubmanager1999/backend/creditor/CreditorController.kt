@@ -48,9 +48,9 @@ class CreditorController(val creditorService: CreditorService) {
     fun createCreditor(
         @RequestBody @Valid newCreditor: NewCreditor,
     ): ResponseEntity<Void> {
-        val existingCreditor = creditorService.create(newCreditor)
+        val creditorId = creditorService.create(newCreditor)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingCreditor.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(creditorId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

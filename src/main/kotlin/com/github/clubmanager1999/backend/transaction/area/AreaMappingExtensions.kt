@@ -23,6 +23,10 @@ fun AreaEntity.toExistingArea(): ExistingArea {
     )
 }
 
+fun AreaEntity.toAreaId(): AreaId {
+    return AreaId(this.id!!)
+}
+
 fun NewArea.toAreaEntity(id: Long?): AreaEntity {
     return AreaEntity(
         id = id,

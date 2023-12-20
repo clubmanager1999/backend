@@ -50,9 +50,9 @@ class RoleController(val roleService: RoleService) {
     fun createRole(
         @RequestBody @Valid newRole: NewRole,
     ): ResponseEntity<Void> {
-        val existingRole = roleService.create(newRole)
+        val roleId = roleService.create(newRole)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingRole.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(roleId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

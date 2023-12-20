@@ -48,7 +48,7 @@ class MemberService(
         return memberRepository.findAll().map { it.toExistingMember() }
     }
 
-    fun create(newMember: NewMember): ExistingMember {
+    fun create(newMember: NewMember): MemberId {
         val oidcUser = oidcUserMapper.toOidcUser(newMember)
         val subject = oidcAdminService.createUser(oidcUser)
 
@@ -61,13 +61,13 @@ class MemberService(
         return newMember
             .toMemberEntity(null, subject.id)
             .let { memberRepository.save(it) }
-            .toExistingMember()
+            .toMemberId()
     }
 
     fun update(
         id: Long,
         newMember: NewMember,
-    ): ExistingMember {
+    ): MemberId {
         val oidcUser = oidcUserMapper.toOidcUser(newMember)
 
         return memberRepository
@@ -81,7 +81,7 @@ class MemberService(
                 newMember.toMemberEntity(it.id, it.subject)
             }
             .let { memberRepository.save(it) }
-            .toExistingMember()
+            .toMemberId()
     }
 
     fun delete(id: Long) {

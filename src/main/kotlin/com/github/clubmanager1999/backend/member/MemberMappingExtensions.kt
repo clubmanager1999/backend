@@ -33,6 +33,10 @@ fun MemberEntity.toExistingMember(): ExistingMember {
     )
 }
 
+fun MemberEntity.toMemberId(): MemberId {
+    return MemberId(this.id!!)
+}
+
 fun NewMember.toMemberEntity(
     id: Long?,
     subject: String,

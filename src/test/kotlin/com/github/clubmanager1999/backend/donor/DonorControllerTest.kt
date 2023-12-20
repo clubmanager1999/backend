@@ -96,7 +96,7 @@ internal class DonorControllerTest {
     @Test
     fun shouldCreateDonor() {
         `when`(donorService.create(DonorTestData.createNewDonor()))
-            .thenReturn(DonorTestData.createExistingDonor())
+            .thenReturn(DonorTestData.createDonorId())
 
         mockMvc
             .perform(
@@ -114,7 +114,7 @@ internal class DonorControllerTest {
     @Test
     fun shouldCreateMultipleDonors() {
         `when`(donorService.create(DonorTestData.createNewDonor()))
-            .thenReturn(DonorTestData.createExistingDonor())
+            .thenReturn(DonorTestData.createDonorId())
 
         mockMvc
             .perform(
@@ -144,7 +144,7 @@ internal class DonorControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(donorService.update(ID, DonorTestData.createNewDonor()))
-            .thenReturn(DonorTestData.createExistingDonor())
+            .thenReturn(DonorTestData.createDonorId())
 
         mockMvc
             .perform(
@@ -168,7 +168,7 @@ internal class DonorControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(donorService.create(DonorTestData.createNewDonor()))
-            .thenReturn(DonorTestData.createExistingDonor())
+            .thenReturn(DonorTestData.createDonorId())
 
         mockMvc
             .perform(
@@ -194,7 +194,7 @@ internal class DonorControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(donorService.update(ID, DonorTestData.createNewDonor()))
-            .thenReturn(DonorTestData.createExistingDonor())
+            .thenReturn(DonorTestData.createDonorId())
 
         mockMvc
             .perform(
@@ -220,7 +220,7 @@ internal class DonorControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(donorService.create(DonorTestData.createNewDonor()))
-            .thenReturn(DonorTestData.createExistingDonor())
+            .thenReturn(DonorTestData.createDonorId())
 
         mockMvc
             .perform(
@@ -241,7 +241,7 @@ internal class DonorControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(donorService.update(ID, DonorTestData.createNewDonor()))
-            .thenReturn(DonorTestData.createExistingDonor())
+            .thenReturn(DonorTestData.createDonorId())
 
         mockMvc
             .perform(

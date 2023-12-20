@@ -80,7 +80,7 @@ internal class CreditorControllerTest {
     @Test
     fun shouldCreateCreditor() {
         `when`(creditorService.create(CreditorTestData.createNewCreditor()))
-            .thenReturn(CreditorTestData.createExistingCreditor())
+            .thenReturn(CreditorTestData.createCreditorId())
 
         mockMvc
             .perform(
@@ -98,7 +98,7 @@ internal class CreditorControllerTest {
     @Test
     fun shouldCreateMultipleCreditors() {
         `when`(creditorService.create(CreditorTestData.createNewCreditor()))
-            .thenReturn(CreditorTestData.createExistingCreditor())
+            .thenReturn(CreditorTestData.createCreditorId())
 
         mockMvc
             .perform(
@@ -128,7 +128,7 @@ internal class CreditorControllerTest {
     @Test
     fun shouldUpdateCreditor() {
         `when`(creditorService.update(ID, CreditorTestData.createNewCreditor()))
-            .thenReturn(CreditorTestData.createExistingCreditor())
+            .thenReturn(CreditorTestData.createCreditorId())
 
         mockMvc
             .perform(
@@ -152,7 +152,7 @@ internal class CreditorControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(creditorService.create(CreditorTestData.createNewCreditor()))
-            .thenReturn(CreditorTestData.createExistingCreditor())
+            .thenReturn(CreditorTestData.createCreditorId())
 
         mockMvc
             .perform(
@@ -173,7 +173,7 @@ internal class CreditorControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(creditorService.update(ID, CreditorTestData.createNewCreditor()))
-            .thenReturn(CreditorTestData.createExistingCreditor())
+            .thenReturn(CreditorTestData.createCreditorId())
 
         mockMvc
             .perform(
@@ -194,7 +194,7 @@ internal class CreditorControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(creditorService.create(CreditorTestData.createNewCreditor()))
-            .thenReturn(CreditorTestData.createExistingCreditor())
+            .thenReturn(CreditorTestData.createCreditorId())
 
         mockMvc
             .perform(
@@ -215,7 +215,7 @@ internal class CreditorControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(creditorService.update(ID, CreditorTestData.createNewCreditor()))
-            .thenReturn(CreditorTestData.createExistingCreditor())
+            .thenReturn(CreditorTestData.createCreditorId())
 
         mockMvc
             .perform(

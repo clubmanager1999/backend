@@ -48,9 +48,9 @@ class MemberController(val memberService: MemberService) {
     fun createMember(
         @RequestBody @Valid newMember: NewMember,
     ): ResponseEntity<Void> {
-        val existingMember = memberService.create(newMember)
+        val memberId = memberService.create(newMember)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingMember.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(memberId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

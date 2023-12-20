@@ -84,13 +84,12 @@ class RoleServiceTest {
     @Test
     fun shouldCreateRole() {
         val newRole = RoleTestData.createNewRole()
-        val existingRole = RoleTestData.createExistingRole()
         val savedEntity = RoleTestData.createRoleEntity()
         val newEntity = savedEntity.copy(id = null, holder = null)
 
         `when`(roleRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(roleService.create(newRole)).isEqualTo(existingRole)
+        assertThat(roleService.create(newRole)).isEqualTo(RoleTestData.createRoleId())
 
         verify(oidcAdminService).createRole(NAME)
     }
@@ -98,7 +97,6 @@ class RoleServiceTest {
     @Test
     fun shouldUpdateRole() {
         val newRole = RoleTestData.createNewRole()
-        val existingRole = RoleTestData.createExistingRole()
         val savedEntity = RoleTestData.createRoleEntity()
         val newEntity = savedEntity.copy(holder = null)
 
@@ -106,7 +104,7 @@ class RoleServiceTest {
 
         `when`(roleRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(roleService.update(ID, newRole)).isEqualTo(existingRole)
+        assertThat(roleService.update(ID, newRole)).isEqualTo(RoleTestData.createRoleId())
     }
 
     @Test

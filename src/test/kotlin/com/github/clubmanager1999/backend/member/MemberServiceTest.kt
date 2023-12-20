@@ -93,7 +93,6 @@ class MemberServiceTest {
     @Test
     fun shouldCreateMember() {
         val newMember = MemberTestData.createNewMember()
-        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
         val newEntity = MemberTestData.createFlatMemberEntity().copy(id = null)
 
@@ -103,13 +102,12 @@ class MemberServiceTest {
 
         `when`(oidcAdminService.createUser(any())).thenReturn(Subject(SUBJECT))
 
-        assertThat(memberService.create(newMember)).isEqualTo(existingMemberWithRoles)
+        assertThat(memberService.create(newMember)).isEqualTo(MemberTestData.createMemberId())
     }
 
     @Test
     fun shouldUpdateMember() {
         val newMember = MemberTestData.createNewMember()
-        val existingMemberWithRoles = MemberTestData.createExistingMember()
         val savedEntity = MemberTestData.createMemberEntity()
         val updatedEntity = MemberTestData.createFlatMemberEntity()
 
@@ -117,7 +115,7 @@ class MemberServiceTest {
 
         `when`(memberRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        assertThat(memberService.update(ID, newMember)).isEqualTo(existingMemberWithRoles)
+        assertThat(memberService.update(ID, newMember)).isEqualTo(MemberTestData.createMemberId())
     }
 
     @Test

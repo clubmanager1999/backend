@@ -23,6 +23,10 @@ fun PurposeEntity.toExistingPurpose(): ExistingPurpose {
     )
 }
 
+fun PurposeEntity.toPurposeId(): PurposeId {
+    return PurposeId(this.id!!)
+}
+
 fun NewPurpose.toPurposeEntity(id: Long?): PurposeEntity {
     return PurposeEntity(
         id = id,

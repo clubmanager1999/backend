@@ -45,7 +45,7 @@ class ReceiptService(
         return receiptRepository.findAll().map { it.toExistingReceipt() }
     }
 
-    fun create(newReceipt: NewReceipt): ExistingReceipt {
+    fun create(newReceipt: NewReceipt): ReceiptId {
         if (
             receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validFrom).isNotEmpty() ||
             receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validTo).isNotEmpty()
@@ -56,13 +56,13 @@ class ReceiptService(
         return newReceipt
             .toReceiptEntity(null)
             .let { receiptRepository.save(it) }
-            .toExistingReceipt()
+            .toReceiptId()
     }
 
     fun update(
         id: Long,
         newReceipt: NewReceipt,
-    ): ExistingReceipt {
+    ): ReceiptId {
         if (
             receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validFrom).isNotEmpty() ||
             receiptRepository.findAllByCreditorAndDate(newReceipt.creditor.id, newReceipt.validTo).isNotEmpty()
@@ -75,7 +75,7 @@ class ReceiptService(
             .orElseThrow { ReceiptNotFoundException(id) }
             .let { newReceipt.toReceiptEntity(it.id) }
             .let { receiptRepository.save(it) }
-            .toExistingReceipt()
+            .toReceiptId()
     }
 
     fun delete(id: Long) {

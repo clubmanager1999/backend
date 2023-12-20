@@ -48,9 +48,9 @@ class PurposeController(val purposeService: PurposeService) {
     fun createPurpose(
         @RequestBody @Valid newPurpose: NewPurpose,
     ): ResponseEntity<Void> {
-        val existingPurpose = purposeService.create(newPurpose)
+        val purposeId = purposeService.create(newPurpose)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingPurpose.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(purposeId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

@@ -102,4 +102,8 @@ object MappingTestData {
             area = areaEntity,
         )
     }
+
+    fun createMappingId(): MappingId {
+        return MappingId(ID)
+    }
 }

@@ -33,23 +33,23 @@ class PurposeService(
         return purposeRepository.findAll().map { it.toExistingPurpose() }
     }
 
-    fun create(newPurpose: NewPurpose): ExistingPurpose {
+    fun create(newPurpose: NewPurpose): PurposeId {
         return newPurpose
             .toPurposeEntity(null)
             .let { purposeRepository.save(it) }
-            .toExistingPurpose()
+            .toPurposeId()
     }
 
     fun update(
         id: Long,
         newPurpose: NewPurpose,
-    ): ExistingPurpose {
+    ): PurposeId {
         return purposeRepository
             .findById(id)
             .orElseThrow { PurposeNotFoundException(id) }
             .let { newPurpose.toPurposeEntity(id) }
             .let { purposeRepository.save(it) }
-            .toExistingPurpose()
+            .toPurposeId()
     }
 
     fun delete(id: Long) {

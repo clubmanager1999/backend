@@ -18,6 +18,7 @@ package com.github.clubmanager1999.backend.profile
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.clubmanager1999.backend.error.ErrorCode
+import com.github.clubmanager1999.backend.member.MemberTestData
 import com.github.clubmanager1999.backend.member.MemberTestData.CITY
 import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
 import com.github.clubmanager1999.backend.member.MemberTestData.FIRST_NAME
@@ -81,7 +82,7 @@ internal class ProfileControllerTest {
     @Test
     fun shouldUpdateProfile() {
         `when`(profileService.update(Subject(SUBJECT), ProfileTestData.createProfileUpdate()))
-            .thenReturn(ProfileTestData.createProfile())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -95,7 +96,7 @@ internal class ProfileControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(profileService.update(Subject(SUBJECT), ProfileTestData.createEmptyProfileUpdate()))
-            .thenReturn(ProfileTestData.createProfile())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(
@@ -122,7 +123,7 @@ internal class ProfileControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(profileService.update(Subject(SUBJECT), ProfileTestData.createEmptyProfileUpdate()))
-            .thenReturn(ProfileTestData.createProfile())
+            .thenReturn(MemberTestData.createMemberId())
 
         mockMvc
             .perform(

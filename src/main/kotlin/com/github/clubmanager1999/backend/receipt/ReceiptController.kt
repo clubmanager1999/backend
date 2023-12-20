@@ -48,9 +48,9 @@ class ReceiptController(val receiptService: ReceiptService) {
     fun createReceipt(
         @RequestBody @Valid newReceipt: NewReceipt,
     ): ResponseEntity<Void> {
-        val existingReceipt = receiptService.create(newReceipt)
+        val receiptId = receiptService.create(newReceipt)
 
-        val uriComponents: UriComponents = uriComponentsBuilder.expand(existingReceipt.id)
+        val uriComponents: UriComponents = uriComponentsBuilder.expand(receiptId.id)
 
         return ResponseEntity.created(uriComponents.toUri()).build()
     }

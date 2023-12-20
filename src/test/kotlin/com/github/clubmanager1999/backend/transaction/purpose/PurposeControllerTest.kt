@@ -80,7 +80,7 @@ internal class PurposeControllerTest {
     @Test
     fun shouldCreatePurpose() {
         `when`(purposeService.create(PurposeTestData.createNewPurpose()))
-            .thenReturn(PurposeTestData.createExistingPurpose())
+            .thenReturn(PurposeTestData.createPurposeId())
 
         mockMvc
             .perform(
@@ -98,7 +98,7 @@ internal class PurposeControllerTest {
     @Test
     fun shouldCreateMultiplePurposes() {
         `when`(purposeService.create(PurposeTestData.createNewPurpose()))
-            .thenReturn(PurposeTestData.createExistingPurpose())
+            .thenReturn(PurposeTestData.createPurposeId())
 
         mockMvc
             .perform(
@@ -128,7 +128,7 @@ internal class PurposeControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(purposeService.update(ID, PurposeTestData.createNewPurpose()))
-            .thenReturn(PurposeTestData.createExistingPurpose())
+            .thenReturn(PurposeTestData.createPurposeId())
 
         mockMvc
             .perform(
@@ -152,7 +152,7 @@ internal class PurposeControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(purposeService.create(PurposeTestData.createNewPurpose()))
-            .thenReturn(PurposeTestData.createExistingPurpose())
+            .thenReturn(PurposeTestData.createPurposeId())
 
         mockMvc
             .perform(
@@ -173,7 +173,7 @@ internal class PurposeControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(purposeService.update(ID, PurposeTestData.createNewPurpose()))
-            .thenReturn(PurposeTestData.createExistingPurpose())
+            .thenReturn(PurposeTestData.createPurposeId())
 
         mockMvc
             .perform(
@@ -194,7 +194,7 @@ internal class PurposeControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(purposeService.create(PurposeTestData.createNewPurpose()))
-            .thenReturn(PurposeTestData.createExistingPurpose())
+            .thenReturn(PurposeTestData.createPurposeId())
 
         mockMvc
             .perform(
@@ -215,7 +215,7 @@ internal class PurposeControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(purposeService.update(ID, PurposeTestData.createNewPurpose()))
-            .thenReturn(PurposeTestData.createExistingPurpose())
+            .thenReturn(PurposeTestData.createPurposeId())
 
         mockMvc
             .perform(

@@ -95,19 +95,17 @@ class TransactionServiceTest {
     @Test
     fun shouldCreateTransaction() {
         val newTransaction = TransactionTestData.createNewTransaction()
-        val existingTransaction = TransactionTestData.createExistingTransaction()
         val savedEntity = TransactionTestData.createTransactionEntity()
         val newEntity = TransactionTestData.createFlatTransactionEntity().copy(id = null)
 
         `when`(transactionRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(transactionService.create(newTransaction)).isEqualTo(existingTransaction)
+        assertThat(transactionService.create(newTransaction)).isEqualTo(TransactionTestData.createTransactionId())
     }
 
     @Test
     fun shouldUpdateTransaction() {
         val newTransaction = TransactionTestData.createNewTransaction()
-        val existingTransaction = TransactionTestData.createExistingTransaction()
         val savedEntity = TransactionTestData.createTransactionEntity()
         val updatedEntity = TransactionTestData.createFlatTransactionEntity()
 
@@ -115,7 +113,7 @@ class TransactionServiceTest {
 
         `when`(transactionRepository.save(updatedEntity)).thenReturn(savedEntity)
 
-        assertThat(transactionService.update(ID, newTransaction)).isEqualTo(existingTransaction)
+        assertThat(transactionService.update(ID, newTransaction)).isEqualTo(TransactionTestData.createTransactionId())
     }
 
     @Test

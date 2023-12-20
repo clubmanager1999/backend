@@ -44,25 +44,25 @@ class RoleService(
         return roleRepository.findAll().map { it.toExistingRole() }
     }
 
-    fun create(newRole: NewRole): ExistingRole {
+    fun create(newRole: NewRole): RoleId {
         oidcAdminService.createRole(newRole.name)
 
         return newRole
             .toRoleEntity(null)
             .let { roleRepository.save(it) }
-            .toExistingRole()
+            .toRoleId()
     }
 
     fun update(
         id: Long,
         newRole: NewRole,
-    ): ExistingRole {
+    ): RoleId {
         return roleRepository
             .findById(id)
             .orElseThrow { RoleNotFoundException(id) }
             .let { newRole.toRoleEntity(id) }
             .let { roleRepository.save(it) }
-            .toExistingRole()
+            .toRoleId()
     }
 
     fun delete(id: Long) {

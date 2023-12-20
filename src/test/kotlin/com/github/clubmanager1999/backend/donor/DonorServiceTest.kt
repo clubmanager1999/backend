@@ -67,26 +67,24 @@ class DonorServiceTest {
     @Test
     fun shouldCreateDonor() {
         val newDonor = DonorTestData.createNewDonor()
-        val existingDonor = DonorTestData.createExistingDonor()
         val savedEntity = DonorTestData.createDonorEntity()
         val newEntity = savedEntity.copy(id = null)
 
         `when`(donorRepository.save(newEntity)).thenReturn(savedEntity)
 
-        assertThat(donorService.create(newDonor)).isEqualTo(existingDonor)
+        assertThat(donorService.create(newDonor)).isEqualTo(DonorTestData.createDonorId())
     }
 
     @Test
     fun shouldUpdateDonor() {
         val newDonor = DonorTestData.createNewDonor()
-        val existingDonor = DonorTestData.createExistingDonor()
         val savedEntity = DonorTestData.createDonorEntity()
 
         `when`(donorRepository.findById(ID)).thenReturn(Optional.of(savedEntity))
 
         `when`(donorRepository.save(savedEntity)).thenReturn(savedEntity)
 
-        assertThat(donorService.update(ID, newDonor)).isEqualTo(existingDonor)
+        assertThat(donorService.update(ID, newDonor)).isEqualTo(DonorTestData.createDonorId())
     }
 
     @Test

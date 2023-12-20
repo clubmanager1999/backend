@@ -33,23 +33,23 @@ class CreditorService(
         return creditorRepository.findAll().map { it.toExistingCreditor() }
     }
 
-    fun create(newCreditor: NewCreditor): ExistingCreditor {
+    fun create(newCreditor: NewCreditor): CreditorId {
         return newCreditor
             .toCreditorEntity(null)
             .let { creditorRepository.save(it) }
-            .toExistingCreditor()
+            .toCreditorId()
     }
 
     fun update(
         id: Long,
         newCreditor: NewCreditor,
-    ): ExistingCreditor {
+    ): CreditorId {
         return creditorRepository
             .findById(id)
             .orElseThrow { CreditorNotFoundException(id) }
             .let { newCreditor.toCreditorEntity(it.id) }
             .let { creditorRepository.save(it) }
-            .toExistingCreditor()
+            .toCreditorId()
     }
 
     fun delete(id: Long) {

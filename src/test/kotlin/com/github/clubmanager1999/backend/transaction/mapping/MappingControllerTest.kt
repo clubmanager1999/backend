@@ -106,7 +106,7 @@ internal class MappingControllerTest {
     @Test
     fun shouldCreateMapping() {
         `when`(mappingService.create(MappingTestData.createNewMapping()))
-            .thenReturn(MappingTestData.createExistingMapping())
+            .thenReturn(MappingTestData.createMappingId())
 
         mockMvc
             .perform(
@@ -124,7 +124,7 @@ internal class MappingControllerTest {
     @Test
     fun shouldCreateMultipleMappings() {
         `when`(mappingService.create(MappingTestData.createNewMapping()))
-            .thenReturn(MappingTestData.createExistingMapping())
+            .thenReturn(MappingTestData.createMappingId())
 
         mockMvc
             .perform(
@@ -154,7 +154,7 @@ internal class MappingControllerTest {
     @Test
     fun shouldUpdateUser() {
         `when`(mappingService.update(ID, MappingTestData.createNewMapping()))
-            .thenReturn(MappingTestData.createExistingMapping())
+            .thenReturn(MappingTestData.createMappingId())
 
         mockMvc
             .perform(
@@ -178,7 +178,7 @@ internal class MappingControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPost() {
         `when`(mappingService.create(MappingTestData.createNewMapping()))
-            .thenReturn(MappingTestData.createExistingMapping())
+            .thenReturn(MappingTestData.createMappingId())
 
         mockMvc
             .perform(
@@ -199,7 +199,7 @@ internal class MappingControllerTest {
     @Test
     fun shouldFailOnInvalidBodyPut() {
         `when`(mappingService.update(ID, MappingTestData.createNewMapping()))
-            .thenReturn(MappingTestData.createExistingMapping())
+            .thenReturn(MappingTestData.createMappingId())
 
         mockMvc
             .perform(
@@ -220,7 +220,7 @@ internal class MappingControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPost() {
         `when`(mappingService.create(MappingTestData.createNewMapping()))
-            .thenReturn(MappingTestData.createExistingMapping())
+            .thenReturn(MappingTestData.createMappingId())
 
         mockMvc
             .perform(
@@ -241,7 +241,7 @@ internal class MappingControllerTest {
     @Test
     fun shouldFailOnEmptyBodyPut() {
         `when`(mappingService.update(ID, MappingTestData.createNewMapping()))
-            .thenReturn(MappingTestData.createExistingMapping())
+            .thenReturn(MappingTestData.createMappingId())
 
         mockMvc
             .perform(

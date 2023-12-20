@@ -22,6 +22,10 @@ fun MembershipEntity.toExistingMembership(): ExistingMembership {
     return ExistingMembership(id = this.id!!, name = this.name, fee = this.fee)
 }
 
+fun MembershipEntity.toMembershipId(): MembershipId {
+    return MembershipId(this.id!!)
+}
+
 fun NewMembership.toMembershipEntity(id: Long?): MembershipEntity {
     return MembershipEntity(id = id, name = this.name, fee = this.fee)
 }

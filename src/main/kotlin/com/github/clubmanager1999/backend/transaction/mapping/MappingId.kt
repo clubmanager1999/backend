@@ -14,29 +14,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.creditor
+package com.github.clubmanager1999.backend.transaction.mapping
 
-fun CreditorEntity.toExistingCreditor(): ExistingCreditor {
-    return ExistingCreditor(
-        id = this.id!!,
-        name = this.name,
-    )
-}
+import jakarta.validation.constraints.NotNull
 
-fun CreditorEntity.toCreditorId(): CreditorId {
-    return CreditorId(this.id!!)
-}
-
-fun NewCreditor.toCreditorEntity(id: Long?): CreditorEntity {
-    return CreditorEntity(
-        id = id,
-        name = this.name,
-    )
-}
-
-fun CreditorId.toCreditorEntity(): CreditorEntity {
-    return CreditorEntity(
-        id = this.id,
-        name = "",
-    )
-}
+data class MappingId(
+    @field:NotNull
+    val id: Long,
+)
