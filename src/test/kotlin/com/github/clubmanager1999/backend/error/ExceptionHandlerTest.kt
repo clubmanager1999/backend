@@ -17,20 +17,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package com.github.clubmanager1999.backend.error
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.clubmanager1999.backend.creditor.CreditorNotFoundException
-import com.github.clubmanager1999.backend.donor.DonorNotFoundException
-import com.github.clubmanager1999.backend.member.MemberNotFoundException
-import com.github.clubmanager1999.backend.member.SubjectNotFoundException
-import com.github.clubmanager1999.backend.membership.MembershipNotFoundException
+import com.github.clubmanager1999.backend.domain.area.AreaNotFoundException
+import com.github.clubmanager1999.backend.domain.creditor.CreditorNotFoundException
+import com.github.clubmanager1999.backend.domain.donor.DonorNotFoundException
+import com.github.clubmanager1999.backend.domain.mapping.MappingNotFoundException
+import com.github.clubmanager1999.backend.domain.member.MemberNotFoundException
+import com.github.clubmanager1999.backend.domain.member.SubjectNotFoundException
+import com.github.clubmanager1999.backend.domain.membership.MembershipNotFoundException
+import com.github.clubmanager1999.backend.domain.purpose.PurposeNotFoundException
+import com.github.clubmanager1999.backend.domain.receipt.OverlappingReceiptException
+import com.github.clubmanager1999.backend.domain.receipt.ReceiptNotFoundException
+import com.github.clubmanager1999.backend.domain.transaction.TransactionNotFoundException
 import com.github.clubmanager1999.backend.oidc.ClientNotFoundException
 import com.github.clubmanager1999.backend.oidc.RoleNotFoundException
-import com.github.clubmanager1999.backend.receipt.OverlappingReceiptException
-import com.github.clubmanager1999.backend.receipt.ReceiptNotFoundException
 import com.github.clubmanager1999.backend.security.withoutRole
-import com.github.clubmanager1999.backend.transaction.TransactionNotFoundException
-import com.github.clubmanager1999.backend.transaction.area.AreaNotFoundException
-import com.github.clubmanager1999.backend.transaction.mapping.MappingNotFoundException
-import com.github.clubmanager1999.backend.transaction.purpose.PurposeNotFoundException
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
@@ -131,7 +131,7 @@ class ExceptionHandlerTest {
                 HttpStatus.CONFLICT,
             ),
             Case(
-                com.github.clubmanager1999.backend.role.RoleNotFoundException(42),
+                com.github.clubmanager1999.backend.domain.role.RoleNotFoundException(42),
                 ApiError(ErrorCode.ROLE_NOT_FOUND, "No role with id 42 found"),
                 HttpStatus.NOT_FOUND,
             ),

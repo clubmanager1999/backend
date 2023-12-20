@@ -16,8 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.oidc
 
-import com.github.clubmanager1999.backend.member.MemberTestData.EMAIL
-import com.github.clubmanager1999.backend.member.MemberTestData.USER_NAME
+import com.github.clubmanager1999.backend.domain.member.MemberTestData.EMAIL
+import com.github.clubmanager1999.backend.domain.member.MemberTestData.USER_NAME
 
 object OidcTestData {
     const val REALM = "clubmanager1999"
