@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 package com.github.clubmanager1999.backend.oidc
 
-import com.github.clubmanager1999.backend.member.NewMember
+import com.github.clubmanager1999.backend.domain.member.NewMember
 import org.springframework.stereotype.Service
 
 @Service
