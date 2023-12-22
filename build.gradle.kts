@@ -65,6 +65,14 @@ spotless {
         target("**/*.md")
         flexmark()
     }
+    json {
+        target("**/*.json")
+        jackson()
+    }
+    yaml {
+        target("**/*.yaml")
+        jackson()
+    }
 }
 
 jacoco { toolVersion = "0.8.11" }
