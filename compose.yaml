@@ -1,23 +1,24 @@
+---
 services:
   backend:
-    image: ghcr.io/clubmanager1999/backend:latest
+    image: "ghcr.io/clubmanager1999/backend:latest"
     environment:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/"
     network_mode: "host"
   postgres:
-    image: postgres
+    image: "postgres"
     environment:
-      POSTGRES_PASSWORD: secret
+      POSTGRES_PASSWORD: "secret"
     network_mode: "host"
   keycloak:
-    image: keycloak/keycloak
+    image: "keycloak/keycloak"
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: password
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "password"
     volumes:
-      - ./src/test/resources/realm.json:/opt/keycloak/data/import/realm.json
+    - "./src/test/resources/realm.json:/opt/keycloak/data/import/realm.json"
     network_mode: "host"
-    command: start-dev --import-realm --hostname-url=http://localhost:8081 --http-port=8081
+    command: "start-dev --import-realm --hostname-url=http://localhost:8081 --http-port=8081"
   mailhog:
-    image: mailhog/mailhog
+    image: "mailhog/mailhog"
     network_mode: "host"
