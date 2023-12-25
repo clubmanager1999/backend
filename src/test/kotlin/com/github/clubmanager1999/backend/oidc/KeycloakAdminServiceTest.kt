@@ -55,6 +55,7 @@ import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.time.Duration
 
 @ContextConfiguration(initializers = [KeycloakAdminServiceTest.DataSourceInitializer::class])
 @SpringBootTest
@@ -69,7 +70,7 @@ class KeycloakAdminServiceTest {
 
         @Container
         val keycloak: KeycloakContainer =
-            KeycloakContainer().withRealmImportFile("/realm.json").withNetwork(mailNet)
+            KeycloakContainer().withRealmImportFile("/realm.json").withNetwork(mailNet).withStartupTimeout(Duration.ofMinutes(5))
 
         @Container
         val mailhog: GenericContainer<*> =

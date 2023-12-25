@@ -32,4 +32,5 @@ enum class ErrorCode {
     PURPOSE_NOT_FOUND,
     AREA_NOT_FOUND,
     OVERLAPPING_RECEIPT,
+    TEMPLATE_NOT_FOUND,
 }
