@@ -14,29 +14,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.security
+package com.github.clubmanager1999.backend.domain.template
 
-enum class Permission {
-    MANAGE_MEMBERS,
-    MANAGE_MEMBERSHIPS,
-    MANAGE_ROLES,
-    MANAGE_TRANSACTIONS,
-    MANAGE_DONORS,
-    MANAGE_CREDITORS,
-    MANAGE_RECEIPTS,
-    MANAGE_MAPPINGS,
-    MANAGE_PURPOSES,
-    MANAGE_AREAS,
-    MANAGE_TEMPLATES,
-    ;
-
-    fun getRoleName(): String {
-        return this.name
-            .lowercase()
-            .replace("_", "-")
-    }
-
-    companion object {
-        val byRoleName = Permission.entries.associateBy { it.getRoleName() }
-    }
-}
+data class ExistingTemplate(
+    val id: Long,
+    val name: String,
+    val template: String,
+)

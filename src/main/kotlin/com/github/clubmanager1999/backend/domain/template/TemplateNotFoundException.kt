@@ -14,29 +14,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.clubmanager1999.backend.security
+package com.github.clubmanager1999.backend.domain.template
 
-enum class Permission {
-    MANAGE_MEMBERS,
-    MANAGE_MEMBERSHIPS,
-    MANAGE_ROLES,
-    MANAGE_TRANSACTIONS,
-    MANAGE_DONORS,
-    MANAGE_CREDITORS,
-    MANAGE_RECEIPTS,
-    MANAGE_MAPPINGS,
-    MANAGE_PURPOSES,
-    MANAGE_AREAS,
-    MANAGE_TEMPLATES,
-    ;
+import com.github.clubmanager1999.backend.error.ErrorCode
+import com.github.clubmanager1999.backend.error.NotFoundException
 
-    fun getRoleName(): String {
-        return this.name
-            .lowercase()
-            .replace("_", "-")
-    }
-
-    companion object {
-        val byRoleName = Permission.entries.associateBy { it.getRoleName() }
-    }
-}
+class TemplateNotFoundException(id: Long) : NotFoundException(ErrorCode.TEMPLATE_NOT_FOUND, "template", "id", id)
